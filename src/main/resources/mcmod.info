@@ -1,0 +1,16 @@
+[
+{
+  "modid": "twitchspawn",
+  "name": "TwitchSpawn",
+  "description": "Donators donate, streamers get rewards ingame.",
+  "version": "0.0.1dev",
+  "mcversion": "1.12",
+  "url": "<github link will be put here>",
+  "updateUrl": "",
+  "authorList": ["iGoodie"],
+  "credits": "Redowar for designing the fundamental idea of this mod",
+  "logoFile": "/textures/logo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]
