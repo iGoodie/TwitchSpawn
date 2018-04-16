@@ -22,7 +22,7 @@ You should use some in-game commands to start/stop the mod. These commands are;
 *   **/twitchspawn stop** - Stops the mod
 *   **/twitchspawn status** - Displays the status of the mod (ON/OFF)
 *   **/twitchspawn reloadcfg** - Reloads all the configs without requiring restart
-*   **/twitchspawn test <name> <amount>** - Simulates a donation for test purposes
+*   **/twitchspawn test \<name\> \<amount\>** - Simulates a donation for test purposes
 
 ![In-game SS](https://cdn.discordapp.com/attachments/329962349081526273/340121198027472896/unknown.png)
 
