@@ -1,16 +1,18 @@
 [
-{
-  "modid": "twitchspawn",
-  "name": "TwitchSpawn",
-  "description": "Donators donate, streamers get rewards ingame.",
-  "version": "0.0.1dev",
-  "mcversion": "1.12",
-  "url": "<github link will be put here>",
-  "updateUrl": "",
-  "authorList": ["iGoodie"],
-  "credits": "Redowar for designing the fundamental idea of this mod",
-  "logoFile": "/textures/logo.png",
-  "screenshots": [],
-  "dependencies": []
-}
+	{
+		  "modid": "twitchspawn",
+		  "name": "TwitchSpawn",
+		  "description": "Donators donate, streamers get rewards ingame.",
+		  "version": "0.0.240dev",
+		  "mcversion": "1.12",
+		  "url": "https://github.com/iGoodie/TwitchSpawn",
+		  "updateUrl": "https://minecraft.curseforge.com/projects/twitchspawn",
+		  "authorList": ["iGoodie"],
+		  "credits": "Redowar for designing the fundamental idea of this mod",
+		  "logoFile": "assets/twitchspawn/textures/logo.png",
+		  "screenshots": [],
+		  "dependencies": [
+		  	"goodieutilsmc"
+		  ]
+	}
 ]

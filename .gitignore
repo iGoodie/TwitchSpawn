@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# Except these ones
+!.gitignore
+!.project
+!.classpath
+!/src
+!build.gradle
+!LICENSE
+!README.md
+!/gradle

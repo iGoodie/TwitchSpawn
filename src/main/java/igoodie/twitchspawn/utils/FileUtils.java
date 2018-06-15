@@ -1,7 +1,5 @@
 package igoodie.twitchspawn.utils;
 
-import igoodie.twitchspawn.TSConstants;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,11 +15,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import igoodie.twitchspawn.TSConstants;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+
 public class FileUtils {
 	public static boolean fileExists(String path) {
 		return new File(path).exists();
 	}
 
+	/* External IO */
 	public static void createFile(String path) {
 		try {
 			File f = new File(path);
@@ -51,7 +54,7 @@ public class FileUtils {
 			return str;
 		}
 		catch(IOException e) {
-			return null;
+			return "";
 		}
 	}
 	
@@ -68,6 +71,7 @@ public class FileUtils {
 		}
 	}
 
+	/* Online IO */
 	public static JsonObject fetchJson(String url) {
 		try {
 			HttpURLConnection req = (HttpURLConnection) new URL(url).openConnection();
@@ -79,5 +83,25 @@ public class FileUtils {
 		catch(IOException e) {
 			return null;
 		}
+	}
+
+	/* Internal IO */
+	public static String readPrototypeString(String path) {
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			ResourceLocation loc = new ResourceLocation("twitchspawn", "prototypes/"+path);
+			InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(loc).getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		
+			String line;
+			while((line=br.readLine()) != null) sb.append(line+"\n");
+			br.close();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return sb.toString();
 	}
 }
