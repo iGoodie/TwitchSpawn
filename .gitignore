@@ -1,12 +1,16 @@
-# Ignore everything
-*
-
-# Except these ones
-!.gitignore
-!.project
-!.classpath
-!/src
-!build.gradle
-!LICENSE
-!README.md
-!/gradle
+/build
+/run
+/.gradle
+/.settings
+/crash-reports
+gradle.properties
+/build
+/bin
+/logs
+/config
+gradlew
+gradlew.bat
+/gradle
+options.txt
+Forge_Client.launch
+ForgeServer.launch

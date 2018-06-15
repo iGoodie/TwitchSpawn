@@ -1,0 +1,20 @@
+{
+  "access_token": "!Your Legacy Streamlabs API Token here!",
+  "streamer_mc_nick": "!Your Minecraft nick here!",
+  "streamer_twitch_nick": "!Your Twitch channel name here!",
+  "rewards": [
+    {
+      "minimum_currency": 0,
+      "blocks": [
+        "minecraft:stick",
+        "minecraft:apple"
+      ]
+    },
+    {
+      "minimum_currency": 1,
+      "blocks": [
+		"minecraft:diamond_block"
+	  ]
+    }
+  ]
+}
