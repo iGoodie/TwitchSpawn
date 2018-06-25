@@ -1,7 +1,7 @@
 package igoodie.twitchspawn.utils;
 
-import igoodie.twitchspawn.model.packet.TitlePacket;
-import igoodie.twitchspawn.network.Packets;
+import igoodie.twitchspawn.packet.PacketDisplayTitle;
+import igoodie.twitchspawn.packet.TwitchSpawnPacketHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -45,7 +45,7 @@ public class MinecraftServerUtils {
 	
 	public static void noticeScreen(EntityPlayerMP player, String title, String subtitle) {
 		if(!isServer()) return;
-		TitlePacket packet = new TitlePacket(title, subtitle);
-		Packets.NETWORK_WRAPPER.sendTo(packet, player);
+		PacketDisplayTitle.Message packet = new PacketDisplayTitle.Message(title, subtitle);
+		TwitchSpawnPacketHandler.NETWORK_WRAPPER.sendTo(packet, player);
 	}
 }
