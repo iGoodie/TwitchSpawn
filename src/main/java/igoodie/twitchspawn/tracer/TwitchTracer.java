@@ -41,20 +41,3 @@ public class TwitchTracer extends JsonTracer {
 		}
 	}
 }
-
-/*public static void init() {
-	//Fetch the twitch nick from configs and form the URL
-	String streamerNick = Configs.json.get("streamer_twitch_nick").getAsString().toLowerCase();
-	formedUrl = CHATTERS_REQ_URL_PATTERN.replace("${streamer_twitch_nick}", streamerNick);
-
-	//Pre-check if configs are proper
-	if(streamerNick.isEmpty() || streamerNick==null || FileUtils.fetchJson(formedUrl)==null) {
-		TwitchSpawn.logger.error("TwitchSpawn can't find valid twitch channel. Twitch tracer won't work.");
-		return;
-	}
-	
-	//Initiate the instance & start thread
-	instance = new TwitchTracer();
-	instance.setName("Twitch Tracer");
-	instance.start();
-}*/

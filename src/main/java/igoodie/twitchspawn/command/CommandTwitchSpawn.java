@@ -45,7 +45,7 @@ public class CommandTwitchSpawn extends CommandBase {
 			return getListOfStringsMatchingLastWord(args, "start", "stop", "reloadcfg", "status", "test"); //twitchspawn *
 		
 		if(args.length == 2) {
-			if(args[0].equals("test") && TwitchTracer.instance.isRunning()) { //twitchspawn test *
+			if(args[0].equals("test") && TwitchTracer.instance!=null && TwitchTracer.instance.isRunning()) { //twitchspawn test *
 				Collection<String> viewers = TwitchTracer.instance.getViewers();
 				if(!viewers.isEmpty()) return getListOfStringsMatchingLastWord(args, viewers);
 				return Collections.<String>emptyList();
@@ -140,7 +140,7 @@ public class CommandTwitchSpawn extends CommandBase {
 	}
 
 	public void moduleStatus(ICommandSender sender) {
-		if(StreamLabsTracer.instance.isRunning()) 
+		if(StreamLabsTracer.instance!=null && StreamLabsTracer.instance.isRunning()) 
 			MinecraftServerUtils.noticeChatFor(sender, "TwitchSpawn is currently waiting for donations. [ON]", TextFormatting.AQUA);
 		else 
 			MinecraftServerUtils.noticeChatFor(sender, "TwitchSpawn is currently not running. [OFF]", TextFormatting.AQUA);
@@ -148,7 +148,8 @@ public class CommandTwitchSpawn extends CommandBase {
 
 	public void moduleTest(ICommandSender sender, String[] args) throws CommandException {
 		if(args.length != 3) throw new WrongUsageException("/twitchspawn test <nick> <amount>", new Object[0]);
-		if(!StreamLabsTracer.instance.isRunning()) throw new CommandException("TwitchSpawn is currently not running. Turn it on before using test donation.");
+		if(StreamLabsTracer.instance==null || !StreamLabsTracer.instance.isRunning())
+			throw new CommandException("TwitchSpawn is currently not running. Turn it on before using test donation.");
 		
 		//Fetch & evaluate args
 		String username;
