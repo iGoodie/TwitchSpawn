@@ -43,7 +43,7 @@ public class StreamLabsTracer extends JsonTracer {
 	@Override
 	protected void preTrace() {
 		// Pre-trace and mark previously handled donations
-		JsonArray donations = fetch().getAsJsonArray();
+		JsonArray donations = fetch().get("donations").getAsJsonArray();
 		for(JsonElement d : donations) {
 			checkedDonations.add(d.getAsJsonObject().get("id").getAsString());
 		}
