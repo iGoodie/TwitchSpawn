@@ -105,7 +105,7 @@ public class CommandTwitchSpawn extends CommandBase {
 		// Fetch the access token from the configs
 		String legacyToken = Configs.json.get("access_token").getAsString();
 		if(legacyToken.isEmpty() || legacyToken==null) {
-			TwitchSpawn.logger.error("TwitchSpawn won't work, because no valid legacy token found in the configs");
+			TwitchSpawn.LOGGER.error("TwitchSpawn won't work, because no valid legacy token found in the configs");
 			MinecraftServerUtils.noticeChatFor(sender, "TwitchSpawn configs are invalid. Please check/refill them", TextFormatting.RED);
 			return;
 		}

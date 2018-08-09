@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import igoodie.twitchspawn.TwitchSpawn;
 import igoodie.twitchspawn.configs.Configs;
 import igoodie.twitchspawn.model.Donation;
 import igoodie.twitchspawn.utils.MinecraftServerUtils;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class StreamLabsTracer extends JsonTracer {
@@ -42,8 +44,16 @@ public class StreamLabsTracer extends JsonTracer {
 	
 	@Override
 	protected void preTrace() {
+		JsonObject fetch = fetch();
+		TwitchSpawn.LOGGER.info("PreTracec Fetched: " + fetch);
+		if(fetch == null) { // Then it means, Legacy API key is invalid
+			MinecraftServerUtils.noticeChatAll("[ ! ] TwitchSpawn: Legacy API Key is invalid. Please check Streamlabs again.", TextFormatting.RED);
+			stop();
+			return;
+		}
+		
 		// Pre-trace and mark previously handled donations
-		JsonArray donations = fetch().get("donations").getAsJsonArray();
+		JsonArray donations = fetch.get("donations").getAsJsonArray();
 		for(JsonElement d : donations) {
 			checkedDonations.add(d.getAsJsonObject().get("id").getAsString());
 		}

@@ -15,24 +15,24 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 @Mod(modid=TSConstants.MOD_ID, version=TSConstants.MOD_VERSION)
 public class TwitchSpawn implements TSConstants {
 	
-	public static Logger logger;
+	public static Logger LOGGER;
 	
 	@EventHandler
 	public void preinit(FMLPreInitializationEvent event) {
-		logger = event.getModLog();
+		LOGGER = event.getModLog();
 		Configs.init(event.getSuggestedConfigurationFile());
 		TwitchSpawnPacketHandler.init();
-		logger.info("Done pre-init for physical side: " + event.getSide());
+		LOGGER.info("Done pre-init for physical side: " + event.getSide());
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		logger.info("Done init for physical side: " + event.getSide());
+		LOGGER.info("Done init for physical side: " + event.getSide());
 	}
 	
 	@EventHandler
 	public void postinit(FMLPostInitializationEvent event) {
-		logger.info("Done post-init for physical side: " + event.getSide());
+		LOGGER.info("Done post-init for physical side: " + event.getSide());
 	}
 	
 	@EventHandler

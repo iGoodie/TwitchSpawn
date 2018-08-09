@@ -26,7 +26,7 @@ public class Donation implements Comparable<Donation> {
 			this.note = json.get("message").getAsString();
 		}
 		catch(ParseException e) {
-			TwitchSpawn.logger.error("Invalid donation model fetched from StreamLabs");
+			TwitchSpawn.LOGGER.error("Invalid donation model fetched from StreamLabs");
 		}
 	}
 
