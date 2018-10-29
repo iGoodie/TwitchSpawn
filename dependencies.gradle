@@ -1,0 +1,25 @@
+println "**** BUILDING SHADED DEPENDENCIES ****"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+configurations {
+    mods
+    shade
+    compile.extendsFrom shade
+}
+
+dependencies {
+    shade group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
+}
+
+jar {
+	// Include shaded source in the built mod jar
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+}

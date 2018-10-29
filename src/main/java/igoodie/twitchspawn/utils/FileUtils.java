@@ -20,6 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 public class FileUtils {
+	
 	public static boolean fileExists(String path) {
 		return new File(path).exists();
 	}

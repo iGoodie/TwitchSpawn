@@ -26,7 +26,7 @@ public class ConfigsValidator {
 		
 		//Check if config.json in config direction exists. Create if not there.
 		if(!FileUtils.fileExists(Configs.CONFIG_DIR + File.separatorChar + "config.json")) {
-			String jsonRead = FileUtils.readPrototypeString("configs/config.json");
+			String jsonRead = "{\"access_token\":\"!Your Streamlabs API Access Token here!\",\"socket_api_token\":\"!Your Streamlabs Socket API Token here!\",\"streamer_mc_nick\":\"!Your Minecraft nick here!\",\"streamer_twitch_nick\":\"!Your Twitch channel name here!\",\"rewards\":{\"bit_rewards\":[{\"minimum_bit\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_bit\":100,\"items\":[\"minecraft:diamond_block\"]}],\"donation_rewards\":[{\"minimum_amount\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]}]}}";
 			Configs.json = new JsonParser().parse(jsonRead).getAsJsonObject();
 			valid = false;
 		}
@@ -48,7 +48,7 @@ public class ConfigsValidator {
 		//TODO: Delete non-valid lines for every config file
 		//TODO: Fix read prototype for server capability.
 		
-		String jsonRead = "{\"access_token\":\"!Your Legacy Streamlabs API Token here!\",\"streamer_mc_nick\":\"!Your Minecraft nick here!\",\"streamer_twitch_nick\":\"!Your Twitch channel name here!\",\"rewards\":[{\"minimum_currency\":0,\"blocks\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_currency\":1,\"blocks\":[\"minecraft:diamond_block\"]}]}";
+		String jsonRead = "{\"access_token\":\"!Your Streamlabs API Access Token here!\",\"socket_api_token\":\"!Your Streamlabs Socket API Token here!\",\"streamer_mc_nick\":\"!Your Minecraft nick here!\",\"streamer_twitch_nick\":\"!Your Twitch channel name here!\",\"rewards\":{\"bit_rewards\":[{\"minimum_bit\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_bit\":100,\"items\":[\"minecraft:diamond_block\"]}],\"donation_rewards\":[{\"minimum_amount\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]}]}}";
 		JsonObject defaultConfigs = new JsonParser().parse(jsonRead).getAsJsonObject();
 		for(Entry<String, JsonElement> j : defaultConfigs.entrySet()) {
 			if(!Configs.json.has(j.getKey())) {

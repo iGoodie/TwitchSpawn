@@ -1,17 +1,21 @@
-/build
-/runClient
-/runServer
-/.gradle
-/.settings
-/crash-reports
-gradle.properties
-/build
+# Build environment
 /bin
-/logs
-/config
+/build
+/.gradle
+/gradle
+/.settings
 gradlew
 gradlew.bat
-/gradle
+/logs
+/libs
+/META-INF
 options.txt
+
+# Test environment
+/runServer
+/runClient
+/crash-reports
+
+# Launchers
 Forge_Client.launch
 ForgeServer.launch

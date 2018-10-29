@@ -7,6 +7,7 @@ import java.util.List;
 import igoodie.twitchspawn.TwitchSpawn;
 import igoodie.twitchspawn.configs.Configs;
 import igoodie.twitchspawn.model.Donation;
+import igoodie.twitchspawn.tracer.StreamLabsSocket;
 import igoodie.twitchspawn.tracer.StreamLabsTracer;
 import igoodie.twitchspawn.tracer.TwitchTracer;
 import igoodie.twitchspawn.utils.MinecraftServerUtils;
@@ -78,6 +79,12 @@ public class CommandTwitchSpawn extends CommandBase {
 		case "status": moduleStatus(sender); break;
 		case "test": moduleTest(sender, args); break;
 		case "debug": moduleDebug(sender); break;
+		case "socket":
+			if(StreamLabsSocket.isRunning())
+				StreamLabsSocket.dispose();
+			else
+				StreamLabsSocket.start(Configs.json.get("socket_api_token").getAsString());
+			break;
 		default: throw new WrongUsageException(getUsage(sender), new Object[0]);
 		}
 	}
