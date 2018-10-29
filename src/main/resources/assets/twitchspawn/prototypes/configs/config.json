@@ -27,6 +27,21 @@
           "minecraft:apple"
         ]
       }
+    ],
+    "sub_rewards": [
+      {
+        "minimum_months": 0,
+        "items": [
+          "minecraft:stick",
+          "minecraft:apple"
+        ]
+      },
+      {
+        "minimum_months": 10,
+        "items": [
+          "minecraft:diamond_block"
+        ]
+      }
     ]
   }
 }

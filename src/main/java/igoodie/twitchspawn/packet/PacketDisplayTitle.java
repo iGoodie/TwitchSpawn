@@ -40,7 +40,7 @@ public class PacketDisplayTitle implements IMessageHandler<Message, IMessage> { 
 			buf.writeInt(title.length()); //n char
 			buf.writeInt(subtitle.length());
 			
-			buf.writeBytes(title.getBytes(TwitchSpawnPacketHandler.UTF8)); //2n bytes		
+			buf.writeBytes(title.getBytes(TwitchSpawnPacketHandler.UTF8)); //2*n bytes		
 			buf.writeBytes(subtitle.getBytes(TwitchSpawnPacketHandler.UTF8));		
 		}
 
