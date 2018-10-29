@@ -20,8 +20,10 @@ public class TwitchSpawn implements TSConstants {
 	@EventHandler
 	public void preinit(FMLPreInitializationEvent event) {
 		LOGGER = event.getModLog();
+		
 		Configs.init(event.getSuggestedConfigurationFile());
 		TwitchSpawnPacketHandler.init();
+		
 		LOGGER.info("Done pre-init for physical side: " + event.getSide());
 	}
 
