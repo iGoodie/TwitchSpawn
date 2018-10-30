@@ -22,11 +22,11 @@ Rewards are hand defined by the streamer in a very basic config file structure!
 There are some required configs (Found in config/TwitchSpawn/config.json) before the mod works properly.
 
 API tokens are the very first thing you would like to add. 
-There are 2 different tokens can be gathered from Streamlabs; `API Access Token` and `Socket API Token`. TwitchSpawn uses them to communicate with it!
+There are 2 different tokens can be gathered from Streamlabs; `API Access Token` and `Socket API Token`. TwitchSpawn uses them to communicate with Streamlabs!
 
 Login to your [Streamlabs](https://streamlabs.com/) account.
 Navigate to [API Settings](https://streamlabs.com/dashboard#/apisettings) page from the left menu.
-Finally switch the tab to "API Tokens", and voil‡, you can copy `access_token` and `socket_api_token` from here.
+Finally switch the tab to "API Tokens", and voil√†, you can copy `access_token` and `socket_api_token` from here.
 
 ![Streamlabs API Tokens Tab](https://cdn.discordapp.com/attachments/460909423045509140/506632938067197953/help1.png)
 
@@ -66,6 +66,8 @@ You should use some in-game commands to start/stop the mod. These commands are;
 ![In-game SS](https://cdn.discordapp.com/attachments/329962349081526273/340121198027472896/unknown.png)
 
 ## Future Goals
+
+* Mixer & Youtube alerts handled properly
 
 * Reward gathering system (Blocks and items) is going to be designed & implemented
 
