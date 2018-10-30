@@ -7,6 +7,7 @@ import net.minecraft.util.StringUtils;
 import java.io.File;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -46,6 +47,11 @@ public class Configs {
 		changesMade |= addValue("streamer_twitch_nick", "!Your Twitch channel name here!");
 		
 		// Add example selectors
+		if(json.has("rewards")) {
+			if(!(json.get("rewards") instanceof JsonObject)) {
+				json.remove("rewards");
+			}
+		}
 		String selectors = "{\"bit_rewards\":[{\"minimum_bit\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_bit\":100,\"items\":[\"minecraft:diamond_block\"]}],\"donation_rewards\":[{\"minimum_amount\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]}],\"sub_rewards\":[{\"minimum_months\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_months\":10,\"items\":[\"minecraft:diamond_block\"]}]}";
 		changesMade |= addValue("rewards", new JsonParser().parse(selectors).getAsJsonObject());
 		
