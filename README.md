@@ -52,6 +52,10 @@ Following `bit_rewards` example is a valid one:
  }
 ]
 ```
+If you want to have no reward for an event, just leave the reward array empty, like so;
+```json
+"donation_rewards": []
+```
 
 ## How to use?
 
