@@ -59,7 +59,6 @@ public class StreamLabsSocket {
 
 		instance.socket.disconnect();
 		instance = null;
-		System.out.println("Instance deleted!");
 	}
 
 	public Socket socket;
@@ -74,6 +73,12 @@ public class StreamLabsSocket {
 			throw new InternalError();
 		}
 
+		bindHandlers();
+
+		socket.connect();
+	}
+
+	private void bindHandlers() {
 		socket.on(Socket.EVENT_CONNECT, (obj) -> {
 			TwitchSpawn.LOGGER.info("Socket connection success!");
 			tokenVerified = true;
@@ -84,7 +89,7 @@ public class StreamLabsSocket {
 			if(!tokenVerified) { // If token was not verified via connection				
 				MinecraftServerUtils.noticeChatAll("Streamlabs Socket disconnected.. This could be caused by invalid socket token."
 						+ " Please double check your token.", TextFormatting.RED);
-				instance = null;
+				instance = null; // Nullify here outside dispose() if it was a force disconnect
 			}
 		});
 
@@ -96,57 +101,40 @@ public class StreamLabsSocket {
 			String obj_for = JSONHelper.extractString(obj, "for");
 			JSONArray message = JSONHelper.extractJSONArray(obj, "message");
 			TwitchSpawn.LOGGER.info("Received: " + obj_type + " | " + obj_for);
-			
+
 			// Handle that packet accordingly
 			handleMessage(obj_type, obj_for, message);
 		});
-
-		socket.connect();
 	}
 
-//	public void handleDonation(JSONArray donationMessage) {
-//		JsonObject rewards = Configs.json.get("rewards").getAsJsonObject();
-//		JsonArray donationRewards = rewards.get("donation_rewards").getAsJsonArray();
-//
-//		JSONHelper.forEachJSONObject(donationMessage, (donation)->{
-//			// Traverse all the rewards in reverse order, to find max
-//			double amount = JSONHelper.extractDouble(donation, "amount");
-//			String selectedReward = SelectionHelper.selectDonationReward(donationRewards, amount);
-//
-//			// If no reward fits that amount, continue to other donation messages.
-//			if(selectedReward == null) return;
-//
-//			// Now spawn the reward!
-//			dropItem(donation, selectedReward);
-//		});
-//	}
-	
 	public void handleMessage(String eventType, String eventFor, JSONArray message) {
 		handleMessage(eventType+"|"+eventFor, message);
 	}
-	
+
 	public void handleMessage(String eventPair, JSONArray message) {
+		TwitchSpawn.LOGGER.info("Handling event pair = " + eventPair);
 		switch(eventPair) { // Switch type|for pair
+		case "donation|null":		 		handleEvent(message, "donation_rewards", "amount", "minimum_amount", "donated"); break;
 		case "donation|streamlabs": 		handleEvent(message, "donation_rewards", "amount", "minimum_amount", "donated"); break;
 		case "bits|twitch_account":			handleEvent(message, "bit_rewards", "amount", "minimum_bit", "bit-wise donated"); break;
 		case "subscription|twitch_account": handleEvent(message, "sub_rewards", "months", "minimum_months", "subscribed"); break;
 		}
 	}
-	
+
 	public void handleEvent(JSONArray eventMessage, String rewardFieldName, String amountFieldName, 
 			String minimumFieldName, String actionMessage) {
 		JsonObject rewards = Configs.json.get("rewards").getAsJsonObject();
 		JsonArray eventRewards = rewards.get(rewardFieldName).getAsJsonArray();
-		
+
 		// Handle each event received in the message object
 		JSONHelper.forEachJSONObject(eventMessage, (donation)->{
 			// Select reward with given amount
 			double amount = JSONHelper.extractDouble(donation, amountFieldName);
 			String selectedReward = SelectionHelper.selectReward(eventRewards, minimumFieldName, amount);
-			
+
 			// If no reward fits that amount, continue to other event messages.
 			if(selectedReward == null) return;
-			
+
 			// Now spawn the reward!
 			dropItem(donation, selectedReward, actionMessage);
 		});

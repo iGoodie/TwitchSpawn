@@ -1,16 +1,17 @@
 package igoodie.twitchspawn.configs;
 
-import igoodie.twitchspawn.TwitchSpawn;
-import igoodie.twitchspawn.utils.FileUtils;
-import net.minecraft.util.StringUtils;
-
 import java.io.File;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+
+import igoodie.twitchspawn.TwitchSpawn;
+import igoodie.twitchspawn.utils.FileUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.StringUtils;
 
 public class Configs {
 	public static JsonObject json;
@@ -21,7 +22,12 @@ public class Configs {
 		//Save direction of TwitchSpawn configs
 		CONFIG_DIR = file.getParent() + File.separatorChar + "TwitchSpawn";
 
-		load();
+		try {
+			load();
+		} catch(JsonParseException e) {
+			TwitchSpawn.LOGGER.error("Invalid JSON syntax in ../config/TwitchSpawn/config.json");
+			System.exit(0); // Force exit. TODO: Find a better solution
+		}
 		
 		if(validate())
 			save();
