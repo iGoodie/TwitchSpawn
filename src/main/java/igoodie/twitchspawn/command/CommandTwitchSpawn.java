@@ -9,12 +9,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonParseException;
 
 import igoodie.twitchspawn.TwitchSpawn;
 import igoodie.twitchspawn.configs.Configs;
 import igoodie.twitchspawn.tracer.StreamLabsSocket;
 import igoodie.twitchspawn.tracer.TwitchTracer;
+import igoodie.twitchspawn.utils.JSONHelper;
 import igoodie.twitchspawn.utils.MinecraftServerUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -29,15 +31,15 @@ import net.minecraft.util.text.TextFormatting;
  * Trackers are always going to be @ Effective Server Side
  */
 public class CommandTwitchSpawn extends CommandBase {
-	
+
 	// Probably the ugliest way to allias test command
 	public static final HashMap<String, String> EVENT_TYPES = new HashMap<>(); {
 		EVENT_TYPES.put("donation", "donation|streamlabs");
 		EVENT_TYPES.put("d", "donation|streamlabs");
-		
+
 		EVENT_TYPES.put("bits", "bits|twitch_account");
 		EVENT_TYPES.put("b", "bits|twitch_account");
-		
+
 		EVENT_TYPES.put("subscription", "subscription|twitch_account");
 		EVENT_TYPES.put("sub", "subscription|twitch_account");
 		EVENT_TYPES.put("subs", "subscription|twitch_account");
@@ -91,13 +93,16 @@ public class CommandTwitchSpawn extends CommandBase {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if(args.length == 0) throw new WrongUsageException(getUsage(sender), new Object[0]);
 
-		// If sender is not the streamer, send an error chat message.
-		String streamerNick = Configs.json.get("streamer_mc_nick").getAsString();
-		if(!streamerNick.equalsIgnoreCase(sender.getName())) {
-			TwitchSpawn.LOGGER.warn(sender.getName() + " tried to use TwitchSpawn commands but insufficient permissions.");
-			String msg = String.format("Only streamer %s can execute TwitchSpawn commands!", streamerNick!=null ? "("+streamerNick+")" : "");
-			MinecraftServerUtils.noticeChatFor(sender, msg, TextFormatting.RED);
-			return;
+		if(sender!=null) { // if command is not sent via server command line
+			// If sender is not the streamer or a moderator, send an error chat message.
+			String streamerNick = Configs.json.get("streamer_mc_nick").getAsString();
+			JsonArray moderators = Configs.json.get("moderator_mc_nicks").getAsJsonArray();
+			if(!streamerNick.equalsIgnoreCase(sender.getName()) && !JSONHelper.jsonArrayContains(moderators, sender.getName()) ) {
+				TwitchSpawn.LOGGER.warn(sender.getName() + " tried to use TwitchSpawn commands but insufficient permissions.");
+				String msg = String.format("Only streamer %s or moderators can execute TwitchSpawn commands!", streamerNick!=null ? "("+streamerNick+")" : "");
+				MinecraftServerUtils.noticeChatFor(sender, msg, TextFormatting.RED);
+				return;
+			}
 		}
 
 		// Find and execute module. XXX: Can be implemented better
@@ -171,7 +176,7 @@ public class CommandTwitchSpawn extends CommandBase {
 			MinecraftServerUtils.noticeChatFor(sender, ">> Reload failed. Invalid JSON syntax!", TextFormatting.RED);
 			return;
 		}
-		
+
 		MinecraftServerUtils.noticeChatFor(sender, ">> TwitchSpawn reloaded configs.", TextFormatting.BLUE);
 	}
 
@@ -194,20 +199,21 @@ public class CommandTwitchSpawn extends CommandBase {
 			String username = args[1];
 			double amount = Double.parseDouble(args[2]);
 			String type = args.length==4 ? args[3] : "donation";
-			
+
 			// Create a pseudo-donation message
 			JSONArray donations = new JSONArray();
 			JSONObject donation = new JSONObject();
 			donation.put("from", username);
 			donation.put("amount", amount);
+			donation.put("months", amount); // Ugly hacky wack
 			donations.put(donation);
-			
+
 			String eventType = EVENT_TYPES.get(type);
 			if(eventType==null) {
 				String types = String.join(", ", EVENT_TYPES.keySet());
 				throw new CommandException("[type] is invalid. Valid values: " + types);
 			}
-			
+
 			// Now simulate a donation test
 			StreamLabsSocket.instance.handleMessage(eventType, donations);
 		} catch(NumberFormatException e) {
