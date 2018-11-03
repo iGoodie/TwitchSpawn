@@ -18,6 +18,7 @@ The mod provides supply drops to the streamer as his/her viewers donate or subsc
 Rewards are hand defined by the streamer in a very basic config file structure!
 
 ## Configuration
+(Detailed info about `config.json` can be found in [TwitchSpawn Wiki page](https://github.com/iGoodie/TwitchSpawn/wiki/Config.json-Details))
 
 There are some required configs (Found in config/TwitchSpawn/config.json) before the mod works properly.
 
