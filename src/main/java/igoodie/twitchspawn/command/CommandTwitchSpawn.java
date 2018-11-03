@@ -9,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.JsonParseException;
+
 import igoodie.twitchspawn.TwitchSpawn;
 import igoodie.twitchspawn.configs.Configs;
 import igoodie.twitchspawn.tracer.StreamLabsSocket;
@@ -161,9 +163,15 @@ public class CommandTwitchSpawn extends CommandBase {
 
 	public void moduleReloadCfg(ICommandSender sender) throws CommandException {
 		if(StreamLabsSocket.isRunning())
-			throw new CommandException("TwitchSpawn should be stopped in order to be able to reload configs. Type '/twitchspawn stop' and retry.");
+			throw new CommandException(">> TwitchSpawn should be stopped in order to be able to reload configs. Type '/twitchspawn stop' and retry.");
 
-		Configs.load();
+		try {
+			Configs.load();
+		} catch(JsonParseException e) {
+			MinecraftServerUtils.noticeChatFor(sender, ">> Reload failed. Invalid JSON syntax!", TextFormatting.RED);
+			return;
+		}
+		
 		MinecraftServerUtils.noticeChatFor(sender, ">> TwitchSpawn reloaded configs.", TextFormatting.BLUE);
 	}
 
@@ -179,7 +187,7 @@ public class CommandTwitchSpawn extends CommandBase {
 			throw new WrongUsageException("/twitchspawn test <nick> <amount> [type]", new Object[0]);
 
 		if(!StreamLabsSocket.isRunning())
-			throw new CommandException("TwitchSpawn is currently not running. Turn it on before using test donation.");
+			throw new CommandException(">> TwitchSpawn is currently not running. Turn it on before using test donation.");
 
 		//Fetch & evaluate args
 		try {
@@ -196,7 +204,8 @@ public class CommandTwitchSpawn extends CommandBase {
 			
 			String eventType = EVENT_TYPES.get(type);
 			if(eventType==null) {
-				throw new CommandException("[type] is invalid.");
+				String types = String.join(", ", EVENT_TYPES.keySet());
+				throw new CommandException("[type] is invalid. Valid values: " + types);
 			}
 			
 			// Now simulate a donation test
