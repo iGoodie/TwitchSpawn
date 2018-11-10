@@ -10,7 +10,6 @@ import com.google.gson.JsonParser;
 
 import igoodie.twitchspawn.TwitchSpawn;
 import igoodie.twitchspawn.utils.FileUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.StringUtils;
 
 public class Configs {
