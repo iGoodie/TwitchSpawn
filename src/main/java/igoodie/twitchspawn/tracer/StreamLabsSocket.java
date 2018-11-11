@@ -123,7 +123,7 @@ public class StreamLabsSocket {
 
 	public void handleEvent(JSONArray eventMessage, String rewardFieldName, String amountFieldName, 
 			String minimumFieldName, String actionMessage) {
-		JsonObject rewards = Configs.json.get("rewards").getAsJsonObject();
+		JsonObject rewards = Configs.configJson.get("rewards").getAsJsonObject();
 		JsonArray eventRewards = rewards.get(rewardFieldName).getAsJsonArray();
 
 		// Handle each event received in the message object
@@ -141,7 +141,7 @@ public class StreamLabsSocket {
 	}
 
 	public void dropItem(JSONObject donation, String rewardName, String actionMessage) {
-		String streamerNick = Configs.json.get("streamer_mc_nick").getAsString();
+		String streamerNick = Configs.configJson.get("streamer_mc_nick").getAsString();
 		String donatorNick = JSONHelper.extractString(donation, "from");
 
 		MinecraftServer minecraftServer = FMLCommonHandler.instance().getMinecraftServerInstance();
