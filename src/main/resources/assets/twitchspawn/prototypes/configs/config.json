@@ -3,6 +3,7 @@
   "socket_api_token": "!Your Streamlabs Socket API Token here!",
   "streamer_mc_nick": "!Your Minecraft nick here!",
   "streamer_twitch_nick": "!Your Twitch channel name here!",
+  "moderator_mc_nicks": [],
   "rewards": {
     "bit_rewards": [
       {

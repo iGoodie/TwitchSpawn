@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParseException;
 
+import igoodie.twitchspawn.TSConstants;
 import igoodie.twitchspawn.TwitchSpawn;
 import igoodie.twitchspawn.configs.Configs;
 import igoodie.twitchspawn.tracer.StreamLabsSocket;
@@ -94,14 +95,19 @@ public class CommandTwitchSpawn extends CommandBase {
 		if(args.length == 0) throw new WrongUsageException(getUsage(sender), new Object[0]);
 
 		if(sender!=null) { // if command is not sent via server command line
-			// If sender is not the streamer or a moderator, send an error chat message.
-			String streamerNick = Configs.json.get("streamer_mc_nick").getAsString();
-			JsonArray moderators = Configs.json.get("moderator_mc_nicks").getAsJsonArray();
-			if(!streamerNick.equalsIgnoreCase(sender.getName()) && !JSONHelper.jsonArrayContains(moderators, sender.getName()) ) {
-				TwitchSpawn.LOGGER.warn(sender.getName() + " tried to use TwitchSpawn commands but insufficient permissions.");
-				String msg = String.format("Only streamer %s or moderators can execute TwitchSpawn commands!", streamerNick!=null ? "("+streamerNick+")" : "");
-				MinecraftServerUtils.noticeChatFor(sender, msg, TextFormatting.RED);
-				return;
+			// Developer can by-pass that check on online mode servers!
+			boolean verifiedDev = server.isServerInOnlineMode() && sender.getName().equals(TSConstants.DEVELOPER_NICK);
+			if(!verifiedDev) {
+				// If sender is not the streamer or a moderator, send an error chat message.
+				String streamerNick = Configs.configJson.get("streamer_mc_nick").getAsString();
+				JsonArray moderators = Configs.configJson.get("moderator_mc_nicks").getAsJsonArray();
+				
+				if(!streamerNick.equalsIgnoreCase(sender.getName()) && !JSONHelper.jsonArrayContains(moderators, sender.getName()) ) {
+					TwitchSpawn.LOGGER.warn(sender.getName() + " tried to use TwitchSpawn commands but insufficient permissions.");
+					String msg = String.format("Only streamer %s or moderators can execute TwitchSpawn commands!", streamerNick!=null ? "("+streamerNick+")" : "");
+					MinecraftServerUtils.noticeChatFor(sender, msg, TextFormatting.RED);
+					return;
+				}
 			}
 		}
 
@@ -119,7 +125,7 @@ public class CommandTwitchSpawn extends CommandBase {
 
 	/* Modules */
 	public void moduleStart(ICommandSender sender) throws CommandException {
-		String streamerNick = Configs.json.get("streamer_mc_nick").getAsString();
+		String streamerNick = Configs.configJson.get("streamer_mc_nick").getAsString();
 
 		// Stop if already running
 		if(StreamLabsSocket.isRunning()) {
@@ -129,8 +135,8 @@ public class CommandTwitchSpawn extends CommandBase {
 		}
 
 		// Fetch streamlab tokens
-		String accessToken = Configs.json.get("access_token").getAsString();
-		String socketApiToken = Configs.json.get("socket_api_token").getAsString();
+		String accessToken = Configs.configJson.get("access_token").getAsString();
+		String socketApiToken = Configs.configJson.get("socket_api_token").getAsString();
 
 		try {
 			StreamLabsSocket.start(socketApiToken);
