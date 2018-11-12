@@ -45,6 +45,12 @@ public class CommandTwitchSpawn extends CommandBase {
 		EVENT_TYPES.put("sub", "subscription|twitch_account");
 		EVENT_TYPES.put("subs", "subscription|twitch_account");
 		EVENT_TYPES.put("s", "subscription|twitch_account");
+		
+		EVENT_TYPES.put("follow", "follow|twitch_account");
+		EVENT_TYPES.put("f", "follow|twitch_account");
+		
+		EVENT_TYPES.put("host", "host|twitch_account");
+		EVENT_TYPES.put("h", "host|twitch_account");
 	}
 
 	@Override
@@ -216,6 +222,7 @@ public class CommandTwitchSpawn extends CommandBase {
 			donation.put("from", username);
 			donation.put("amount", amount);
 			donation.put("months", amount); // Ugly hacky wack
+			donation.put("viewers", amount); // Ugly hacky wack
 			donations.put(donation);
 
 			String eventType = EVENT_TYPES.get(type);
