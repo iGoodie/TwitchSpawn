@@ -38,7 +38,7 @@ public class Configs {
 		
 		// If file exists, try to load. Exit if syntax error exists.
 		if(FileUtils.fileExists(CUSTOM_TEXT_PATH)) {
-			try { loadGeneralConfig(); } catch(JsonParseException e) {
+			try { loadCustomText(); } catch(JsonParseException e) {
 				TwitchSpawn.LOGGER.error("Invalid JSON syntax in ../config/TwitchSpawn/custom_text.json");
 				System.exit(0); // Force exit. TODO: Find a better solution
 			}			

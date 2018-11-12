@@ -9,9 +9,9 @@ public class ConfigValidator {
 	public static JsonObject validateCustomText(JsonObject customText) {
 		JsonObject temp = new JsonObject();		
 		
-		copy(customText, temp, "donation", parseJson("{\"upper_text_format\":\"${actor} donated to ${streamer}!\",\"lower_text_format\":\"${actor} rewarded you with ${item}!\"}"));
-		copy(customText, temp, "bit_donation", parseJson("{\"upper_text_format\":\"${actor} donated ${amount} bit(s)!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
-		copy(customText, temp, "subscription", parseJson("{\"upper_text_format\":\"${actor} is a subscriber for ${amount} month(s)!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
+		copy(customText, temp, "donation", parseJson("{\"upper_text_format\":\"${actor} donated ${amount} USD to ${streamer}!\",\"lower_text_format\":\"${actor} rewarded you with ${item}!\"}"));
+		copy(customText, temp, "bit_donation", parseJson("{\"upper_text_format\":\"${actor} donated ${amount_i} bit(s)!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
+		copy(customText, temp, "subscription", parseJson("{\"upper_text_format\":\"${actor} is a subscriber for ${amount_i} month(s)!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
 		
 		return temp;
 	}

@@ -172,6 +172,7 @@ public class StreamLabsSocket {
 		text = text.replace("${actor}", actorNick);
 		text = text.replace("${streamer}", streamerNick);
 		text = text.replace("${amount}", Double.toString(amount));
+		text = text.replace("${amount_i}", Integer.toString((int)amount));
 		if(text.contains("${item}")) {
 			text = text.replace("${item}", "%s");
 			text = text.concat("|").concat(itemstack.getItem().getUnlocalizedName());
