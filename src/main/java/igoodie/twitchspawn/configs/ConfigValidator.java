@@ -5,8 +5,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class ConfigValidator {
+	
+	public static JsonObject validateCustomText(JsonObject customText) {
+		JsonObject temp = new JsonObject();		
+		
+		copy(customText, temp, "donation", parseJson("{\"upper_text_format\":\"${actor} donated to ${streamer}!\",\"lower_text_format\":\"${actor} rewarded you with ${item}!\"}"));
+		copy(customText, temp, "bit_donation", parseJson("{\"upper_text_format\":\"${actor} donated ${amount} bit(s)!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
+		copy(customText, temp, "subscription", parseJson("{\"upper_text_format\":\"${actor} is a subscriber for ${amount} month(s)!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
+		
+		return temp;
+	}
 
-	public static JsonObject validate(JsonObject configJson) {
+	public static JsonObject validateGeneralConfig(JsonObject configJson) {
 		JsonObject temp = new JsonObject();
 
 		copy(configJson, temp, "access_token", "!Your Streamlabs API Access Token here!");

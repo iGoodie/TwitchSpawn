@@ -114,15 +114,16 @@ public class StreamLabsSocket {
 	public void handleMessage(String eventPair, JSONArray message) {
 		TwitchSpawn.LOGGER.info("Handling event pair = " + eventPair);
 		switch(eventPair) { // Switch type|for pair
-		case "donation|null":		 		handleEvent(message, "donation_rewards", "amount", "minimum_amount", "donated"); break;
-		case "donation|streamlabs": 		handleEvent(message, "donation_rewards", "amount", "minimum_amount", "donated"); break;
-		case "bits|twitch_account":			handleEvent(message, "bit_rewards", "amount", "minimum_bit", "bit-wise donated"); break;
-		case "subscription|twitch_account": handleEvent(message, "sub_rewards", "months", "minimum_months", "subscribed"); break;
+		case "donation|null":		 		handleEvent(message, "donation_rewards", "amount", "minimum_amount", "donation"); break;
+		case "donation|streamlabs": 		handleEvent(message, "donation_rewards", "amount", "minimum_amount", "donation"); break;
+
+		case "bits|twitch_account":			handleEvent(message, "bit_rewards", "amount", "minimum_bit", "bit_donation"); break;
+
+		case "subscription|twitch_account": handleEvent(message, "sub_rewards", "months", "minimum_months", "subscription"); break;
 		}
 	}
 
-	public void handleEvent(JSONArray eventMessage, String rewardFieldName, String amountFieldName, 
-			String minimumFieldName, String actionMessage) {
+	public void handleEvent(JSONArray eventMessage, String rewardFieldName, String amountFieldName, String minimumFieldName, String actionName) {
 		JsonObject rewards = Configs.configJson.get("rewards").getAsJsonObject();
 		JsonArray eventRewards = rewards.get(rewardFieldName).getAsJsonArray();
 
@@ -135,38 +136,46 @@ public class StreamLabsSocket {
 			// If no reward fits that amount, continue to other event messages.
 			if(selectedReward == null) return;
 
-			// Now spawn the reward!
-			dropItem(donation, selectedReward, actionMessage);
+			// Fetch server
+			MinecraftServer minecraftServer = FMLCommonHandler.instance().getMinecraftServerInstance();
+
+			// Find streamer nick and actor
+			String streamerNick = Configs.configJson.get("streamer_mc_nick").getAsString();
+			String actorNick = JSONHelper.extractString(donation, "from");
+			EntityPlayerMP streamerPlayer = minecraftServer.getPlayerList().getPlayerByUsername(streamerNick);			
+
+			// Create item by it's uid and rename the itemstack with actor's nick
+			Item item = Item.getByNameOrId(selectedReward);
+			ItemStack itemstack = new ItemStack(item, 1).setStackDisplayName(actorNick);
+
+			// Couldn't find the streamer on server, how is it possibru?
+			if(streamerPlayer == null) {
+				TwitchSpawn.LOGGER.warn("Donation received but streamer could not be found online. Is the config file valid?");
+				return;
+			}
+
+			// Drop item in front of streamer
+			streamerPlayer.dropItem(itemstack, false);
+
+			// Fetch and format upper & lower texts
+			String upperText = Configs.customText.get(actionName).getAsJsonObject().get("upper_text_format").getAsString();
+			String lowerText = Configs.customText.get(actionName).getAsJsonObject().get("lower_text_format").getAsString();
+			upperText = formatText(upperText, actorNick, streamerNick, amount, itemstack);
+			lowerText = formatText(lowerText, actorNick, streamerNick, amount, itemstack);
+
+			// As the server, send given player Title and Subtitle data to notice on screen
+			MinecraftServerUtils.noticeScreen(streamerPlayer, upperText, lowerText);
 		});
 	}
-
-	public void dropItem(JSONObject donation, String rewardName, String actionMessage) {
-		String streamerNick = Configs.configJson.get("streamer_mc_nick").getAsString();
-		String donatorNick = JSONHelper.extractString(donation, "from");
-
-		MinecraftServer minecraftServer = FMLCommonHandler.instance().getMinecraftServerInstance();
-		EntityPlayerMP streamerPlayer = minecraftServer.getPlayerList().getPlayerByUsername(streamerNick);
-
-		if(streamerPlayer == null) { // Couldn't find the streamer on server, how is it possibru?
-			TwitchSpawn.LOGGER.warn("Donation received but streamer could not be found online. Is the config file valid?");
-			return;
+	
+	private String formatText(String text, String actorNick, String streamerNick, double amount, ItemStack itemstack) {
+		text = text.replace("${actor}", actorNick);
+		text = text.replace("${streamer}", streamerNick);
+		text = text.replace("${amount}", Double.toString(amount));
+		if(text.contains("${item}")) {
+			text = text.replace("${item}", "%s");
+			text = text.concat("|").concat(itemstack.getItem().getUnlocalizedName());
 		}
-
-		Item item = Item.getByNameOrId(rewardName);
-		ItemStack itemstack = new ItemStack(item, 1)
-				.setStackDisplayName(donatorNick);
-		/*TODO: NBT JSON Configs
-		try {
-			itemstack = new ItemStack(Items.DIAMOND_PICKAXE);
-			itemstack.setTagCompound(JsonToNBT.getTagFromJson("{display:{Name:\"Sa\", Lore:\"Something\"}, Unbreakable:1}"));
-		} catch (NBTException e) { MinecraftUtils.noticeChat(player, e.getMessage()); }*/
-
-		//Drop item in front of streamer
-		streamerPlayer.dropItem(itemstack, false);
-
-		//As the server, send given player Title and Subtitle data to notice on screen
-		MinecraftServerUtils.noticeScreen(streamerPlayer, donatorNick + " " + actionMessage + "!",
-				donatorNick + " rewarded you with %s|" + itemstack.getItem().getUnlocalizedName(itemstack));
-
+		return text;
 	}
 }

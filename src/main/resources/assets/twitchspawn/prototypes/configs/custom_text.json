@@ -1,0 +1,14 @@
+{
+	"donation": {
+		"upper_text_format": "${actor} donated to ${streamer}!",
+		"lower_text_format": "${actor} rewarded you with ${item}!"
+	},
+	"bit_donation": {
+		"upper_text_format": "${actor} donated ${amount} bit(s)!",
+		"lower_text_format": "${actor} rewarded you with ${item}"
+	},
+	"subscription": {
+		"upper_text_format": "${actor} is a subscriber for ${amount} month(s)!",
+		"lower_text_format": "${actor} rewarded you with ${item}"
+	},
+}
