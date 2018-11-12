@@ -120,6 +120,10 @@ public class StreamLabsSocket {
 		case "bits|twitch_account":			handleEvent(message, "bit_rewards", "amount", "minimum_bit", "bit_donation"); break;
 
 		case "subscription|twitch_account": handleEvent(message, "sub_rewards", "months", "minimum_months", "subscription"); break;
+		
+		case "host|twitch_account": 		handleEvent(message, "host_rewards", "viewers", "minimum_viewer", "host"); break;
+		
+		case "follow|twitch_account": 		handleEvent(message, "follow_rewards", null, null, "follow"); break;
 		}
 	}
 
@@ -142,7 +146,7 @@ public class StreamLabsSocket {
 			// Find streamer nick and actor
 			String streamerNick = Configs.configJson.get("streamer_mc_nick").getAsString();
 			String actorNick = JSONHelper.extractString(donation, "from");
-			EntityPlayerMP streamerPlayer = minecraftServer.getPlayerList().getPlayerByUsername(streamerNick);			
+			EntityPlayerMP streamerPlayer = minecraftServer.getPlayerList().getPlayerByUsername(streamerNick);
 
 			// Create item by it's uid and rename the itemstack with actor's nick
 			Item item = Item.getByNameOrId(selectedReward);
@@ -167,16 +171,21 @@ public class StreamLabsSocket {
 			MinecraftServerUtils.noticeScreen(streamerPlayer, upperText, lowerText);
 		});
 	}
-	
+
 	private String formatText(String text, String actorNick, String streamerNick, double amount, ItemStack itemstack) {
 		text = text.replace("${actor}", actorNick);
 		text = text.replace("${streamer}", streamerNick);
-		text = text.replace("${amount}", Double.toString(amount));
-		text = text.replace("${amount_i}", Integer.toString((int)amount));
-		if(text.contains("${item}")) {
+
+		if(amount != -1) { // If amount exists for this specific format, then replace
+			text = text.replace("${amount}", Double.toString(amount));
+			text = text.replace("${amount_i}", Integer.toString((int)amount));
+		}
+
+		if(text.contains("${item}")) { // If it doesn't contain item tag, do not concat unlocalized name
 			text = text.replace("${item}", "%s");
 			text = text.concat("|").concat(itemstack.getItem().getUnlocalizedName());
 		}
-		return text;
+		
+		return text; // Return edited text
 	}
 }

@@ -1,45 +1,65 @@
 {
-  "access_token": "!Your Streamlabs API Access Token here!",
-  "socket_api_token": "!Your Streamlabs Socket API Token here!",
-  "streamer_mc_nick": "!Your Minecraft nick here!",
-  "streamer_twitch_nick": "!Your Twitch channel name here!",
+  "access_token":"!Your Streamlabs API Access Token here!",
+  "socket_api_token":"!Your Streamlabs Socket API Token here!",
+  "streamer_mc_nick":"!Your Minecraft nick here!",
+  "streamer_twitch_nick":"!Your Twitch channel name here!",
   "moderator_mc_nicks": [],
-  "rewards": {
-    "bit_rewards": [
+  "rewards":{
+    "follow_rewards":[
+      "minecraft:stone",
+      "minecraft:diamond_block"
+    ],
+    "host_rewards":[
+      [
+        {
+          "minimum_viewer":0,
+          "items":[
+            "minecraft:stick"
+          ]
+        },
+        {
+          "minimum_viewer":10,
+          "items":[
+            "minecraft:diamond"
+          ]
+        }
+      ]
+    ],
+    "bit_rewards":[
       {
-        "minimum_bit": 0,
-        "items": [
+        "minimum_bit":0,
+        "items":[
           "minecraft:stick",
           "minecraft:apple"
         ]
       },
       {
-        "minimum_bit": 100,
-        "items": [
+        "minimum_bit":100,
+        "items":[
           "minecraft:diamond_block"
         ]
       }
     ],
-    "donation_rewards": [
+    "donation_rewards":[
       {
-        "minimum_amount": 0,
-        "items": [
+        "minimum_amount":0,
+        "items":[
           "minecraft:stick",
           "minecraft:apple"
         ]
       }
     ],
-    "sub_rewards": [
+    "sub_rewards":[
       {
-        "minimum_months": 0,
-        "items": [
+        "minimum_months":0,
+        "items":[
           "minecraft:stick",
           "minecraft:apple"
         ]
       },
       {
-        "minimum_months": 10,
-        "items": [
+        "minimum_months":10,
+        "items":[
           "minecraft:diamond_block"
         ]
       }

@@ -12,6 +12,8 @@ public class ConfigValidator {
 		copy(customText, temp, "donation", parseJson("{\"upper_text_format\":\"${actor} donated ${amount} USD to ${streamer}!\",\"lower_text_format\":\"${actor} rewarded you with ${item}!\"}"));
 		copy(customText, temp, "bit_donation", parseJson("{\"upper_text_format\":\"${actor} donated ${amount_i} bit(s)!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
 		copy(customText, temp, "subscription", parseJson("{\"upper_text_format\":\"${actor} is a subscriber for ${amount_i} month(s)!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
+		copy(customText, temp, "follow", parseJson("{\"upper_text_format\":\"${actor} followed you!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
+		copy(customText, temp, "host", parseJson("{\"upper_text_format\":\"${actor} hosted you to ${amount_i} viewer(s)!\",\"lower_text_format\":\"${actor} rewarded you with ${item}\"}"));
 		
 		return temp;
 	}
@@ -25,8 +27,7 @@ public class ConfigValidator {
 		copy(configJson, temp, "streamer_twitch_nick", "!Your Twitch channel name here!");
 
 		copy(configJson, temp, "moderator_mc_nicks", new JsonArray());
-		copy(configJson, temp, "rewards", parseJson("{\"bit_rewards\":[{\"minimum_bit\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_bit\":100,\"items\":[\"minecraft:diamond_block\"]}],\"donation_rewards\":[{\"minimum_amount\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]}],\"sub_rewards\":[{\"minimum_months\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_months\":10,\"items\":[\"minecraft:diamond_block\"]}]}"));
-
+		copy(configJson, temp, "rewards", parseJson("{\"follow_rewards\":[\"minecraft:stone\",\"minecraft:diamond_block\"],\"host_rewards\":[{\"minimum_viewer\":0,\"items\":[\"minecraft:stick\"]},{\"minimum_viewer\":10,\"items\":[\"minecraft:diamond\"]}],\"bit_rewards\":[{\"minimum_bit\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_bit\":100,\"items\":[\"minecraft:diamond_block\"]}],\"donation_rewards\":[{\"minimum_amount\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]}],\"sub_rewards\":[{\"minimum_months\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_months\":10,\"items\":[\"minecraft:diamond_block\"]}]}"));
 		// TODO: In-depth validation for rewards entities
 		
 		return temp;

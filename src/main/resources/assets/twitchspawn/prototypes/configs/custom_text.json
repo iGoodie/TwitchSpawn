@@ -11,4 +11,8 @@
 		"upper_text_format": "${actor} is a subscriber for ${amount} month(s)!",
 		"lower_text_format": "${actor} rewarded you with ${item}"
 	},
+	"follow": {
+		"upper_text_format": "${actor} followed you!",
+		"lower_text_format": "${actor} rewarded you with ${item}"
+	}
 }
