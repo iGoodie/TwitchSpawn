@@ -4,7 +4,7 @@
 		"lower_text_format": "${actor} rewarded you with ${item}!"
 	},
 	"bit_donation": {
-		"upper_text_format": "${actor} donated ${amount} bit(s)!",
+		"upper_text_format": "${actor} donated ${amount_i} bit(s)!",
 		"lower_text_format": "${actor} rewarded you with ${item}"
 	},
 	"subscription": {
