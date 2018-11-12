@@ -146,6 +146,10 @@ public class CommandTwitchSpawn extends CommandBase {
 			TwitchSpawn.LOGGER.error("TwitchSpawn won't work, because tokens are not valid. Check config file!");
 			MinecraftServerUtils.noticeChatFor(sender, ">> TwitchSpawn configs are invalid. Please check/refill them", TextFormatting.RED);
 			return;
+		} catch(InternalError e) {
+			TwitchSpawn.LOGGER.error("TwitchSpawn couldn't connect Streamlabs socket. URI changed, or invalid token in config.json");
+			MinecraftServerUtils.noticeChatFor(sender, ">> TwitchSpawn couldn't connect Streamlabs Socket. Please recheck your config.json or console!", TextFormatting.RED);
+			return;
 		}
 
 		// Let everybody know TwitchSpawn is now listening to Streamlabs Socket!
@@ -177,7 +181,7 @@ public class CommandTwitchSpawn extends CommandBase {
 			throw new CommandException(">> TwitchSpawn should be stopped in order to be able to reload configs. Type '/twitchspawn stop' and retry.");
 
 		try {
-			Configs.load();
+			Configs.loadGeneralConfig();
 		} catch(JsonParseException e) {
 			MinecraftServerUtils.noticeChatFor(sender, ">> Reload failed. Invalid JSON syntax!", TextFormatting.RED);
 			return;
