@@ -27,8 +27,14 @@ public class ConfigValidator {
 		copy(configJson, temp, "streamer_twitch_nick", "!Your Twitch channel name here!");
 
 		copy(configJson, temp, "moderator_mc_nicks", new JsonArray());
+		
 		copy(configJson, temp, "rewards", parseJson("{\"follow_rewards\":[\"minecraft:stone\",\"minecraft:diamond_block\"],\"host_rewards\":[{\"minimum_viewer\":0,\"items\":[\"minecraft:stick\"]},{\"minimum_viewer\":10,\"items\":[\"minecraft:diamond\"]}],\"bit_rewards\":[{\"minimum_bit\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_bit\":100,\"items\":[\"minecraft:diamond_block\"]}],\"donation_rewards\":[{\"minimum_amount\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]}],\"sub_rewards\":[{\"minimum_months\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_months\":10,\"items\":[\"minecraft:diamond_block\"]}]}"));
-		// TODO: In-depth validation for rewards entities
+		
+		copySubArray(configJson, temp, "rewards", "follow_rewards", parseJsonArray("[\"minecraft:stone\",\"minecraft:diamond_block\"]"));
+		copySubArray(configJson, temp, "rewards", "host_rewards", parseJsonArray("[{\"minimum_viewer\":0,\"items\":[\"minecraft:stick\"]},{\"minimum_viewer\":10,\"items\":[\"minecraft:diamond\"]}]"));
+		copySubArray(configJson, temp, "rewards", "bit_rewards", parseJsonArray("[{\"minimum_bit\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_bit\":100,\"items\":[\"minecraft:diamond_block\"]}]"));
+		copySubArray(configJson, temp, "rewards", "donation_rewards", parseJsonArray("[{\"minimum_amount\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]}]"));
+		copySubArray(configJson, temp, "rewards", "sub_rewards", parseJsonArray("[{\"minimum_months\":0,\"items\":[\"minecraft:stick\",\"minecraft:apple\"]},{\"minimum_months\":10,\"items\":[\"minecraft:diamond_block\"]}]"));
 		
 		return temp;
 	}
@@ -74,9 +80,23 @@ public class ConfigValidator {
 			to.add(fieldName, defaultValue);
 		}
 	}
+	
+	public static void copySubArray(JsonObject from, JsonObject to, String fieldName, String arrayName, JsonArray defaultValue) {
+		JsonObject field = from.get(fieldName).getAsJsonObject();
+		
+		if(!field.has(arrayName)) { // Copy default value, if array doesn't exist under field
+			to.get(fieldName).getAsJsonObject().add(arrayName, defaultValue);
+		} else { // Copy if exists tho
+			to.get(fieldName).getAsJsonObject().add(arrayName, field.get(arrayName).getAsJsonArray());
+		}
+	}
 
 	private static JsonObject parseJson(String raw) {
 		return new JsonParser().parse(raw).getAsJsonObject();
+	}
+	
+	private static JsonArray parseJsonArray(String raw) {
+		return new JsonParser().parse(raw).getAsJsonArray();
 	}
 	
 }
