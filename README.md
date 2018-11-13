@@ -18,7 +18,9 @@ The mod provides supply drops to the streamer as his/her viewers donate or subsc
 Rewards are hand defined by the streamer in a very basic config file structure!
 
 ## Configuration
-(Detailed info about `config.json` can be found in [TwitchSpawn Wiki page](https://github.com/iGoodie/TwitchSpawn/wiki/Config.json-Details))
+(Detailed info about how to start can be found in [TwitchSpawn Wiki page](https://github.com/iGoodie/TwitchSpawn/wiki))
+
+(Detailed info about `config.json` can be also found in [TwitchSpawn Wiki page](https://github.com/iGoodie/TwitchSpawn/wiki/Config.json-Details))
 
 There are some required configs (Found in config/TwitchSpawn/config.json) before the mod works properly.
 
@@ -27,7 +29,7 @@ There are 2 different tokens can be gathered from Streamlabs; `API Access Token`
 
 Login to your [Streamlabs](https://streamlabs.com/) account.
 Navigate to [API Settings](https://streamlabs.com/dashboard#/apisettings) page from the left menu.
-Finally switch the tab to "API Tokens", and voil√†, you can copy `access_token` and `socket_api_token` from here.
+Finally switch the tab to "API Tokens", and voil‡, you can copy `access_token` and `socket_api_token` from here.
 
 ![Streamlabs API Tokens Tab](https://cdn.discordapp.com/attachments/460909423045509140/506632938067197953/help1.png)
 
@@ -38,7 +40,7 @@ Fortunately, it is so easy to edit! Just change the values of `streamer_mc_nick`
 "streamer_twitch_nick": "iGoodiex"
 ```
 
-And finally, rewards should be declared. There are currently 3 event rewarding system; ,`streamlabs donations`, `twitch bits` and `twitch subscriptions`.
+And finally, rewards should be declared. There are currently 5 event rewarding system; ,`streamlabs donations`, `twitch follows`, `twitch hosts` `twitch bits` and `twitch subscriptions`.
 An examplar rewards config will be created upon the very first load of the mod. The reward entries should be in ascending order.
 Following `bit_rewards` example is a valid one:
 ```json
@@ -72,7 +74,7 @@ You should use some in-game commands to start/stop the mod. These commands are;
 
 ## Future Goals
 
-* Mixer & Youtube alerts handled properly
+* Mixer & Youtube alerts are also handled properly. *(Still TwitchSpawn? Or MoreThanTwitchSpawn?)*
 
 * Reward gathering system (Blocks and items) is going to be designed & implemented
 
