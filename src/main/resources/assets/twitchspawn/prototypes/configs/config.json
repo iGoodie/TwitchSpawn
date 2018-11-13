@@ -10,7 +10,6 @@
       "minecraft:diamond_block"
     ],
     "host_rewards":[
-      [
         {
           "minimum_viewer":0,
           "items":[
@@ -23,7 +22,6 @@
             "minecraft:diamond"
           ]
         }
-      ]
     ],
     "bit_rewards":[
       {
