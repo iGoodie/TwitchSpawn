@@ -9,4 +9,7 @@ public interface TSConstants {
 	
 	public static final String URL_USER_AGENT = "TwitchSpawn/1";
 
+	/* Exit Codes */
+	public static final int EXIT_INVALID_CONFIG = - 0xDEADBEEF;
+	
 }

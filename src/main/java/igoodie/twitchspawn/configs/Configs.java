@@ -8,8 +8,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
+import igoodie.twitchspawn.TSConstants;
 import igoodie.twitchspawn.TwitchSpawn;
 import igoodie.twitchspawn.utils.FileUtils;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 // TODO: Do moar abstraction, it's getting terrible :c
 public class Configs {
@@ -29,7 +32,7 @@ public class Configs {
 		if(FileUtils.fileExists(CONFIG_PATH)) {
 			try { loadGeneralConfig(); } catch(JsonParseException e) {
 				TwitchSpawn.LOGGER.error("Invalid JSON syntax in ../config/TwitchSpawn/config.json");
-				System.exit(0); // Force exit. TODO: Find a better solution
+				FMLCommonHandler.instance().exitJava(TSConstants.EXIT_INVALID_CONFIG, false);
 			}			
 		} else { // Load default configs otherwise
 			loadGeneralConfig("{}");
@@ -40,7 +43,7 @@ public class Configs {
 		if(FileUtils.fileExists(CUSTOM_TEXT_PATH)) {
 			try { loadCustomText(); } catch(JsonParseException e) {
 				TwitchSpawn.LOGGER.error("Invalid JSON syntax in ../config/TwitchSpawn/custom_text.json");
-				System.exit(0); // Force exit. TODO: Find a better solution
+				FMLCommonHandler.instance().exitJava(TSConstants.EXIT_INVALID_CONFIG, false);
 			}			
 		} else { // Load default configs otherwise
 			loadCustomText("{}");
