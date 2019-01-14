@@ -82,7 +82,7 @@ public class ConfigValidator {
 	}
 	
 	public static void copySubArray(JsonObject from, JsonObject to, String fieldName, String arrayName, JsonArray defaultValue) {
-		JsonObject field = from.get(fieldName).getAsJsonObject();
+		JsonObject field = from.has(fieldName) ? from.get(fieldName).getAsJsonObject() : new JsonObject();
 		
 		if(!field.has(arrayName)) { // Copy default value, if array doesn't exist under field
 			to.get(fieldName).getAsJsonObject().add(arrayName, defaultValue);
