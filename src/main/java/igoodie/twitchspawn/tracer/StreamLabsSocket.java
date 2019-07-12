@@ -145,7 +145,7 @@ public class StreamLabsSocket {
 
 			// Find streamer nick and actor
 			String streamerNick = Configs.configJson.get("streamer_mc_nick").getAsString();
-			String actorNick = JSONHelper.extractString(donation, "from");
+			String actorNick = JSONHelper.extractString(donation, "name");
 			EntityPlayerMP streamerPlayer = minecraftServer.getPlayerList().getPlayerByUsername(streamerNick);
 
 			// Create item by it's uid and rename the itemstack with actor's nick
