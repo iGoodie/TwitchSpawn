@@ -5,11 +5,16 @@ import io.socket.client.Socket;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
+import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 public class StreamlabsSocketClient {
 
@@ -96,8 +101,53 @@ public class StreamlabsSocketClient {
         }
     }
 
-    private void onEvent(Socket socket, CredentialsConfig.Streamer streamer, Object...args) {
-        // TODO
+    private void onEvent(Socket socket, CredentialsConfig.Streamer streamer, Object... args) {
+        JSONObject response = (JSONObject) args[0];
+
+        String responseType = extractFrom(response, "type", String.class);
+        String responseFor = extractFrom(response, "for", String.class);
+
+        // TODO: Fetch TSLEvent Nodes here
+
+        JSONArray messages = extractFrom(response, "message", JSONArray.class);
+        forEach(messages, message -> {
+            EventArguments eventArguments = new EventArguments();
+            eventArguments.streamerNickname = streamer.minecraftNick;
+            eventArguments.actorNickname = extractFrom(message, "name", String.class);
+            eventArguments.message = extractFrom(message, "message", String.class);
+            eventArguments.donationAmount = Float.parseFloat(extractFrom(message, "amount", String.class));
+            eventArguments.donationCurrency = extractFrom(message, "currency", String.class);
+            eventArguments.subscriptionMonths = extractFrom(message, "months", Integer.class);
+            eventArguments.raiderCount = extractFrom(message, "raiders", Integer.class);
+            eventArguments.viewerCount = Integer.parseInt(extractFrom(message, "viewers", String.class));
+
+            // TODO: Pass event arguments to proper TSL event node
+        });
+    }
+
+    private <T> T extractFrom(JSONObject json, String key, Class<T> type) {
+        try {
+            Object value = json.get(key);
+            return type.cast(value);
+
+        } catch (JSONException e) {
+            return null;
+
+        } catch (ClassCastException e) {
+            return null;
+        }
+    }
+
+    private void forEach(JSONArray array, Consumer<JSONObject> consumer) {
+        for (int i = 0; i < array.length(); i++) {
+            try {
+                JSONObject json = array.getJSONObject(i);
+                consumer.accept(json);
+
+            } catch (JSONException e) {
+                throw new InternalError("Error performing JSONArray forEach.");
+            }
+        }
     }
 
 }

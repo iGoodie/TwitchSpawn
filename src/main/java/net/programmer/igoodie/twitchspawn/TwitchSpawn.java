@@ -1,5 +1,6 @@
 package net.programmer.igoodie.twitchspawn;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,6 +22,8 @@ public class TwitchSpawn {
 
     public static final String MOD_ID = "twitchspawn";
     public static final Logger LOGGER = LogManager.getLogger(TwitchSpawn.class);
+
+    public static MinecraftServer SERVER;
 
     public TwitchSpawn() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
@@ -52,11 +55,13 @@ public class TwitchSpawn {
     public void onServerStarting(FMLServerStartingEvent event) {
         LOGGER.debug("Executing {}::onServerStarting", getClass().getSimpleName());
         TwitchSpawnCommand.register(event.getCommandDispatcher());
+        SERVER = event.getServer();
     }
 
     @SubscribeEvent
     public void onServerStopping(FMLServerStoppingEvent event) {
         LOGGER.debug("Executing {}::onServerStopping", getClass().getSimpleName());
+        SERVER = null;
     }
 
     @SubscribeEvent
