@@ -5,4 +5,6 @@ import java.util.List;
 
 public abstract class TSLFlowNode {
 
+    public abstract TSLFlowNode chain(TSLFlowNode next);
+
 }

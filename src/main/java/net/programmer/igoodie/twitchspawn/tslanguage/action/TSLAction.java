@@ -9,6 +9,7 @@ public abstract class TSLAction extends TSLFlowNode {
 
     /**
      * Performs the Action on targeted player
+     *
      * @param player Target player of the action
      */
     public abstract void performAction(ServerPlayerEntity player);
@@ -17,6 +18,7 @@ public abstract class TSLAction extends TSLFlowNode {
      * Executes the action node.
      * It fetches player entity with given nickname from the server
      * before trying to perform the action.
+     *
      * @param nickname Nickname of the streamer
      */
     public void execute(String nickname) {
@@ -33,8 +35,14 @@ public abstract class TSLAction extends TSLFlowNode {
                 this.getClass().getSimpleName(), nickname);
     }
 
+    @Override
+    public TSLFlowNode chain(TSLFlowNode next) {
+        throw new UnsupportedOperationException("TSLFlowNode::chain is not meant to be used on an Action node");
+    }
+
     /**
      * Fetches player entity from the server.
+     *
      * @param username Nickname of the player
      * @return Player entity with given nickname
      * @throws IllegalStateException if executed on a non-running server

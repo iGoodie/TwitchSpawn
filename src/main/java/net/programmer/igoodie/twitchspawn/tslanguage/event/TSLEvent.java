@@ -6,21 +6,22 @@ import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class TSLEvent {
-
-    protected String eventType;
-    protected String eventFor;
+public abstract class TSLEvent extends TSLFlowNode {
 
     protected List<TSLFlowNode> nextNodes;
 
-    public TSLEvent(String eventType, String eventFor) {
+    public TSLEvent() {
         this.nextNodes = new LinkedList<>();
-        this.eventType = eventType;
-        this.eventFor = eventFor;
     }
 
-    public void append(TSLFlowNode node) {
+    public TSLFlowNode append(TSLFlowNode node) {
         nextNodes.add(node);
+        return node;
+    }
+
+    @Override
+    public TSLFlowNode chain(TSLFlowNode next) {
+        return append(next);
     }
 
     public void handleEvent(EventArguments arguments) {
