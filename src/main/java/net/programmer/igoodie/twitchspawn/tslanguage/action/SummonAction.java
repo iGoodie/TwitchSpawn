@@ -11,7 +11,7 @@ public class SummonAction extends TSLAction {
     }
 
     @Override
-    public void performAction(ServerPlayerEntity player) {
+    protected void performAction(ServerPlayerEntity player) {
         // TODO
     }
 }

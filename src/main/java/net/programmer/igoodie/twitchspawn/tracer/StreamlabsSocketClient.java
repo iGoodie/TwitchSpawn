@@ -112,6 +112,8 @@ public class StreamlabsSocketClient {
         JSONArray messages = extractFrom(response, "message", JSONArray.class);
         forEach(messages, message -> {
             EventArguments eventArguments = new EventArguments();
+            eventArguments.eventType = responseType;
+            eventArguments.eventFor = responseFor;
             eventArguments.streamerNickname = streamer.minecraftNick;
             eventArguments.actorNickname = extractFrom(message, "name", String.class);
             eventArguments.message = extractFrom(message, "message", String.class);

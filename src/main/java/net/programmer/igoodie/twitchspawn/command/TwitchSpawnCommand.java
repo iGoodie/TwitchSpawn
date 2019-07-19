@@ -28,17 +28,17 @@ public class TwitchSpawnCommand {
 
         root.then(Commands.literal("reloadcfg").executes(TwitchSpawnCommand::reloadModule));
 
-        root.then(Commands.literal("test")
-                .then(Commands.literal("drop")
-                        .then(CommandArguments.string("action_arguments")
-                                .executes(TwitchSpawnCommand::testDropModule)))
-                .then(Commands.literal("summon")
-                        .then(CommandArguments.string("action_arguments")
-                                .executes(TwitchSpawnCommand::testSummonModule)))
-                .then(Commands.literal("command")
-                        .then(CommandArguments.string("action_arguments")
-                                .executes(TwitchSpawnCommand::testCommandModule)))
-        );
+//        root.then(Commands.literal("test")
+//                .then(Commands.literal("drop")
+//                        .then(CommandArguments.string("action_arguments")
+//                                .executes(TwitchSpawnCommand::testDropModule)))
+//                .then(Commands.literal("summon")
+//                        .then(CommandArguments.string("action_arguments")
+//                                .executes(TwitchSpawnCommand::testSummonModule)))
+//                .then(Commands.literal("command")
+//                        .then(CommandArguments.string("action_arguments")
+//                                .executes(TwitchSpawnCommand::testCommandModule)))
+//        );
 
         dispatcher.register(root);
     }
@@ -66,31 +66,5 @@ public class TwitchSpawnCommand {
 
     /* ------------------------------------------------------------ */
 
-    public static int testDropModule(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        String raw = StringArgumentType.getString(context, "action_arguments");
-
-        try {
-            List<String> tokens = new TSLParser("").parseWords(raw);
-            TwitchSpawn.LOGGER.info("Raw: {}", raw);
-            tokens.forEach(TwitchSpawn.LOGGER::info);
-            new DropAction(tokens).execute(context.getSource().getName());
-            return 1;
-
-        } catch (TSLSyntaxError e) {
-            throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherParseException().create(e.getMessage());
-        }
-    }
-
-    public static int testSummonModule(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        String raw = StringArgumentType.getString(context, "action_arguments");
-        return 1;
-    }
-
-    public static int testCommandModule(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        String raw = StringArgumentType.getString(context, "action_arguments");
-        return TwitchSpawn.SERVER.getCommandManager().handleCommand(context.getSource(), raw);
-//        serverplayerentity.connection.sendPacket(new STitlePacket(type, TextComponentUtils.updateForEntity(source, message, serverplayerentity, 0)));
-
-    }
 
 }

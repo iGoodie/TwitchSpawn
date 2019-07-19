@@ -1,6 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.parser;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.CommandBlockAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.DropAction;
@@ -9,6 +10,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.StreamlabsDonationEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TwitchFollowEvent;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.TwitchHostEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.GreaterThanComparator;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.InRangeComparator;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLComparator;
@@ -41,6 +43,9 @@ public class TSLParser {
 
         registerEvent(StreamlabsDonationEvent.class);
         registerEvent(TwitchFollowEvent.class);
+        registerEvent(TwitchHostEvent.class);
+
+        TSLPredicate.loadFieldAliases();
 
         registerAction("DROP", DropAction.class);
         registerAction("SUMMON", SummonAction.class);
@@ -378,11 +383,11 @@ public class TSLParser {
         if (arguments.size() < 3)
             throw new TSLSyntaxError("Expected at least 3 words after WITH.");
 
-        String parameterName = arguments.remove(0);
+        String fieldAlias = arguments.remove(0);
         String rightHandRaw = arguments.remove(arguments.size() - 1);
         String symbol = String.join(" ", arguments);
 
-        return new TSLPredicate(parameterName, createComparator(symbol, rightHandRaw));
+        return new TSLPredicate(fieldAlias, createComparator(symbol, rightHandRaw));
     }
 
     public TSLComparator createComparator(String symbol, String rightHandRaw) throws TSLSyntaxError {
@@ -460,52 +465,70 @@ public class TSLParser {
     }
 
     public static void main(String[] args) {
-//        try {
-//            TSLParser.initialize();
-//            File file = new File("C:/twitchspawntest.tsl");
-//            String script = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-//
-//            TSLParser parser = new TSLParser(script);
-//
-//            parser.parse();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (TSLSyntaxError e) {
-//            e.printStackTrace();
-//        } catch (TSLSyntaxErrors e) {
-//            e.getErrors().forEach(Exception::printStackTrace);
-//        }
-
         try {
             TSLParser.initialize();
-            File file = new File("C:/twitchspawntest.tsl");
-            String input = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-            TSLParser parser = new TSLParser(input);
+            File file = new File("C:/twitchspawntest3.tsl");
+            String script = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
-            System.out.println("# --------------RAW-INPUT---------- #");
-            System.out.println(input);
-            System.out.println("# --------------RULES-------------- #");
+            EventArguments eventArguments = new EventArguments();
+            eventArguments.eventType = "follow";
+            eventArguments.eventFor = "twitch_account";
 
-            parser.parseRules(input).forEach(rule -> {
-                try {
-                    System.out.println(rule);
-//                    parseWords(rule).forEach(System.out::println);
-                    parser.parse(rule);
-                } catch (TSLSyntaxError e) {
-                    e.printStackTrace();
-                } catch (InternalError e) {
-                    e.printStackTrace();
-                }
-                System.out.println("# --------------------------------- #");
+            TSLParser parser = new TSLParser(script);
+
+            Map<String, TSLEvent> lang = parser.parse();
+
+            lang.values().forEach(event -> {
+                System.out.println("EVENT::" + event.getClass().getSimpleName());
+                event.process(null);
+                System.out.println();
+//                event.getNextNodes().forEach(pred -> {
+//                    System.out.println(((TSLPredicate) pred));
+//                    System.out.print(" - " + ((TSLPredicate) ((TSLPredicate) pred)).fieldAlias);
+//                    System.out.println(" " + ((TSLPredicate) ((TSLPredicate) pred)).comparator);
+//                    System.out.print(" - " + ((TSLPredicate) ((TSLPredicate) pred).getNext()).fieldAlias);
+//                    System.out.println(" " + ((TSLPredicate) ((TSLPredicate) pred).getNext()).comparator);
+//                    System.out.println(" - - " + ((TSLAction) ((TSLPredicate) ((TSLPredicate) pred).getNext()).getNext()));
+//                });
             });
 
         } catch (IOException e) {
             e.printStackTrace();
-
         } catch (TSLSyntaxError e) {
             e.printStackTrace();
+        } catch (TSLSyntaxErrors e) {
+            e.getErrors().forEach(Exception::printStackTrace);
         }
+
+//        try {
+//            TSLParser.initialize();
+//            File file = new File("C:/twitchspawntest2.tsl");
+//            String input = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+//            TSLParser parser = new TSLParser(input);
+//
+//            System.out.println("# --------------RAW-INPUT---------- #");
+//            System.out.println(input);
+//            System.out.println("# --------------RULES-------------- #");
+//
+//            parser.parseRules(input).forEach(rule -> {
+//                try {
+//                    System.out.println(rule);
+////                    parseWords(rule).forEach(System.out::println);
+//                    parser.parse(rule);
+//                } catch (TSLSyntaxError e) {
+//                    e.printStackTrace();
+//                } catch (InternalError e) {
+//                    e.printStackTrace();
+//                }
+//                System.out.println("# --------------------------------- #");
+//            });
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//
+//        } catch (TSLSyntaxError e) {
+//            e.printStackTrace();
+//        }
 
 //        String symbol = "IN";
 //        String indentRegex = "[ \t]+";
