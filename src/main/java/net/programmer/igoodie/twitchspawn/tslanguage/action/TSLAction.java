@@ -3,41 +3,46 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 
-public abstract class TSLAction extends TSLFlowNode {
+import java.lang.reflect.Field;
+
+public abstract class TSLAction implements TSLFlowNode {
 
     /**
      * Performs the Action on targeted player
      *
      * @param player Target player of the action
      */
-    public abstract void performAction(ServerPlayerEntity player);
+    protected abstract void performAction(ServerPlayerEntity player);
 
     /**
-     * Executes the action node.
+     * Processes the action node with given .
      * It fetches player entity with given nickname from the server
      * before trying to perform the action.
      *
-     * @param nickname Nickname of the streamer
+     * @param args Arguments of the event (derived from Streamlabs Socket API)
+     * @return True if processed successfully
      */
-    public void execute(String nickname) {
-        ServerPlayerEntity player = getPlayer(nickname);
+    @Override
+    public boolean process(EventArguments args) {
+        System.out.println("Processing " + getClass().getSimpleName());
+        if(args == null) return true;
+
+        ServerPlayerEntity player = getPlayer(args.streamerNickname);
 
         if (player == null) {
-            TwitchSpawn.LOGGER.info("");
-            return;
+            TwitchSpawn.LOGGER.info("Player {} is not found. Skipping {} event.",
+                    args.streamerNickname, this.getClass().getSimpleName());
+            return false;
         }
 
         performAction(player);
 
         TwitchSpawn.LOGGER.info("{} action performed for {}",
-                this.getClass().getSimpleName(), nickname);
-    }
-
-    @Override
-    public TSLFlowNode chain(TSLFlowNode next) {
-        throw new UnsupportedOperationException("TSLFlowNode::chain is not meant to be used on an Action node");
+                this.getClass().getSimpleName(), args.streamerNickname);
+        return true;
     }
 
     /**

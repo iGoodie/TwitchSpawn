@@ -3,10 +3,11 @@ package net.programmer.igoodie.twitchspawn.tslanguage.event;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class TSLEvent extends TSLFlowNode {
+public abstract class TSLEvent implements TSLFlowNode {
 
     protected List<TSLFlowNode> nextNodes;
 
@@ -14,18 +15,22 @@ public abstract class TSLEvent extends TSLFlowNode {
         this.nextNodes = new LinkedList<>();
     }
 
-    public TSLFlowNode append(TSLFlowNode node) {
-        nextNodes.add(node);
-        return node;
+    @Override
+    public TSLFlowNode chain(TSLFlowNode next) {
+        nextNodes.add(next);
+        return next;
     }
 
     @Override
-    public TSLFlowNode chain(TSLFlowNode next) {
-        return append(next);
-    }
+    public boolean process(EventArguments args) {
+        Iterator<TSLFlowNode> iterator = nextNodes.iterator();
+        boolean success = false;
 
-    public void handleEvent(EventArguments arguments) {
-        nextNodes.forEach(node -> System.out.println(node)); // TODO pass args
+        while(iterator.hasNext()) {
+            success |= iterator.next().process(args);
+        }
+
+        return success;
     }
 
 }

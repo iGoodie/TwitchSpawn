@@ -13,8 +13,9 @@ public class CommandBlockAction extends TSLAction {
     }
 
     @Override
-    public void performAction(ServerPlayerEntity player) {
+    protected void performAction(ServerPlayerEntity player) {
         // TODO
+        System.out.println("Performed");
     }
 
 }
