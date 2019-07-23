@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Cumulative syntax errors exception
@@ -15,7 +16,7 @@ public class TSLSyntaxErrors extends Exception {
     List<TSLSyntaxError> errors;
 
     public TSLSyntaxErrors(List<TSLSyntaxError> errors) {
-        super(errors.toString());
+        super(errors.stream().map(err -> err.getMessage()).collect(Collectors.joining("\n")));
         this.errors = errors;
     }
 
