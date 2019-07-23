@@ -19,7 +19,7 @@ public class TSLEvent implements TSLFlowNode {
         registerEventName("subscription", "twitch_account", "twitch subscription");
         registerEventName("host", "twitch_account", "twitch host");
         registerEventName("bits", "twitch_account", "twitch bits");
-        registerEventName("raids", "twitch_account", "twitch raid");
+        registerEventName("raid", "twitch_account", "twitch raid");
 
         registerEventName("follow", "youtube_account", "youtube subscription");
         registerEventName("subscription", "youtube_account", "youtube sponsor");

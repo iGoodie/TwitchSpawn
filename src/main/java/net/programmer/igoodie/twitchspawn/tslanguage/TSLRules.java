@@ -27,7 +27,7 @@ public class TSLRules {
 
     public boolean handleEvent(EventArguments args) {
         TwitchSpawn.LOGGER.info("Handling event {} for {}",
-                new TSLEventPair(args.eventType, args.eventFor), args.streamerNickname);
+                args, args.streamerNickname);
 
         // Fetch TSLTree associated with the streamer
         TSLTree responsibleTree = streamerTrees.get(args.streamerNickname);
