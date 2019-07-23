@@ -2,11 +2,11 @@ package net.programmer.igoodie.twitchspawn.tslanguage.predicate;
 
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
-public class GreaterThanComparator extends BasicComparator {
+public class GreaterThanOrEqComparator extends BasicComparator {
 
-    public static final String SYMBOL = ">";
+    public static final String SYMBOL = ">=";
 
-    public GreaterThanComparator(String rightHandRaw) throws TSLSyntaxError {
+    public GreaterThanOrEqComparator(String rightHandRaw) throws TSLSyntaxError {
         super(rightHandRaw);
     }
 
@@ -15,7 +15,7 @@ public class GreaterThanComparator extends BasicComparator {
         if (!(leftHand instanceof Number))
             return false;
 
-        return ((Double) leftHand) > value;
+        return ((Double) leftHand) >= value;
     }
 
 }
