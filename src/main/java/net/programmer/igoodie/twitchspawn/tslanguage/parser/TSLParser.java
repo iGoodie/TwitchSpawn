@@ -7,10 +7,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.action.DropAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.SummonAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
-import net.programmer.igoodie.twitchspawn.tslanguage.predicate.GreaterThanComparator;
-import net.programmer.igoodie.twitchspawn.tslanguage.predicate.InRangeComparator;
-import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLComparator;
-import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
+import net.programmer.igoodie.twitchspawn.tslanguage.predicate.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -42,6 +39,9 @@ public class TSLParser {
 
         registerComparator(InRangeComparator.class);
         registerComparator(GreaterThanComparator.class);
+        registerComparator(GreaterThanOrEqComparator.class);
+        registerComparator(LessThanComparator.class);
+        registerComparator(LessThanOrEqComparator.class);
 
         TwitchSpawn.LOGGER.info("Initialized TSL parsing specs successfully");
     }
