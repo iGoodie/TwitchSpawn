@@ -1,7 +1,12 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.play.server.SPlaySoundPacket;
+import net.minecraft.network.play.server.STitlePacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.ITextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
@@ -27,8 +32,8 @@ public abstract class TSLAction implements TSLFlowNode {
      */
     @Override
     public boolean process(EventArguments args) {
-        System.out.println("Processing " + getClass().getSimpleName());
-        if(args == null) return true;
+        TwitchSpawn.LOGGER.debug("Reached TSLAction node -> {} with {}",
+                this.getClass().getSimpleName(), args);
 
         ServerPlayerEntity player = getPlayer(args.streamerNickname);
 
@@ -38,11 +43,32 @@ public abstract class TSLAction implements TSLFlowNode {
             return false;
         }
 
+        notifyPlayer(player, args, "\"${streamer} got an action\"", "\"Test thingies\"");
         performAction(player);
 
         TwitchSpawn.LOGGER.info("{} action performed for {}",
                 this.getClass().getSimpleName(), args.streamerNickname);
         return true;
+    }
+
+    private void notifyPlayer(ServerPlayerEntity player, EventArguments args, String title, String subtitle) {
+        title = title.replace("${actor}", args.actorNickname)
+                .replace("${streamer}", args.streamerNickname);
+        subtitle = subtitle.replace("${actor}", args.actorNickname)
+                .replace("${streamer}", args.streamerNickname);
+
+        ResourceLocation soundLocation = new ResourceLocation("minecraft:entity.player.levelup");
+        SoundCategory category = SoundCategory.MASTER;
+        SPlaySoundPacket packetSound = new SPlaySoundPacket(soundLocation, category, player.getPositionVec(), 1.0f, 0.0f);
+        player.connection.sendPacket(packetSound);
+
+        ITextComponent text = ITextComponent.Serializer.fromJsonLenient(title);
+        STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text);
+        player.connection.sendPacket(packet);
+
+        ITextComponent subtext = ITextComponent.Serializer.fromJsonLenient(subtitle);
+        STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext);
+        player.connection.sendPacket(subtitlePacket);
     }
 
     /**

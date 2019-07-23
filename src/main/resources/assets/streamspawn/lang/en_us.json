@@ -1,5 +1,0 @@
-{
-  "commands.twitchspawn.cfgkey.success": "§3Value of %s = %s",
-  "commands.twitchspawn.cfgkey.fail": "§4Failed to read %s config.",
-  "commands.twitchspawn.reloadcfg.success": "§3Successfully reloaded all the configs"
-}

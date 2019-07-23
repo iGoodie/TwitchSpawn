@@ -36,12 +36,11 @@ public class CredentialsConfig {
         }
 
         int correctionCount = spec.correct(config, (action, path, incorrectVal, correctedVal) -> {
-            TwitchSpawn.LOGGER.info("Corrected {} from {} to {}",
-                    String.join(".", path), incorrectVal, correctedVal);
+            TwitchSpawn.LOGGER.info("Corrected {} from {} to {}", String.join(".", path), incorrectVal, correctedVal);
         });
 
-        TwitchSpawn.LOGGER.info("{} correction(s) were made to {}",
-                correctionCount, filepath);
+        if (correctionCount != 0)
+            TwitchSpawn.LOGGER.info("{} correction(s) were made to {}", correctionCount, filepath);
 
         CredentialsConfig credentials = converter
                 .toObject(config, CredentialsConfig::new);
@@ -82,7 +81,7 @@ public class CredentialsConfig {
         return subconfig;
     }
 
-    private static <T> ArrayList<T> arrayList(T...elements) {
+    private static <T> ArrayList<T> arrayList(T... elements) {
         ArrayList<T> list = new ArrayList<>();
         list.addAll(Arrays.asList(elements));
         return list;
@@ -90,7 +89,6 @@ public class CredentialsConfig {
 
     /* ----------------------------------- */
 
-    public String streamlabsSocketDomain;
     public ArrayList<Streamer> streamers;
     public ArrayList<String> moderatorsMinecraft;
     public ArrayList<String> moderatorsTwitch;

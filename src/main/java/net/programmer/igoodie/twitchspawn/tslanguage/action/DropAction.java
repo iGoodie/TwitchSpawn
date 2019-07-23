@@ -4,10 +4,19 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.arguments.ItemParser;
+import net.minecraft.command.impl.PlaySoundCommand;
+import net.minecraft.command.impl.TitleCommand;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.play.server.SPlaySoundPacket;
+import net.minecraft.network.play.server.STitlePacket;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
@@ -31,9 +40,6 @@ public class DropAction extends TSLAction {
         try {
             ItemParser itemParser = new ItemParser(new StringReader(params.get(0)), true).parse();
             int amount = params.size() != 2 ? 1 : Integer.parseInt(params.get(1));
-
-            System.out.println(itemParser);
-            System.out.println(amount);
 
             this.itemStack = new ItemStack(itemParser.getItem(), amount);
             this.itemStack.setTag(itemParser.getNbt());

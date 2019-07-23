@@ -1,28 +1,20 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.parser;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.CommandBlockAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.DropAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.SummonAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.StreamlabsDonationEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TwitchFollowEvent;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TwitchHostEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.GreaterThanComparator;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.InRangeComparator;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLComparator;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
-import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -34,18 +26,15 @@ public class TSLParser {
 
     private static Map<String, Class<? extends TSLAction>> ACTION_CLASSES;
     private static Map<String, Class<? extends TSLComparator>> COMPARATOR_CLASSES;
-    private static Map<String, Class<? extends TSLEvent>> EVENT_CLASSES;
 
     public static void initialize() {
-        EVENT_CLASSES = new HashMap<>();
+        TwitchSpawn.LOGGER.info("Initializing TSL parsing specs...");
+
         ACTION_CLASSES = new HashMap<>();
         COMPARATOR_CLASSES = new HashMap<>();
 
-        registerEvent(StreamlabsDonationEvent.class);
-        registerEvent(TwitchFollowEvent.class);
-        registerEvent(TwitchHostEvent.class);
-
-        TSLPredicate.loadFieldAliases();
+        TSLEvent.loadEventAliases();
+        TSLPredicate.loadPropertyAliases();
 
         registerAction("DROP", DropAction.class);
         registerAction("SUMMON", SummonAction.class);
@@ -53,47 +42,13 @@ public class TSLParser {
 
         registerComparator(InRangeComparator.class);
         registerComparator(GreaterThanComparator.class);
-    }
 
-    private static void registerEvent(Class<? extends TSLEvent> eventClass) {
-        try {
-            Field descriptionField = eventClass.getField("DESCRIPTION");
-            Field eventTypeField = eventClass.getField("EVENT_TYPE");
-            Field eventForField = eventClass.getField("EVENT_FOR");
-
-            if (!Modifier.isFinal(descriptionField.getModifiers()))
-                throw new InternalError("TSLEvent's DESCRIPTION field must be constant");
-            if (!Modifier.isFinal(eventTypeField.getModifiers()))
-                throw new InternalError("");
-            if (!Modifier.isFinal(eventForField.getModifiers()))
-                throw new InternalError("");
-
-            String description = (String) descriptionField.get(null);
-            String eventType = (String) eventTypeField.get(null);
-            String eventFor = (String) eventForField.get(null);
-
-            EVENT_CLASSES.put(description, eventClass);
-            TwitchSpawn.LOGGER.info("Registered TSLEvent key: {} -> {}",
-                    description, eventClass.getSimpleName());
-
-        } catch (NoSuchFieldException e) {
-            throw new InternalError("TSLEvent must have public DESCRIPTION, EVENT_TYPE and EVENT_FOR fields -> "
-                    + eventClass.getSimpleName());
-        } catch (NullPointerException e) {
-            throw new InternalError("TSLEvent's DESCRIPTION, EVENT_TYPE and EVENT_FOR fields must be static -> "
-                    + eventClass.getSimpleName());
-        } catch (IllegalAccessException e) {
-            throw new InternalError("TSLEvent's DESCRIPTION, EVENT_TYPE and EVENT_FOR fields must be public -> "
-                    + eventClass.getSimpleName());
-        } catch (ClassCastException e) {
-            throw new InternalError("TSLEvent's DESCRIPTION, EVENT_TYPE and EVENT_FOR fields must be a String -> "
-                    + eventClass.getSimpleName());
-        }
+        TwitchSpawn.LOGGER.info("Initialized TSL parsing specs successfully");
     }
 
     public static void registerAction(String name, Class<? extends TSLAction> actionClass) {
         ACTION_CLASSES.put(name, actionClass);
-        TwitchSpawn.LOGGER.info("Registered TSLAction key: {} -> {}",
+        TwitchSpawn.LOGGER.debug("Registered TSLAction key: {} -> {}",
                 name, actionClass.getSimpleName());
     }
 
@@ -108,7 +63,7 @@ public class TSLParser {
             String symbol = (String) symbolField.get(null);
 
             COMPARATOR_CLASSES.put(symbol, comparatorClass);
-            TwitchSpawn.LOGGER.info("Registered TSLComparator key: {} -> {}",
+            TwitchSpawn.LOGGER.debug("Registered TSLComparator key: {} -> {}",
                     symbol, comparatorClass.getSimpleName());
 
         } catch (NoSuchFieldException e) {
@@ -206,6 +161,7 @@ public class TSLParser {
                 continue;
 
             // Trim end of line comments
+            // TODO: Keep them if they are in a word (E.g "Number#1")
             line = line.replaceAll("#.*", "");
 
             // Empty line
@@ -309,7 +265,6 @@ public class TSLParser {
         if ((actionClass = ACTION_CLASSES.get(actionName)) == null)
             throw new TSLSyntaxError("Unexpected action name -> " + actionName);
 
-
         // <ACTION> foo bar baz ON ...
         while (!(word = words.get(wordIndex)).equalsIgnoreCase("ON")) {
             actionArguments.add(word);
@@ -338,14 +293,17 @@ public class TSLParser {
         if (eventName.isEmpty())
             throw new TSLSyntaxError("Expected an event name after ON keyword.");
 
-        Class<? extends TSLEvent> eventClass;
-
         // Event name not found
-        if ((eventClass = EVENT_CLASSES.get(eventName)) == null)
+        if (!TSLEvent.EVENT_NAME_ALIASES.containsValue(eventName))
             throw new TSLSyntaxError("Unexpected event description -> " + eventName);
 
-        // Return existing event or create one
-        return events.getOrDefault(eventName, createInstance(eventClass));
+        // Fetch or create event if necessary
+        TSLEvent event = events.get(eventName);
+        if (event == null)
+            events.put(eventName, (event = new TSLEvent()));
+
+        // Return the parsed TSLEvent
+        return event;
     }
 
     public List<TSLPredicate> parsePredicates(List<String> words) throws TSLSyntaxError {
@@ -417,9 +375,6 @@ public class TSLParser {
         }
         current = current.chain(action);
 
-        // Put the event on/back to the event cache
-        String eventDescription = getClassProperty(event.getClass(), "DESCRIPTION");
-        events.put(eventDescription, event);
         return this.events;
     }
 
@@ -464,101 +419,4 @@ public class TSLParser {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            TSLParser.initialize();
-            File file = new File("C:/twitchspawntest3.tsl");
-            String script = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-
-            EventArguments eventArguments = new EventArguments();
-            eventArguments.eventType = "follow";
-            eventArguments.eventFor = "twitch_account";
-
-            TSLParser parser = new TSLParser(script);
-
-            Map<String, TSLEvent> lang = parser.parse();
-
-            lang.values().forEach(event -> {
-                System.out.println("EVENT::" + event.getClass().getSimpleName());
-                event.process(null);
-                System.out.println();
-//                event.getNextNodes().forEach(pred -> {
-//                    System.out.println(((TSLPredicate) pred));
-//                    System.out.print(" - " + ((TSLPredicate) ((TSLPredicate) pred)).fieldAlias);
-//                    System.out.println(" " + ((TSLPredicate) ((TSLPredicate) pred)).comparator);
-//                    System.out.print(" - " + ((TSLPredicate) ((TSLPredicate) pred).getNext()).fieldAlias);
-//                    System.out.println(" " + ((TSLPredicate) ((TSLPredicate) pred).getNext()).comparator);
-//                    System.out.println(" - - " + ((TSLAction) ((TSLPredicate) ((TSLPredicate) pred).getNext()).getNext()));
-//                });
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TSLSyntaxError e) {
-            e.printStackTrace();
-        } catch (TSLSyntaxErrors e) {
-            e.getErrors().forEach(Exception::printStackTrace);
-        }
-
-//        try {
-//            TSLParser.initialize();
-//            File file = new File("C:/twitchspawntest2.tsl");
-//            String input = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-//            TSLParser parser = new TSLParser(input);
-//
-//            System.out.println("# --------------RAW-INPUT---------- #");
-//            System.out.println(input);
-//            System.out.println("# --------------RULES-------------- #");
-//
-//            parser.parseRules(input).forEach(rule -> {
-//                try {
-//                    System.out.println(rule);
-////                    parseWords(rule).forEach(System.out::println);
-//                    parser.parse(rule);
-//                } catch (TSLSyntaxError e) {
-//                    e.printStackTrace();
-//                } catch (InternalError e) {
-//                    e.printStackTrace();
-//                }
-//                System.out.println("# --------------------------------- #");
-//            });
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//
-//        } catch (TSLSyntaxError e) {
-//            e.printStackTrace();
-//        }
-
-//        String symbol = "IN";
-//        String indentRegex = "[ \t]+";
-//
-//        String input = "IN   [0 ,   20, 30, 40]";
-//        String regex = Pattern.quote(symbol) + indentRegex
-//                + "\\[(\\d+)(?:[ \t]*,[ \t]*(\\d+))*\\]";
-//
-//        Pattern pattern = Pattern.compile(regex);
-//        Matcher matcher = pattern.matcher(input);
-//
-//        if (matcher.find()) {
-//            System.out.println(matcher.group());
-//            for (int i = 0; i <= matcher.groupCount(); i++)
-//                System.out.printf("GRP#%d - %s\n", i, matcher.group(i));
-//        }
-//
-//        Class<? extends TSLComparator> comp = InRangeComparator.class;
-//
-//        try {
-//            System.out.println(TSLComparator.SYMBOL);
-//            System.out.println(comp.getField("SYMBOL").get(null));
-//
-//        } catch (NoSuchFieldException | IllegalAccessException e) {
-//            e.printStackTrace();
-//            System.err.println("TSLComparator extensions should have a public SYMBOL variable!");
-//        }
-//
-//        Object a = "Foo";
-//
-//        System.out.println((int) a);
-    }
 }

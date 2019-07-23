@@ -14,26 +14,37 @@ public class TSLPredicate implements TSLFlowNode {
 
     private static Map<String, Field> FIELD_ALIASES;
 
-    public static void loadFieldAliases() {
+    public static void loadPropertyAliases() {
         FIELD_ALIASES = new HashMap<>();
 
-        loadMultipleAliases(EventArguments.getField("donationCurrency"), "currency", "donation_currency");
-        loadMultipleAliases(EventArguments.getField("donationAmount"), "amount", "donation_amount");
-        loadMultipleAliases(EventArguments.getField("subscriptionMonths"), "months", "#months", "subscription_months");
-        loadMultipleAliases(EventArguments.getField("viewerCount"), "#viewer", "viewer_count");
-        loadMultipleAliases(EventArguments.getField("raiderCount"), "#raider", "raider_count");
+        loadAliases(EventArguments.getField("donationCurrency"), "currency", "donation_currency");
+        loadAliases(EventArguments.getField("donationAmount"), "amount", "donation_amount");
+        loadAliases(EventArguments.getField("subscriptionMonths"), "months", "#months", "subscription_months");
+        loadAliases(EventArguments.getField("viewerCount"), "#viewer", "viewer_count");
+        loadAliases(EventArguments.getField("raiderCount"), "#raider", "raider_count");
     }
 
-    private static void loadMultipleAliases(Field field, String... aliases) {
-        Stream.of(aliases).forEach(alias -> {
-            FIELD_ALIASES.put(alias, field);
-            TwitchSpawn.LOGGER.info("Loaded alias {} -> {}",
-                    alias, field.getName());
-        });
+    private static void loadAliases(Field field, String... aliases) {
+        Stream.of(aliases).forEach(alias -> loadAlias(field, alias));
+    }
+
+    private static void loadAlias(Field field, String alias) {
+        FIELD_ALIASES.put(alias, field);
+        TwitchSpawn.LOGGER.debug("Loaded TSLPredicate property alias: {} -> {}", alias, field.getName());
     }
 
     private static Object extractValue(EventArguments args, String fieldAlias) {
-        return null; // TODO
+        Field field = FIELD_ALIASES.get(fieldAlias);
+
+        if (field == null)
+            throw new InternalError("Invalid field alias " + fieldAlias + " was bound to the predicate.");
+
+        try {
+            return field.get(args);
+
+        } catch (IllegalAccessException e) {
+            throw new InternalError("Invalid field alias " + fieldAlias + " was bound to the predicate.");
+        }
     }
 
     /* ----------------------------------- */
@@ -58,7 +69,8 @@ public class TSLPredicate implements TSLFlowNode {
 
     @Override
     public boolean process(EventArguments args) {
-        System.out.println("Processing " + getClass().getSimpleName());
+        TwitchSpawn.LOGGER.debug("Reached TSLPredicate node -> {} with {}",
+                comparator.getClass().getSimpleName(), args);
 
         Object value = extractValue(args, fieldAlias);
 

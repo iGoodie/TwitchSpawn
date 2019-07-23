@@ -2,24 +2,34 @@ package net.programmer.igoodie.twitchspawn.configuration;
 
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.tslanguage.TSLRules;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
 
 import java.io.File;
 
 public class ConfigManager {
 
-    public static final File CONFIG_FOLDER = new File(FMLPaths.CONFIGDIR.get().toString(), "TwitchSpawn");
+    public static final String CONFIG_DIR_PATH = FMLPaths.CONFIGDIR.get().toString() + File.separator + "TwitchSpawn";
 
     public static CredentialsConfig CREDENTIALS;
+    public static TSLRules HANDLING_RULES;
 
-    public static void loadConfigs() {
+    public static void loadConfigs() throws TSLSyntaxErrors {
         TwitchSpawn.LOGGER.info("Loading configs...");
 
-        if(!CONFIG_FOLDER.exists())
-            CONFIG_FOLDER.mkdirs();
+        File configDirectory = new File(CONFIG_DIR_PATH);
 
-        CREDENTIALS = CredentialsConfig.create(CONFIG_FOLDER.toPath() + "\\credentials.toml");
+        if (!configDirectory.exists())
+            configDirectory.mkdirs();
+
+        CREDENTIALS = CredentialsConfig.create(getPath("credentials.toml"));
+        HANDLING_RULES = RulesConfig.createRules(CONFIG_DIR_PATH);
 
         TwitchSpawn.LOGGER.info("Configs loaded successfully!");
+    }
+
+    public static String getPath(String relativePath) {
+        return CONFIG_DIR_PATH + File.separator + relativePath;
     }
 
 }
