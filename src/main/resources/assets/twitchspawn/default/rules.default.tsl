@@ -1,0 +1,10 @@
+DROP minecraft:diamond 2
+ ON Streamlabs Donation
+ WITH amount > 20
+
+DROP "minecraft:stick{display:{name:\"Stick of Truth!\"}}" 1
+ ON Twitch Follow
+
+EXECUTE "/give @p stick 1"
+ ON Twitch Follow
+

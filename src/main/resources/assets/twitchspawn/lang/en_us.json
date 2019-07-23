@@ -1,0 +1,7 @@
+{
+  "commands.twitchspawn.reloadcfg.success": ">> §3Successfully reloaded all the configs",
+  "commands.twitchspawn.reloadcfg.invalid_syntax": ">> §4Failed to reload: {0}",
+  "commands.twitchspawn.reloadcfg.already_started": ">> §4TwitchSpawn should be stopped in order to be able to reload configs.",
+
+  "errors.twitchspawn.loading": "Cannot load TwitchSpawn"
+}

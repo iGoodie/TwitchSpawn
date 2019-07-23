@@ -1,0 +1,12 @@
+{
+  "streamlabs donation": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " donated!"
+    }
+  ],
+  "twitch follow": {}
+}

@@ -1,23 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<component>
-  <configuration default="false" factoryName="Application" name="runData" singleton="false" type="Application">
-    <option name="MAIN_CLASS_NAME" value="net.minecraftforge.userdev.LaunchTesting"/>
-    <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=debug -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP"/>
-    <option name="PROGRAM_PARAMETERS" value="--mod examplemod --all --output D:\IntelliJ IDEA Workspace\TwitchSpawn\src\generated\resources"/>
-    <option name="WORKING_DIRECTORY" value="D:\IntelliJ IDEA Workspace\TwitchSpawn\run"/>
-    <module name="TwitchSpawn_main"/>
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="runData" type="Application" factoryName="Application" singleton="false">
     <envs>
-      <env name="MOD_CLASSES" value="examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\resources\main;examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\classes\java\main"/>
-      <env name="MCP_MAPPINGS" value="snapshot_20190621-1.14.2"/>
-      <env name="MCP_VERSION" value="20190624.152911"/>
-      <env name="FORGE_VERSION" value="27.0.50"/>
-      <env name="FORGE_GROUP" value="net.minecraftforge"/>
-      <env name="target" value="fmluserdevdata"/>
-      <env name="MC_VERSION" value="1.14.3"/>
+      <env name="MOD_CLASSES" value="examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\resources\main;examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\classes\java\main" />
+      <env name="MCP_MAPPINGS" value="snapshot_20190621-1.14.2" />
+      <env name="MCP_VERSION" value="20190624.152911" />
+      <env name="FORGE_VERSION" value="27.0.50" />
+      <env name="FORGE_GROUP" value="net.minecraftforge" />
+      <env name="target" value="fmluserdevdata" />
+      <env name="MC_VERSION" value="1.14.3" />
     </envs>
+    <option name="MAIN_CLASS_NAME" value="net.minecraftforge.userdev.LaunchTesting" />
+    <module name="TwitchSpawn.main" />
+    <option name="PROGRAM_PARAMETERS" value="--mod examplemod --all --output D:\IntelliJ IDEA Workspace\TwitchSpawn\src\generated\resources" />
+    <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=debug -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <method v="2">
-      <option enabled="true" name="Make"/>
-      <option enabled="true" externalProjectPath="$PROJECT_DIR$" name="Gradle.BeforeRunTask" tasks=":prepareRunData"/>
+      <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks=":prepareRunData" externalProjectPath="$PROJECT_DIR$" />
     </method>
   </configuration>
 </component>

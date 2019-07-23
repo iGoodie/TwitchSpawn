@@ -12,7 +12,7 @@ issueTrackerURL="http://my.issue.tracker/" #optional
 
 [[mods]]
 modId="twitchspawn"
-version="${version}"
+version="${file.jarVersion}"
 displayName="TwitchSpawn"
 authors="iGoodie"
 logoFile="twitchspawn.png"
@@ -21,7 +21,7 @@ description='''
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.streamspawn]] #optional
+[[dependencies.twitchspawn]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -34,7 +34,7 @@ description='''
     side="BOTH"
 
 # Here's another dependency
-[[dependencies.streamspawn]]
+[[dependencies.twitchspawn]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.14.3]"
