@@ -9,6 +9,8 @@ import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -127,20 +129,50 @@ public class StreamlabsSocketClient {
         JSONArray messages = extractFrom(response, "message", JSONArray.class, null);
 
         forEachMessage(messages, message -> {
+            TwitchSpawn.LOGGER.info("Received streamlabs package {} -> {}",
+                    new TSLEventPair(responseType, responseFor), message);
+
             EventArguments eventArguments = new EventArguments();
             eventArguments.eventType = responseType;
             eventArguments.eventFor = responseFor;
             eventArguments.streamerNickname = streamer.minecraftNick;
             eventArguments.actorNickname = extractFrom(message, "name", String.class, null);
             eventArguments.message = extractFrom(message, "message", String.class, null);
-            eventArguments.donationAmount = Float.parseFloat(extractFrom(message, "amount", String.class, "0"));
+            eventArguments.donationAmount = extractNumberFrom(message, "amount", 0.0).doubleValue();
             eventArguments.donationCurrency = extractFrom(message, "currency", String.class, null);
-            eventArguments.subscriptionMonths = extractFrom(message, "months", Integer.class, 0);
-            eventArguments.raiderCount = extractFrom(message, "raiders", Integer.class, 0);
-            eventArguments.viewerCount = extractFrom(message, "viewers", Integer.class, 0);
+            eventArguments.subscriptionMonths = extractNumberFrom(message, "months", 0).intValue();
+            eventArguments.raiderCount = extractNumberFrom(message, "raiders", 0).intValue();
+            eventArguments.viewerCount = extractNumberFrom(message, "viewers", 0).intValue();
+
+            // Unregistered event alias
+            if (TSLEvent.getEventAlias(responseType, responseFor) == null)
+                return; // Stop here, do not handle
 
             ConfigManager.HANDLING_RULES.handleEvent(eventArguments);
         });
+    }
+
+    /**
+     * Here to handle unpredictable value type
+     * send by Streamlabs Socket API.
+     * (E.g the type of "amount" is String, Integer or Double)
+     */
+    private Number extractNumberFrom(JSONObject json, String key, Number defaultValue) {
+        Object value = null;
+
+        try {
+            value = json.get(key);
+
+            if(value instanceof String)
+                return Double.parseDouble((String) value);
+
+            return (Number) value;
+
+        } catch(JSONException e) {
+            return defaultValue;
+        } catch(NumberFormatException e) {
+            throw new InternalError("That is bad.. Streamlabs Socket API sent malformed number. -> " + value);
+        }
     }
 
     private <T> T extractFrom(JSONObject json, String key, Class<T> type, T defaultValue) {
