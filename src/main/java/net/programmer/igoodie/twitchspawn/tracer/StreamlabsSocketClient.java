@@ -3,6 +3,8 @@ package net.programmer.igoodie.twitchspawn.tracer;
 import com.google.gson.GsonBuilder;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import net.minecraft.command.CommandSource;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
@@ -34,12 +36,13 @@ public class StreamlabsSocketClient {
         instance = new StreamlabsSocketClient();
         instance.sockets.forEach(s -> s.connect());
 
+        TwitchSpawn.SERVER.getPlayerList().sendMessage(
+                new TranslationTextComponent("commands.twitchspawn.start.success"), true);
+
         TwitchSpawn.LOGGER.info("Started Streamlabs client");
     }
 
-    public static void stop() { stop(null); }
-
-    public static void stop(String reason) {
+    public static void stop(CommandSource source, String reason) {
         if (instance == null)
             throw new IllegalStateException("Streamlabs socket is already stopped");
 
@@ -47,6 +50,12 @@ public class StreamlabsSocketClient {
 
         instance.sockets.forEach(s -> s.disconnect());
         instance = null;
+
+        if (TwitchSpawn.SERVER != null) {
+            TwitchSpawn.SERVER.getPlayerList().sendMessage(
+                    new TranslationTextComponent("commands.twitchspawn.stop.success",
+                            source == null ? "Server" : source.getName(), reason), true);
+        }
 
         TwitchSpawn.LOGGER.info("Stopped Streamlabs client {}",
                 reason == null ? "" : String.format("(Reason: %s)", reason));
@@ -91,7 +100,7 @@ public class StreamlabsSocketClient {
                         streamer.minecraftNick, authorized.get() ? "intentional" : "unauthorized");
 
                 if (authorized.get() == false) {
-                    StreamlabsSocketClient.stop("Unauthorized by the socket server");
+                    StreamlabsSocketClient.stop(null, "Unauthorized by the socket server");
                 }
             });
 
@@ -128,7 +137,7 @@ public class StreamlabsSocketClient {
             eventArguments.donationCurrency = extractFrom(message, "currency", String.class, null);
             eventArguments.subscriptionMonths = extractFrom(message, "months", Integer.class, 0);
             eventArguments.raiderCount = extractFrom(message, "raiders", Integer.class, 0);
-            eventArguments.viewerCount = Integer.parseInt(extractFrom(message, "viewers", String.class, "0"));
+            eventArguments.viewerCount = extractFrom(message, "viewers", Integer.class, 0);
 
             ConfigManager.HANDLING_RULES.handleEvent(eventArguments);
         });

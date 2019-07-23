@@ -27,6 +27,7 @@ public class TwitchSpawnCommand {
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         LiteralArgumentBuilder<CommandSource> root = Commands.literal(COMMAND_NAME);
 
+        root.then(Commands.literal("status").executes(TwitchSpawnCommand::statusModule));
         root.then(Commands.literal("start").executes(TwitchSpawnCommand::startModule));
         root.then(Commands.literal("stop").executes(TwitchSpawnCommand::stopModule));
 
@@ -52,18 +53,35 @@ public class TwitchSpawnCommand {
 
     /* ------------------------------------------------------------ */
 
-    public static int startModule(CommandContext<CommandSource> context) {
-        TwitchSpawn.LOGGER.info("Start module done!");
+    public static int statusModule(CommandContext<CommandSource> context) {
+        if (StreamlabsSocketClient.isStarted())
+            context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.status.on"), false);
+        else
+            context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.status.off"), false);
 
-        StreamlabsSocketClient.start();
+        return 1;
+    }
+
+    public static int startModule(CommandContext<CommandSource> context) {
+        try {
+            StreamlabsSocketClient.start();
+
+        } catch (IllegalStateException e) {
+            context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.start.illegal_state"), true);
+            return 0;
+        }
 
         return 1;
     }
 
     public static int stopModule(CommandContext<CommandSource> context) {
-        TwitchSpawn.LOGGER.info("Stop module done!");
+        try {
+            StreamlabsSocketClient.stop(context.getSource(), "Command execution");
 
-        StreamlabsSocketClient.stop("Command execution");
+        } catch (IllegalStateException e) {
+            context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.stop.illegal_state"), true);
+            return 0;
+        }
 
         return 1;
     }
@@ -82,7 +100,8 @@ public class TwitchSpawnCommand {
             return 1;
 
         } catch (TSLSyntaxErrors e) {
-            source.sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.invalid_syntax", e.getErrors()), false);
+            source.sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.invalid_syntax",
+                    e.getMessage()), false);
             return 0;
         }
     }
@@ -92,6 +111,7 @@ public class TwitchSpawnCommand {
     public static int debugRandomEventModule(CommandContext<CommandSource> context) {
         String sourceNickname = context.getSource().getName();
 
+        // TODO: randomize event args
         EventArguments eventArguments = new EventArguments();
         eventArguments.streamerNickname = sourceNickname;
         eventArguments.actorNickname = "TestUsername123";

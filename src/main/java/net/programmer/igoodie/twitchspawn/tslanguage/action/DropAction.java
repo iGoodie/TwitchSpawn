@@ -54,7 +54,7 @@ public class DropAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player) {
-        player.dropItem(this.itemStack, false, false);
+        player.dropItem(this.itemStack.copy(), false, false);
     }
 
 }
