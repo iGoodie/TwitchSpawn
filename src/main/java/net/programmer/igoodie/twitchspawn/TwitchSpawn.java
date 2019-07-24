@@ -4,7 +4,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.ModLoadingException;
 import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
@@ -17,8 +16,8 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.tracer.StreamlabsSocketClient;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +43,7 @@ public class TwitchSpawn {
             ConfigManager.loadConfigs();
 
         } catch (Exception exception) {
+            // TODO Print exceptions on the screen
             throw new ModLoadingException(
                     ModList.get().getModContainerById(MOD_ID).get().getModInfo(),
                     ModLoadingStage.COMMON_SETUP,
@@ -70,6 +70,10 @@ public class TwitchSpawn {
     @SubscribeEvent
     public void onServerStopping(FMLServerStoppingEvent event) {
         SERVER = null;
+
+        if(StreamlabsSocketClient.isRunning()) {
+            StreamlabsSocketClient.stop(null, "Server stopping");
+        }
     }
 
 }

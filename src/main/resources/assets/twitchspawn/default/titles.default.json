@@ -71,10 +71,22 @@
       "color": "white"
     }
   ],
-  "youtube subscription": [],
-  "youtube sponsor": [],
-  "youtube superchat": [],
-  "mixer follow": [],
-  "mixer subscriptions": [],
-  "mixer host": []
+  "youtube subscription": [
+    "Incoming youtube subscription"
+  ],
+  "youtube sponsor": [
+    "Incoming youtube sponsor"
+  ],
+  "youtube superchat": [
+    "Incoming youtube superchat"
+  ],
+  "mixer follow": [
+    "Incoming mixer follow"
+  ],
+  "mixer subscriptions": [
+    "Incoming mixer subscription"
+  ],
+  "mixer host": [
+    "Incoming mixer host"
+  ]
 }

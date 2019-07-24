@@ -59,9 +59,12 @@ public class DropAction extends TSLAction {
     }
 
     @Override
-    protected String formatText(String textJsonRaw, EventArguments args) {
-        return textJsonRaw
-                .replace("${amount}", String.valueOf(args.donationAmount));
+    protected String subtitleEvaluator(String expression, EventArguments args) {
+        if(expression.equals("itemName"))
+            return itemStack.getItem().getName().getString();
+        if(expression.equals("itemCount"))
+            return String.valueOf(itemStack.getCount());
+        return null;
     }
 
 }

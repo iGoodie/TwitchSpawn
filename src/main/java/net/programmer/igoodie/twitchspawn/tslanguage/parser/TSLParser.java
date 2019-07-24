@@ -1,5 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.parser;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.CommandBlockAction;
@@ -21,13 +23,13 @@ public class TSLParser {
     private static final char QUOTE = '"';
     private static final char ESCAPE_CHAR = '\\';
 
-    private static Map<String, Class<? extends TSLAction>> ACTION_CLASSES;
-    private static Map<String, Class<? extends TSLComparator>> COMPARATOR_CLASSES;
+    public static BiMap<String, Class<? extends  TSLAction>> ACTION_CLASSES;
+    public static Map<String, Class<? extends TSLComparator>> COMPARATOR_CLASSES;
 
     public static void initialize() {
         TwitchSpawn.LOGGER.info("Initializing TSL parsing specs...");
 
-        ACTION_CLASSES = new HashMap<>();
+        ACTION_CLASSES = HashBiMap.create();
         COMPARATOR_CLASSES = new HashMap<>();
 
         TSLEvent.loadEventAliases();
@@ -262,7 +264,7 @@ public class TSLParser {
         Class<? extends TSLAction> actionClass;
 
         // Lookup for the action
-        if ((actionClass = ACTION_CLASSES.get(actionName)) == null)
+        if ((actionClass = ACTION_CLASSES.get(actionName.toUpperCase())) == null)
             throw new TSLSyntaxError("Unexpected action name -> " + actionName);
 
         // <ACTION> foo bar baz ON ...
