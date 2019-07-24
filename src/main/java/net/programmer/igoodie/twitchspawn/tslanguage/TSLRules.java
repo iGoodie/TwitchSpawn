@@ -10,7 +10,7 @@ import java.util.Map;
 public class TSLRules {
 
     private TSLTree defaultTree;
-    private Map<String, TSLTree> streamerTrees;
+    private Map<String, TSLTree> streamerTrees; // Maps lowercase nicks to TSLTree
 
     public TSLRules(TSLTree defaultTree, List<TSLTree> streamerTrees) {
         if (defaultTree == null)
@@ -20,7 +20,7 @@ public class TSLRules {
         this.streamerTrees = new HashMap<>();
 
         for (TSLTree streamerTree : streamerTrees) {
-            this.streamerTrees.put(streamerTree.getStreamer(), streamerTree);
+            this.streamerTrees.put(streamerTree.getStreamer().toLowerCase(), streamerTree);
             TwitchSpawn.LOGGER.debug("Loaded TSL tree for {}", streamerTree.getStreamer());
         }
     }
@@ -30,10 +30,12 @@ public class TSLRules {
                 args, args.streamerNickname);
 
         // Fetch TSLTree associated with the streamer
-        TSLTree responsibleTree = streamerTrees.get(args.streamerNickname);
+        TSLTree responsibleTree = streamerTrees.get(args.streamerNickname.toLowerCase());
 
-        if (responsibleTree != null)
+        if (responsibleTree != null) {
+            TwitchSpawn.LOGGER.info("Found associated tree for {}. Handling with their rules", args.streamerNickname);
             return responsibleTree.handleEvent(args);
+        }
 
         // No tree found for the streamer
         TwitchSpawn.LOGGER.info("No associated tree for {} found. Handling with default rules", args.streamerNickname);

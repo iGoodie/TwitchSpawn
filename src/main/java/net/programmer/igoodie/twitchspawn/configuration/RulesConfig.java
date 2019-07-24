@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 public class RulesConfig {
 
     public static TSLRules createRules(String directory) throws TSLSyntaxErrors {
+        // TODO: Disable creating defaults, if any of em is there
         return new TSLRules(
                 create(directory + File.separator + "rules.default.tsl"),
                 fromDirectory(new File(directory)));
@@ -76,10 +77,9 @@ public class RulesConfig {
         List<TSLTree> trees = new LinkedList<>();
 
         String directoryPath = directory.toString();
-        String[] filenames = directory.list();//directory.listFiles((dir, name) -> name.matches("rules\\.\\w+\\.tsl"));
         Pattern pattern = Pattern.compile("^rules\\.(\\w+)\\.tsl$");
 
-        for (String filename : filenames) {
+        for (String filename : directory.list()) {
             Matcher matcher = pattern.matcher(filename);
 
             if (matcher.find()) {
@@ -88,6 +88,7 @@ public class RulesConfig {
                 if (streamer.equalsIgnoreCase("default"))
                     continue; // Default tree won't be included
 
+                TwitchSpawn.LOGGER.info("Loaded rule set for {} ({})", streamer, filename);
                 String script = readScript(directoryPath + File.separator + filename);
                 trees.add(new TSLTree(streamer, script));
             }
