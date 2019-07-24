@@ -36,7 +36,7 @@ public class TSLRules {
             return responsibleTree.handleEvent(args);
 
         // No tree found for the streamer
-        TwitchSpawn.LOGGER.info("No associated tree found. Handling with default rules");
+        TwitchSpawn.LOGGER.info("No associated tree for {} found. Handling with default rules", args.streamerNickname);
         return defaultTree.handleEvent(args);
     }
 

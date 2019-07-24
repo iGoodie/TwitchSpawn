@@ -148,6 +148,7 @@ public class StreamlabsSocketClient {
             eventArguments.viewerCount = extractNumberFrom(message, "viewers", 0).intValue();
 
             // Pass the model to the handler
+            // TODO: Queue incoming events instead of passing immediately
             ConfigManager.HANDLING_RULES.handleEvent(eventArguments);
         });
     }

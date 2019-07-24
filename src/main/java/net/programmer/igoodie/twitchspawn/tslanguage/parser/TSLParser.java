@@ -40,6 +40,7 @@ public class TSLParser {
         registerAction("EXECUTE", CommandBlockAction.class);
 
         registerComparator(InRangeComparator.class);
+        registerComparator(EqualsComparator.class);
         registerComparator(GreaterThanComparator.class);
         registerComparator(GreaterThanOrEqComparator.class);
         registerComparator(LessThanComparator.class);

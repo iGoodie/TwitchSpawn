@@ -18,7 +18,7 @@ import java.util.List;
 
 public class CredentialsConfig {
 
-    public static CredentialsConfig create(String filepath) {
+    public static CredentialsConfig create(String filepath) throws ParsingException {
         ObjectConverter converter = new ObjectConverter();
 
         ConfigSpec spec = specs(converter);
@@ -28,12 +28,7 @@ public class CredentialsConfig {
                 .charset(StandardCharsets.UTF_8)
                 .build();
 
-        try {
-            config.load();
-
-        } catch (ParsingException e) {
-            e.printStackTrace(); // TODO: Handle parsing error
-        }
+        config.load(); // Throws ParsingException
 
         int correctionCount = spec.correct(config, (action, path, incorrectVal, correctedVal) -> {
             TwitchSpawn.LOGGER.info("Corrected {} from {} to {}", String.join(".", path), incorrectVal, correctedVal);
