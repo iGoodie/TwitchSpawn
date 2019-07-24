@@ -17,23 +17,26 @@ public class TSLPredicate implements TSLFlowNode {
     public static void loadPropertyAliases() {
         FIELD_ALIASES = new HashMap<>();
 
-        loadAliases(EventArguments.getField("donationCurrency"), "currency", "donation_currency");
-        loadAliases(EventArguments.getField("donationAmount"), "amount", "donation_amount");
-        loadAliases(EventArguments.getField("subscriptionMonths"), "months", "#months", "subscription_months");
-        loadAliases(EventArguments.getField("viewerCount"), "#viewer", "viewer_count");
-        loadAliases(EventArguments.getField("raiderCount"), "#raider", "raider_count");
+        loadAliases(EventArguments.getField("donationCurrency"),
+                "currency", "donation_currency");
+        loadAliases(EventArguments.getField("donationAmount"),
+                "amount", "donation_amount");
+        loadAliases(EventArguments.getField("subscriptionMonths"),
+                "months", "#months", "subscription_months");
+        loadAliases(EventArguments.getField("viewerCount"),
+                "#viewer", "viewer_count");
+        loadAliases(EventArguments.getField("raiderCount"),
+                "#raider", "raider_count");
     }
 
     private static void loadAliases(Field field, String... aliases) {
-        Stream.of(aliases).forEach(alias -> loadAlias(field, alias));
+        Stream.of(aliases).forEach(alias -> {
+            FIELD_ALIASES.put(alias, field);
+            TwitchSpawn.LOGGER.debug("Loaded TSLPredicate property alias: {} -> {}", alias, field.getName());
+        });
     }
 
-    private static void loadAlias(Field field, String alias) {
-        FIELD_ALIASES.put(alias, field);
-        TwitchSpawn.LOGGER.debug("Loaded TSLPredicate property alias: {} -> {}", alias, field.getName());
-    }
-
-    private static Object extractValue(EventArguments args, String fieldAlias) {
+    public static Object extractValue(EventArguments args, String fieldAlias) {
         Field field = FIELD_ALIASES.get(fieldAlias);
 
         if (field == null)

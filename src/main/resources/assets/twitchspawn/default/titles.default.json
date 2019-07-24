@@ -1,0 +1,80 @@
+{
+  "streamlabs donation": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " donated you ${amount_f}${currency}",
+      "color": "white"
+    }
+  ],
+  "twitch follow": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " followed you!",
+      "color": "white"
+    }
+  ],
+  "twitch subscription": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " subscribed you!",
+      "color": "white"
+    },
+    {
+      "text": " (Month: ${months})",
+      "color": "gold"
+    }
+  ],
+  "twitch host": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " hosted you",
+      "color": "white"
+    },
+    {
+      "text": " to ${viewers} people!",
+      "color": "gold"
+    }
+  ],
+  "twitch raid": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " raided you",
+      "color": "white"
+    },
+    {
+      "text": " with ${raiders} people!",
+      "color": "gold"
+    }
+  ],
+  "twitch bits": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " donated you ${amount_i} bits",
+      "color": "white"
+    }
+  ],
+  "youtube subscription": [],
+  "youtube sponsor": [],
+  "youtube superchat": [],
+  "mixer follow": [],
+  "mixer subscriptions": [],
+  "mixer host": []
+}

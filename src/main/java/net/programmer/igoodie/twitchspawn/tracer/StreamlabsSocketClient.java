@@ -132,9 +132,12 @@ public class StreamlabsSocketClient {
             TwitchSpawn.LOGGER.info("Received streamlabs package {} -> {}",
                     new TSLEventPair(responseType, responseFor), message);
 
-            EventArguments eventArguments = new EventArguments();
-            eventArguments.eventType = responseType;
-            eventArguments.eventFor = responseFor;
+            // Unregistered event alias
+            if (TSLEvent.getEventAlias(responseType, responseFor) == null)
+                return; // Stop here, do not handle
+
+            // Refine incoming data into EventArguments model
+            EventArguments eventArguments = new EventArguments(responseType, responseFor);
             eventArguments.streamerNickname = streamer.minecraftNick;
             eventArguments.actorNickname = extractFrom(message, "name", String.class, null);
             eventArguments.message = extractFrom(message, "message", String.class, null);
@@ -144,10 +147,7 @@ public class StreamlabsSocketClient {
             eventArguments.raiderCount = extractNumberFrom(message, "raiders", 0).intValue();
             eventArguments.viewerCount = extractNumberFrom(message, "viewers", 0).intValue();
 
-            // Unregistered event alias
-            if (TSLEvent.getEventAlias(responseType, responseFor) == null)
-                return; // Stop here, do not handle
-
+            // Pass the model to the handler
             ConfigManager.HANDLING_RULES.handleEvent(eventArguments);
         });
     }
@@ -163,14 +163,14 @@ public class StreamlabsSocketClient {
         try {
             value = json.get(key);
 
-            if(value instanceof String)
+            if (value instanceof String)
                 return Double.parseDouble((String) value);
 
             return (Number) value;
 
-        } catch(JSONException e) {
+        } catch (JSONException e) {
             return defaultValue;
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new InternalError("That is bad.. Streamlabs Socket API sent malformed number. -> " + value);
         }
     }

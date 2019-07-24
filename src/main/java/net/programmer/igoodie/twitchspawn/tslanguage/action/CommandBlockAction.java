@@ -3,6 +3,7 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 
 import java.util.List;
 
@@ -22,6 +23,11 @@ public class CommandBlockAction extends TSLAction {
         CommandSource source = player.getCommandSource().withPermissionLevel(10);
 
         TwitchSpawn.SERVER.getCommandManager().handleCommand(source, command);
+    }
+
+    @Override
+    protected String formatText(String textJsonRaw, EventArguments args) {
+        return textJsonRaw; // TODO
     }
 
 }

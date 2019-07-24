@@ -1,0 +1,40 @@
+{
+  "DROP": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " gifted your with ",
+      "color": "white"
+    },
+    {
+      "text": "${itemName}x${itemCount}",
+      "color": "gold"
+    }
+  ],
+  "SUMMON": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " summoned you a ",
+      "color": "white"
+    },
+    {
+      "text": "${mobName}x${mobCount}",
+      "color": "gold"
+    }
+  ],
+  "EXECUTE": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " triggered a command for you!",
+      "color": "white"
+    }
+  ]
+}

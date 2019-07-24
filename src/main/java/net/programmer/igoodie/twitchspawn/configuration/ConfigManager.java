@@ -13,6 +13,7 @@ public class ConfigManager {
 
     public static CredentialsConfig CREDENTIALS;
     public static TSLRules HANDLING_RULES;
+    public static TitlesConfig TITLES;
 
     public static void loadConfigs() throws TSLSyntaxErrors {
         TwitchSpawn.LOGGER.info("Loading configs...");
@@ -24,6 +25,7 @@ public class ConfigManager {
 
         CREDENTIALS = CredentialsConfig.create(getPath("credentials.toml"));
         HANDLING_RULES = RulesConfig.createRules(CONFIG_DIR_PATH);
+        TITLES = TitlesConfig.create(new File(getPath("messages.title.json")));
 
         TwitchSpawn.LOGGER.info("Configs loaded successfully!");
     }
