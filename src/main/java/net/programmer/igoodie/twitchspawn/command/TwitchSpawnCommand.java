@@ -55,6 +55,8 @@ public class TwitchSpawnCommand {
 
     public static int startModule(CommandContext<CommandSource> context) {
         try {
+            // TODO: Check if source is moderator or streamer
+
             StreamlabsSocketClient.start();
 
         } catch (IllegalStateException e) {
@@ -67,6 +69,8 @@ public class TwitchSpawnCommand {
 
     public static int stopModule(CommandContext<CommandSource> context) {
         try {
+            // TODO: Check if source is moderator or streamer
+
             StreamlabsSocketClient.stop(context.getSource(), "Command execution");
 
         } catch (IllegalStateException e) {

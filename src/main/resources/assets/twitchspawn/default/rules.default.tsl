@@ -1,10 +1,29 @@
-DROP minecraft:diamond 2
- ON Streamlabs Donation
- WITH amount > 20
+# For full documentation about TSL Language
+# See https://igoodie.gitbook.io/twitchspawn/
 
+# Donation Rules
+DROP minecraft:stick 2
+ ON Streamlabs Donation
+ WITH amount IN RANGE [0,20]
+
+DROP minecraft:diamond_block 1
+ ON Streamlabs Donation
+ WITH amount IN RANGE [21,999]
+
+EXECUTE "/gamerule keepInventory true"
+ ON Streamlabs Donation
+ WITH amount >= 1000
+
+# Follow Rules
 DROP "minecraft:stick{display:{name:\"Stick of Truth!\"}}" 1
  ON Twitch Follow
 
+# Host Rules
 EXECUTE "/give @p stick 1"
- ON Twitch Follow
+ ON Twitch Host
+ WITH #viewer >= 10
 
+# Raid Rules
+EXECUTE "/weather thunder"
+ ON Twitch Raid
+ WITH #raider > 100

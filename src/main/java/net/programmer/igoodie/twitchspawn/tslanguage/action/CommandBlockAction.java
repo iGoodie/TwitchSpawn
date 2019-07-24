@@ -4,30 +4,36 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.List;
 
 public class CommandBlockAction extends TSLAction {
 
-    String command;
+    private List<String> commands;
 
-    public CommandBlockAction(List<String> args) {
-        // TODO
-        command = args.get(0);
+    public CommandBlockAction(List<String> args) throws TSLSyntaxError {
+        if (!args.stream().allMatch(arg -> arg.startsWith("/")))
+            throw new TSLSyntaxError("Every command must start with '/' character");
+
+        this.commands = args;
     }
 
     @Override
     protected void performAction(ServerPlayerEntity player) {
-        // TODO Disable logging to OP users?
+        CommandSource source = player.getCommandSource()
+                .withPermissionLevel(9999) // OVER 9000!
+                .withFeedbackDisabled();
 
-        CommandSource source = player.getCommandSource().withPermissionLevel(10);
-
-        TwitchSpawn.SERVER.getCommandManager().handleCommand(source, command);
+        commands.forEach(command -> {
+            int result = TwitchSpawn.SERVER.getCommandManager().handleCommand(source, command);
+            TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, command);
+        });
     }
 
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
-        return null;
+        return null; // No extra evaluation
     }
 
 }

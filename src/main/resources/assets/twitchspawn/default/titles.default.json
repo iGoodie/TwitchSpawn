@@ -29,7 +29,7 @@
       "color": "white"
     },
     {
-      "text": " (Month: ${months})",
+      "text": " (Month(s): ${months})",
       "color": "gold"
     }
   ],
@@ -43,7 +43,7 @@
       "color": "white"
     },
     {
-      "text": " to ${viewers} people!",
+      "text": " to ${viewers} viewer(s)!",
       "color": "gold"
     }
   ],
@@ -57,7 +57,7 @@
       "color": "white"
     },
     {
-      "text": " with ${raiders} people!",
+      "text": " with ${raiders} raider(s)!",
       "color": "gold"
     }
   ],
@@ -67,7 +67,7 @@
       "color": "aqua"
     },
     {
-      "text": " donated you ${amount_i} bits",
+      "text": " donated you ${amount_i} bit(s)",
       "color": "white"
     }
   ],
