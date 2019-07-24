@@ -1,3 +1,5 @@
+# Example TSL (TwitchSpawn Language) Rule Set
+# Feel free to edit this one, or create your own rule set!
 # For full documentation about TSL Language
 # See https://igoodie.gitbook.io/twitchspawn/
 
@@ -15,7 +17,7 @@ EXECUTE "/gamerule keepInventory true"
  WITH amount >= 1000
 
 # Follow Rules
-DROP "minecraft:stick{display:{name:\"Stick of Truth!\"}}" 1
+DROP "minecraft:stick{display:{Name:\"Stick of Truth!\"}}" 1
  ON Twitch Follow
 
 # Host Rules
