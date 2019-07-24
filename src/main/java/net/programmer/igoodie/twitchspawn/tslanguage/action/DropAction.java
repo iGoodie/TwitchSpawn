@@ -18,6 +18,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.Arrays;
@@ -55,6 +56,12 @@ public class DropAction extends TSLAction {
     @Override
     protected void performAction(ServerPlayerEntity player) {
         player.dropItem(this.itemStack.copy(), false, false);
+    }
+
+    @Override
+    protected String formatText(String textJsonRaw, EventArguments args) {
+        return textJsonRaw
+                .replace("${amount}", String.valueOf(args.donationAmount));
     }
 
 }

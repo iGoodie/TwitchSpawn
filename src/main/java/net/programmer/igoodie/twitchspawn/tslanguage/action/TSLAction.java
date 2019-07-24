@@ -8,10 +8,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.ITextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
+import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
+import net.programmer.igoodie.twitchspawn.util.MessageEvaluator;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public abstract class TSLAction implements TSLFlowNode {
 
@@ -21,6 +26,16 @@ public abstract class TSLAction implements TSLFlowNode {
      * @param player Target player of the action
      */
     protected abstract void performAction(ServerPlayerEntity player);
+
+    /**
+     * Formats a title or subtitle text
+     * with the action specific fields
+     *
+     * @param textJsonRaw Raw text Json to be formatted
+     * @param args        Arguments of the event
+     * @return Formatted text
+     */
+    protected abstract String formatText(String textJsonRaw, EventArguments args);
 
     /**
      * Processes the action node with given .
@@ -43,7 +58,37 @@ public abstract class TSLAction implements TSLFlowNode {
             return false;
         }
 
-        notifyPlayer(player, args, "\"${streamer} got an action\"", "\"Test thingies\"");
+        // Fetch title and format it
+        String title = ConfigManager.TITLES.getTitleJsonRaw(args.eventAlias);
+        title = MessageEvaluator.replaceExpressions(title, expression -> {
+            // TODO: Implement better expression evaluator
+            if (expression.equals("actor"))
+                return args.actorNickname;
+            if (expression.equals("streamer"))
+                return args.streamerNickname;
+            if (expression.equals("amount") && args.donationAmount != 0.0)
+                return String.valueOf(args.donationAmount);
+            if (expression.equals("amount_i") && args.donationAmount != 0.0)
+                return String.valueOf((int) args.donationAmount);
+            if (expression.equals("amount_f") && args.donationAmount != 0.0)
+                return String.format("%.2f", args.donationAmount);
+            if (expression.equals("currency") && args.donationCurrency != null)
+                return args.donationCurrency;
+            if (expression.equals("month") && args.subscriptionMonths != 0)
+                return String.valueOf(args.subscriptionMonths);
+            if (expression.equals("viewers") && args.viewerCount != 0)
+                return String.valueOf(args.viewerCount);
+            if (expression.equals("raiders") && args.viewerCount != 0)
+                return String.valueOf(args.raiderCount);
+            if (expression.equals("time"))
+                return new SimpleDateFormat("HH:mm:ss").format(new Date());
+            return "${" + expression + "}";
+        });
+
+        // TODO Fetch subtitle and format it
+
+        // Notify player and perform the action
+        notifyPlayer(player, title, "\":SUBTITLES NOT IMPLEMENTED YET:\"");
         performAction(player);
 
         TwitchSpawn.LOGGER.info("{} action performed for {}",
@@ -51,12 +96,7 @@ public abstract class TSLAction implements TSLFlowNode {
         return true;
     }
 
-    private void notifyPlayer(ServerPlayerEntity player, EventArguments args, String title, String subtitle) {
-        title = title.replace("${actor}", args.actorNickname)
-                .replace("${streamer}", args.streamerNickname);
-        subtitle = subtitle.replace("${actor}", args.actorNickname)
-                .replace("${streamer}", args.streamerNickname);
-
+    private void notifyPlayer(ServerPlayerEntity player, String title, String subtitle) {
         ResourceLocation soundLocation = new ResourceLocation("minecraft:entity.player.levelup");
         SoundCategory category = SoundCategory.MASTER;
         SPlaySoundPacket packetSound = new SPlaySoundPacket(soundLocation, category, player.getPositionVec(), 1.0f, 0.0f);

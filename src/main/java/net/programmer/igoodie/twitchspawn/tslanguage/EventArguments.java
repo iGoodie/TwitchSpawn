@@ -1,6 +1,8 @@
 package net.programmer.igoodie.twitchspawn.tslanguage;
 
 import com.google.common.base.Defaults;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 
 import java.lang.reflect.Field;
 
@@ -25,8 +27,9 @@ public class EventArguments {
 
     /* ------------------------------ */
 
-    public String eventType;
-    public String eventFor;
+    public final String eventType;
+    public final String eventFor;
+    public final String eventAlias;
 
     public String streamerNickname;
     public String actorNickname;
@@ -39,6 +42,12 @@ public class EventArguments {
 
     public int viewerCount;
     public int raiderCount;
+
+    public EventArguments(String eventType, String eventFor) {
+        this.eventType = eventType;
+        this.eventFor = eventFor;
+        this.eventAlias = TSLEvent.getEventAlias(eventType, eventFor);
+    }
 
     @Override
     public String toString() {

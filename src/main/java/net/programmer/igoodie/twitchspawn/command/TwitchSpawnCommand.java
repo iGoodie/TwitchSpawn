@@ -112,11 +112,9 @@ public class TwitchSpawnCommand {
         String sourceNickname = context.getSource().getName();
 
         // TODO: randomize event args
-        EventArguments eventArguments = new EventArguments();
+        EventArguments eventArguments = new EventArguments("donation", "streamlabs");
         eventArguments.streamerNickname = sourceNickname;
         eventArguments.actorNickname = "TestUsername123";
-        eventArguments.eventType = "donation";
-        eventArguments.eventFor = "streamlabs";
         eventArguments.donationAmount = 100;
 
         return ConfigManager.HANDLING_RULES.handleEvent(eventArguments) ? 1 : 0;
