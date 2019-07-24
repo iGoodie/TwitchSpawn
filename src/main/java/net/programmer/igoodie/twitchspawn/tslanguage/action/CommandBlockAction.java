@@ -18,7 +18,7 @@ public class CommandBlockAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player) {
-        // TODO
+        // TODO Disable logging to OP users?
 
         CommandSource source = player.getCommandSource().withPermissionLevel(10);
 
@@ -26,8 +26,8 @@ public class CommandBlockAction extends TSLAction {
     }
 
     @Override
-    protected String formatText(String textJsonRaw, EventArguments args) {
-        return textJsonRaw; // TODO
+    protected String subtitleEvaluator(String expression, EventArguments args) {
+        return null;
     }
 
 }

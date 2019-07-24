@@ -63,7 +63,7 @@ public class StreamlabsSocketClient {
                 reason == null ? "" : String.format("(Reason: %s)", reason));
     }
 
-    public static boolean isStarted() {
+    public static boolean isRunning() {
         return instance != null;
     }
 
@@ -102,7 +102,7 @@ public class StreamlabsSocketClient {
                         streamer.minecraftNick, authorized.get() ? "intentional" : "unauthorized");
 
                 if (authorized.get() == false) {
-                    StreamlabsSocketClient.stop(null, "Unauthorized by the socket server");
+                    StreamlabsSocketClient.stop(null, streamer.twitchNick + " unauthorized by the socket server");
                 }
             });
 

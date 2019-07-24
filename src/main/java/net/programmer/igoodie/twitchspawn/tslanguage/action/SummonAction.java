@@ -17,8 +17,8 @@ public class SummonAction extends TSLAction {
     }
 
     @Override
-    protected String formatText(String textJsonRaw, EventArguments args) {
-        return textJsonRaw; // TODO
+    protected String subtitleEvaluator(String expression, EventArguments args) {
+        return null;
     }
 
 }

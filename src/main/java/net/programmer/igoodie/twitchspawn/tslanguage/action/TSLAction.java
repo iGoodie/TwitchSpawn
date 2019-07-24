@@ -11,6 +11,7 @@ import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
 import net.programmer.igoodie.twitchspawn.util.MessageEvaluator;
 
@@ -28,14 +29,14 @@ public abstract class TSLAction implements TSLFlowNode {
     protected abstract void performAction(ServerPlayerEntity player);
 
     /**
-     * Formats a title or subtitle text
-     * with the action specific fields
+     * Evaluates a value for given expression
+     * that is used in the subtitle.
      *
-     * @param textJsonRaw Raw text Json to be formatted
-     * @param args        Arguments of the event
-     * @return Formatted text
+     * @param expression Expression to be evaluated
+     * @param args       Arguments of the event
+     * @return Evaluated value of given expression
      */
-    protected abstract String formatText(String textJsonRaw, EventArguments args);
+    protected abstract String subtitleEvaluator(String expression, EventArguments args);
 
     /**
      * Processes the action node with given .
@@ -85,10 +86,39 @@ public abstract class TSLAction implements TSLFlowNode {
             return "${" + expression + "}";
         });
 
-        // TODO Fetch subtitle and format it
+        // Fetch subtitle and format it
+        String actionName = TSLParser.ACTION_CLASSES.inverse().get(getClass());
+        String subtitle = ConfigManager.SUBTITLES.getSubtitleJsonRaw(actionName);
+        subtitle = MessageEvaluator.replaceExpressions(subtitle, expression -> {
+            // TODO Implement better way to evaluate
+            if (expression.equals("actor"))
+                return args.actorNickname;
+            if (expression.equals("streamer"))
+                return args.streamerNickname;
+            if (expression.equals("amount") && args.donationAmount != 0.0)
+                return String.valueOf(args.donationAmount);
+            if (expression.equals("amount_i") && args.donationAmount != 0.0)
+                return String.valueOf((int) args.donationAmount);
+            if (expression.equals("amount_f") && args.donationAmount != 0.0)
+                return String.format("%.2f", args.donationAmount);
+            if (expression.equals("currency") && args.donationCurrency != null)
+                return args.donationCurrency;
+            if (expression.equals("month") && args.subscriptionMonths != 0)
+                return String.valueOf(args.subscriptionMonths);
+            if (expression.equals("viewers") && args.viewerCount != 0)
+                return String.valueOf(args.viewerCount);
+            if (expression.equals("raiders") && args.viewerCount != 0)
+                return String.valueOf(args.raiderCount);
+            if (expression.equals("time"))
+                return new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+            // Not a common one, go for action specific routine
+            String actionEvaluation = subtitleEvaluator(expression, args);
+            return actionEvaluation != null ? actionEvaluation : "${" + expression + "}";
+        });
 
         // Notify player and perform the action
-        notifyPlayer(player, title, "\":SUBTITLES NOT IMPLEMENTED YET:\"");
+        notifyPlayer(player, title, subtitle);
         performAction(player);
 
         TwitchSpawn.LOGGER.info("{} action performed for {}",
