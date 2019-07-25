@@ -27,6 +27,7 @@ public class TSLPredicate implements TSLFlowNode {
                 "#viewer", "viewer_count");
         loadAliases(EventArguments.getField("raiderCount"),
                 "#raider", "raider_count");
+        // TODO: Include "chance" field, which needs no extraction
     }
 
     private static void loadAliases(Field field, String... aliases) {

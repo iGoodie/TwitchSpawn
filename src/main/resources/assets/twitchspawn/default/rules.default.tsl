@@ -17,7 +17,7 @@ EXECUTE "/gamerule keepInventory true"
  WITH amount >= 1000
 
 # Follow Rules
-DROP "minecraft:stick{display:{Name:\"Stick of Truth!\"}}" 1
+DROP "minecraft:stick{display:{Name:\"\\\"Foo\\\"\"}}" 1
  ON Twitch Follow
 
 # Host Rules
