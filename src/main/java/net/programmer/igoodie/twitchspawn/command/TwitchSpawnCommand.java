@@ -84,6 +84,8 @@ public class TwitchSpawnCommand {
     public static int reloadModule(CommandContext<CommandSource> context) {
         CommandSource source = context.getSource();
 
+        // TODO: Check if source is moderator or streamer OR a command block!
+
         if (StreamlabsSocketClient.isRunning()) {
             source.sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.already_started"), false);
             return 0;

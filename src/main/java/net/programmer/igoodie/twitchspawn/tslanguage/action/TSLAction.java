@@ -79,7 +79,7 @@ public abstract class TSLAction implements TSLFlowNode {
                 return String.valueOf(args.subscriptionMonths);
             if (expression.equals("viewers") && args.viewerCount != 0)
                 return String.valueOf(args.viewerCount);
-            if (expression.equals("raiders") && args.viewerCount != 0)
+            if (expression.equals("raiders") && args.raiderCount != 0)
                 return String.valueOf(args.raiderCount);
             if (expression.equals("time"))
                 return new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -107,7 +107,7 @@ public abstract class TSLAction implements TSLFlowNode {
                 return String.valueOf(args.subscriptionMonths);
             if (expression.equals("viewers") && args.viewerCount != 0)
                 return String.valueOf(args.viewerCount);
-            if (expression.equals("raiders") && args.viewerCount != 0)
+            if (expression.equals("raiders") && args.raiderCount != 0)
                 return String.valueOf(args.raiderCount);
             if (expression.equals("time"))
                 return new SimpleDateFormat("HH:mm:ss").format(new Date());
