@@ -104,4 +104,18 @@ public class CredentialsConfig {
         }
     }
 
+    public boolean hasPermission(String nickname) {
+        if (moderatorsMinecraft.stream()
+                .filter(mod -> mod.equalsIgnoreCase(nickname))
+                .findFirst().orElse(null) != null)
+            return true;
+
+        if (streamers.stream()
+                .filter(streamer -> streamer.minecraftNick.equalsIgnoreCase(nickname))
+                .findFirst().orElse(null) != null)
+            return true;
+
+        return false;
+    }
+
 }
