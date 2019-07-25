@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tracer.StreamlabsSocketClient;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
@@ -54,9 +55,16 @@ public class TwitchSpawnCommand {
     }
 
     public static int startModule(CommandContext<CommandSource> context) {
-        try {
-            // TODO: Check if source is moderator or streamer OR a command block!
+        String sourceNickname = context.getSource().getName();
 
+        // If not command block and has no permission
+        if (!sourceNickname.equals("@") && !ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
+            context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.start.no_perm"), true);
+            TwitchSpawn.LOGGER.info("{} tried to run TwitchSpawn, but no permission", sourceNickname);
+            return 0;
+        }
+
+        try {
             StreamlabsSocketClient.start();
 
         } catch (IllegalStateException e) {
@@ -68,9 +76,16 @@ public class TwitchSpawnCommand {
     }
 
     public static int stopModule(CommandContext<CommandSource> context) {
-        try {
-            // TODO: Check if source is moderator or streamer OR a command block!
+        String sourceNickname = context.getSource().getName();
 
+        // If not command block and has no permission
+        if (!sourceNickname.equals("@") && !ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
+            context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.stop.no_perm"), true);
+            TwitchSpawn.LOGGER.info("{} tried to stop TwitchSpawn, but no permission", sourceNickname);
+            return 0;
+        }
+
+        try {
             StreamlabsSocketClient.stop(context.getSource(), "Command execution");
 
         } catch (IllegalStateException e) {
@@ -83,8 +98,14 @@ public class TwitchSpawnCommand {
 
     public static int reloadModule(CommandContext<CommandSource> context) {
         CommandSource source = context.getSource();
+        String sourceNickname = source.getName();
 
-        // TODO: Check if source is moderator or streamer OR a command block!
+        // If not command block and has no permission
+        if (sourceNickname.equals("@") && !ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
+            context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.no_perm"), true);
+            TwitchSpawn.LOGGER.info("{} tried to reload TwitchSpawn configs, but no permission", sourceNickname);
+            return 0;
+        }
 
         if (StreamlabsSocketClient.isRunning()) {
             source.sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.already_started"), false);

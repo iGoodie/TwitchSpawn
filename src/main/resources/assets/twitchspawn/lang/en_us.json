@@ -2,14 +2,19 @@
   "commands.twitchspawn.reloadcfg.success": "§3>> Successfully reloaded all the configs",
   "commands.twitchspawn.reloadcfg.invalid_syntax": "§4>> Failed to reload. Syntax errors:\n{0}",
   "commands.twitchspawn.reloadcfg.already_started": "§4>> TwitchSpawn should be stopped in order to be able to reload configs.",
+  "commands.twitchspawn.reloadcfg.no_perm": "§4>> You do not have permission to reload TwitchSpawn configs.",
 
   "commands.twitchspawn.status.on": "§3>> TwitchSpawn is currently running. [ON]",
   "commands.twitchspawn.status.off": "§3>> TwitchSpawn is currently not running. [OFF]",
 
   "commands.twitchspawn.start.success": "§a>> TwitchSpawn is now started on this server!",
   "commands.twitchspawn.start.illegal_state": "§4>> TwitchSpawn is already running.",
+  "commands.twitchspawn.start.no_perm": "§4>> You do not have permission to start TwitchSpawn.",
+
   "commands.twitchspawn.stop.success": "§6>> TwitchSpawn stopped by {0} (Reason: {1})",
   "commands.twitchspawn.stop.illegal_state": "§4>> TwitchSpawn is already stopped.",
+  "commands.twitchspawn.stop.no_perm": "§4>> You do not have permission to stop TwitchSpawn.",
+
 
   "errors.twitchspawn.loading": "Cannot load TwitchSpawn"
 }
