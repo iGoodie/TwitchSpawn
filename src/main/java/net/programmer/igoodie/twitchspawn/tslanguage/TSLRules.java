@@ -32,6 +32,9 @@ public class TSLRules {
         // Fetch TSLTree associated with the streamer
         TSLTree responsibleTree = streamerTrees.get(args.streamerNickname.toLowerCase());
 
+        // TODO: Collect predicate passing TSLAction nodes
+        // TODO: Select random one to perform
+
         if (responsibleTree != null) {
             TwitchSpawn.LOGGER.info("Found associated tree for {}. Handling with their rules", args.streamerNickname);
             return responsibleTree.handleEvent(args);

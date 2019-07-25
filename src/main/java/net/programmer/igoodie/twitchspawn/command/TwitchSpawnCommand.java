@@ -55,7 +55,7 @@ public class TwitchSpawnCommand {
 
     public static int startModule(CommandContext<CommandSource> context) {
         try {
-            // TODO: Check if source is moderator or streamer
+            // TODO: Check if source is moderator or streamer OR a command block!
 
             StreamlabsSocketClient.start();
 
@@ -69,7 +69,7 @@ public class TwitchSpawnCommand {
 
     public static int stopModule(CommandContext<CommandSource> context) {
         try {
-            // TODO: Check if source is moderator or streamer
+            // TODO: Check if source is moderator or streamer OR a command block!
 
             StreamlabsSocketClient.stop(context.getSource(), "Command execution");
 
