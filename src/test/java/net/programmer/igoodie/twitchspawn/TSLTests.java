@@ -44,4 +44,30 @@ public class TSLTests {
         Assertions.assertIterableEquals(Arrays.asList(words), parsedWords);
     }
 
+    @Test
+    @DisplayName("should separate rules correctly.")
+    public void ruleSeparatingTest() {
+        String[] lines = {
+                "# Comment line",
+                "DROP minecraft:diamond{display:{Name:\"\\\"SomeName\\\"\"}} # EoL Comment",
+                "# Another comment line",
+                " ON Twitch Follow",
+                "",
+                "DROP %item{foo:\"Number#1\"}% # Keep the in-quote hash",
+                " ON Twitch Follow",
+                "# Another comment",
+        };
+
+        String input = String.join("\n", lines);
+
+        List<String> rules = Assertions.assertDoesNotThrow(
+                () -> TSLParser.parseRules(input));
+
+        System.out.println(input);
+        System.out.println("# ------------------- #");
+        System.out.println(rules);
+
+        Assertions.assertEquals(2, rules.size());
+    }
+
 }

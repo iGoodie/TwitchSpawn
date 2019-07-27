@@ -17,7 +17,7 @@ EXECUTE %/gamerule keepInventory true%
  WITH amount >= 1000
 
 # Follow Rules
-DROP %minecraft:stick{display:{Name:"\"Foo\""}}% 1
+DROP %diamond{display:{Name:"\"99.99\% Percent Real Diamond\""}}% 2
  ON Twitch Follow
 
 # Host Rules
