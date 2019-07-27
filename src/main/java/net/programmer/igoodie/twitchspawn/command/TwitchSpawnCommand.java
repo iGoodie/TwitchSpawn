@@ -25,6 +25,7 @@ public class TwitchSpawnCommand {
 
         root.then(Commands.literal("reloadcfg").executes(TwitchSpawnCommand::reloadModule));
 
+        // TODO: rule testing command
 //        root.then(Commands.literal("test")
 //                .then(Commands.literal("drop")
 //                        .then(CommandArguments.string("action_arguments")
@@ -135,7 +136,8 @@ public class TwitchSpawnCommand {
         eventArguments.actorNickname = "TestUsername123";
         eventArguments.donationAmount = 100;
 
-        return ConfigManager.HANDLING_RULES.handleEvent(eventArguments) ? 1 : 0;
+        ConfigManager.HANDLING_RULES.handleEvent(eventArguments);
+        return 1;
     }
 
 }

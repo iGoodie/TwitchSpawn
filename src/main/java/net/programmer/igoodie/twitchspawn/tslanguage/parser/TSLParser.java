@@ -154,7 +154,7 @@ public class TSLParser {
                 continue;
 
             // Trim end of line comments
-            line = line.replaceAll("#(?!.*" + QUOTE + ").*", "");
+            line = line.replaceAll("#(?!.*\\Q" + QUOTE + "\\E).*", "");
 
             // Empty line
             if (line.matches("\\s*")) {

@@ -21,7 +21,7 @@ DROP %diamond{display:{Name:"\"99.99\% Percent Real Diamond\""}}% 2
  ON Twitch Follow
 
 # Host Rules
-EXECUTE %/give @p stick 1%
+EXECUTE %/give @s stick 1%
  ON Twitch Host
  WITH #viewer >= 10
 
