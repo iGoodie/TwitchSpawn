@@ -68,6 +68,10 @@ public class TSLTests {
         System.out.println(rules);
 
         Assertions.assertEquals(2, rules.size());
+        Assertions.assertEquals("DROP minecraft:diamond{display:{Name:\"\\\"SomeName\\\"\"}}" +
+                " ON Twitch Follow", rules.get(0));
+        Assertions.assertEquals("DROP %item{foo:\"Number#1\"}%" +
+                " ON Twitch Follow", rules.get(1));
     }
 
 }

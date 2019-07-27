@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class RulesConfig {
 
     public static TSLRules createRules(String directory) throws TSLSyntaxErrors {
-        // TODO: Disable creating defaults, if any of em is there
+        // TODO: Disable creating defaults, if all of them are there
         return new TSLRules(
                 create(directory + File.separator + "rules.default.tsl"),
                 fromDirectory(new File(directory)));
