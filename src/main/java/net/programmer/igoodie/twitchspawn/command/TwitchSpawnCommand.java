@@ -130,11 +130,7 @@ public class TwitchSpawnCommand {
     public static int debugRandomEventModule(CommandContext<CommandSource> context) {
         String sourceNickname = context.getSource().getName();
 
-        // TODO: randomize event args
-        EventArguments eventArguments = new EventArguments("donation", "streamlabs");
-        eventArguments.streamerNickname = sourceNickname;
-        eventArguments.actorNickname = "TestUsername123";
-        eventArguments.donationAmount = 100;
+        EventArguments eventArguments = EventArguments.createRandom(sourceNickname);
 
         ConfigManager.HANDLING_RULES.handleEvent(eventArguments);
         return 1;
