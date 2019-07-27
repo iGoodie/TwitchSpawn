@@ -126,6 +126,10 @@ public abstract class TSLAction implements TSLFlowNode {
         return true;
     }
 
+    private static final int DEFAULT_FADE_IN_TICKS = 10;
+    private static final int DEFAULT_STAY_TICKS = 70;
+    private static final int DEFAULT_FADE_OUT_TICKS = 20;
+
     private void notifyPlayer(ServerPlayerEntity player, String title, String subtitle) {
         ResourceLocation soundLocation = new ResourceLocation("minecraft:entity.player.levelup");
         SoundCategory category = SoundCategory.MASTER;
@@ -133,11 +137,13 @@ public abstract class TSLAction implements TSLFlowNode {
         player.connection.sendPacket(packetSound);
 
         ITextComponent text = ITextComponent.Serializer.fromJsonLenient(title);
-        STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text);
+        STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text,
+                DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
         player.connection.sendPacket(packet);
 
         ITextComponent subtext = ITextComponent.Serializer.fromJsonLenient(subtitle);
-        STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext);
+        STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
+                DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
         player.connection.sendPacket(subtitlePacket);
     }
 
