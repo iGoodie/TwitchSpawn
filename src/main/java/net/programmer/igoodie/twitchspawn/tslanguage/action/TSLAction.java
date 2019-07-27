@@ -12,12 +12,14 @@ import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
 import net.programmer.igoodie.twitchspawn.util.MessageEvaluator;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public abstract class TSLAction implements TSLFlowNode {
 
@@ -37,6 +39,18 @@ public abstract class TSLAction implements TSLFlowNode {
      * @return Evaluated value of given expression
      */
     protected abstract String subtitleEvaluator(String expression, EventArguments args);
+
+    /**
+     * Some TSL actions might need other
+     * action's subtitle json. In those cases,
+     * subclass modifies this method.
+     * (E.g {@link EitherAction})
+     *
+     * @return Associated subtitle action's name
+     */
+    protected String associatedSubtitleAction() {
+        return TSLParser.getActionName(getClass());
+    }
 
     /**
      * Processes the action node with given .
@@ -87,7 +101,7 @@ public abstract class TSLAction implements TSLFlowNode {
         });
 
         // Fetch subtitle and format it
-        String actionName = TSLParser.ACTION_CLASSES.inverse().get(getClass());
+        String actionName = associatedSubtitleAction();
         String subtitle = ConfigManager.SUBTITLES.getSubtitleJsonRaw(actionName);
         subtitle = MessageEvaluator.replaceExpressions(subtitle, expression -> {
             // TODO Implement better way to evaluate

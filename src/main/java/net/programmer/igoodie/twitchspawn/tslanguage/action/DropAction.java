@@ -34,13 +34,13 @@ public class DropAction extends TSLAction {
      * stone_block 321
      * diamond_sword{Enchantments:[{id:smite,lvl:2},{id:sweeping,lvl:2},{id:unbreaking,lvl:3}]}
      */
-    public DropAction(List<String> params) throws TSLSyntaxError {
-        if (params.size() != 1 && params.size() != 2)
-            throw new TSLSyntaxError("Invalid length of parameters: " + params);
+    public DropAction(List<String> words) throws TSLSyntaxError {
+        if (words.size() != 1 && words.size() != 2)
+            throw new TSLSyntaxError("Invalid length of words: " + words);
 
         try {
-            ItemParser itemParser = new ItemParser(new StringReader(params.get(0)), true).parse();
-            int amount = params.size() != 2 ? 1 : Integer.parseInt(params.get(1));
+            ItemParser itemParser = new ItemParser(new StringReader(words.get(0)), true).parse();
+            int amount = words.size() != 2 ? 1 : Integer.parseInt(words.get(1));
 
             this.itemStack = new ItemStack(itemParser.getItem(), amount);
             this.itemStack.setTag(itemParser.getNbt());
@@ -49,7 +49,7 @@ public class DropAction extends TSLAction {
             throw new TSLSyntaxError(e.getRawMessage().getString());
 
         } catch (Exception e) {
-            throw new TSLSyntaxError("Invalid action parameter: " + params);
+            throw new TSLSyntaxError("Invalid action words: " + words);
         }
     }
 

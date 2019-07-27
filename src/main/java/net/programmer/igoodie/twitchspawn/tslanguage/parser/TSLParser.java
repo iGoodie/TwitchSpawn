@@ -4,10 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
-import net.programmer.igoodie.twitchspawn.tslanguage.action.CommandBlockAction;
-import net.programmer.igoodie.twitchspawn.tslanguage.action.DropAction;
-import net.programmer.igoodie.twitchspawn.tslanguage.action.SummonAction;
-import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
+import net.programmer.igoodie.twitchspawn.tslanguage.action.*;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.*;
 
@@ -23,8 +20,8 @@ public class TSLParser {
     public static final char QUOTE = '%';
     public static final char ESCAPE_CHAR = '\\';
 
-    public static BiMap<String, Class<? extends TSLAction>> ACTION_CLASSES;
-    public static Map<String, Class<? extends TSLComparator>> COMPARATOR_CLASSES;
+    private static BiMap<String, Class<? extends TSLAction>> ACTION_CLASSES;
+    private static Map<String, Class<? extends TSLComparator>> COMPARATOR_CLASSES;
 
     public static void initialize() {
         TwitchSpawn.LOGGER.info("Initializing TSL parsing specs...");
@@ -37,7 +34,8 @@ public class TSLParser {
 
         registerAction("DROP", DropAction.class);
         registerAction("SUMMON", SummonAction.class);
-        registerAction("EXECUTE", CommandBlockAction.class);
+        registerAction("EXECUTE", ExecuteAction.class);
+        registerAction("EITHER", EitherAction.class);
 
         registerComparator(InRangeComparator.class);
         registerComparator(EqualsComparator.class);
@@ -50,9 +48,17 @@ public class TSLParser {
     }
 
     public static void registerAction(String name, Class<? extends TSLAction> actionClass) {
-        ACTION_CLASSES.put(name, actionClass);
+        ACTION_CLASSES.put(name.toUpperCase(), actionClass);
         TwitchSpawn.LOGGER.debug("Registered TSLAction key: {} -> {}",
                 name, actionClass.getSimpleName());
+    }
+
+    public static Class<? extends TSLAction> getActionClass(String actionName) {
+        return ACTION_CLASSES.get(actionName.toUpperCase());
+    }
+
+    public static String getActionName(Class<?> actionClass) {
+        return ACTION_CLASSES.inverse().get(actionClass);
     }
 
     public static void registerComparator(Class<? extends TSLComparator> comparatorClass) {
@@ -86,7 +92,7 @@ public class TSLParser {
 
     /* ------------------------------------------------------------------ */
 
-    private static <T> T createInstance(Class<T> clazz, Object... args) throws TSLSyntaxError {
+    public static <T> T createInstance(Class<T> clazz, Object... args) throws TSLSyntaxError {
         try {
             return (T) clazz.getConstructors()[0].newInstance(args);
 
