@@ -114,9 +114,9 @@ dependencies {
     shade group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
 
     // JUnit 5 for testings
-//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
-//    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.5.0'
-//    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.5.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.0'
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
