@@ -8,15 +8,18 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.List;
 
-public class CommandBlockAction extends TSLAction {
+public class ExecuteAction extends TSLAction {
 
     private List<String> commands;
 
-    public CommandBlockAction(List<String> args) throws TSLSyntaxError {
-        if (!args.stream().allMatch(arg -> arg.startsWith("/")))
+    public ExecuteAction(List<String> words) throws TSLSyntaxError {
+        if (words.size() == 0)
+            throw new TSLSyntaxError("Expected at least one command.");
+
+        if (!words.stream().allMatch(word -> word.startsWith("/")))
             throw new TSLSyntaxError("Every command must start with '/' character");
 
-        this.commands = args;
+        this.commands = words;
     }
 
     @Override

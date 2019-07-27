@@ -6,6 +6,8 @@ import com.google.common.io.Resources;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.programmer.igoodie.twitchspawn.tslanguage.action.EitherAction;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.util.GsonUtils;
 import org.apache.commons.io.FileUtils;
 
