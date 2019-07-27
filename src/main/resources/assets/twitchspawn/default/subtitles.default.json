@@ -36,5 +36,15 @@
       "text": " triggered a command for you!",
       "color": "white"
     }
+  ],
+  "NOTHING": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " triggered no action!",
+      "color": "white"
+    }
   ]
 }
