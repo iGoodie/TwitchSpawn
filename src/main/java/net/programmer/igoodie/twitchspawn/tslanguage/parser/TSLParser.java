@@ -19,11 +19,11 @@ import java.util.stream.IntStream;
 
 public class TSLParser {
 
-    private static final char SPACE = ' ';
-    private static final char QUOTE = '"';
-    private static final char ESCAPE_CHAR = '\\';
+    public static final char SPACE = ' ';
+    public static final char QUOTE = '%';
+    public static final char ESCAPE_CHAR = '\\';
 
-    public static BiMap<String, Class<? extends  TSLAction>> ACTION_CLASSES;
+    public static BiMap<String, Class<? extends TSLAction>> ACTION_CLASSES;
     public static Map<String, Class<? extends TSLComparator>> COMPARATOR_CLASSES;
 
     public static void initialize() {
@@ -140,17 +140,7 @@ public class TSLParser {
 
     /* ------------------------------------------------------------------ */
 
-    private int wordIndex;
-    private List<String> rules;
-    private Map<String, TSLEvent> events;
-
-    public TSLParser(String script) throws TSLSyntaxError {
-        this.rules = parseRules(script);
-        this.events = new HashMap<>();
-        this.wordIndex = 0;
-    }
-
-    public List<String> parseRules(String input) throws TSLSyntaxError {
+    public static List<String> parseRules(String input) throws TSLSyntaxError {
         List<String> rules = new LinkedList<>();
         String[] lines = input.split("\\R");
 
@@ -198,9 +188,9 @@ public class TSLParser {
         return rules;
     }
 
-    public List<String> parseWords(String rule) throws TSLSyntaxError {
+    public static List<String> parseWords(String rule) throws TSLSyntaxError {
         if (unescapedQuoteCount(rule) % 2 != 0)
-            throw new TSLSyntaxError("Invalid count of quotation marks");
+            throw new TSLSyntaxError("Invalid count of " + QUOTE + " marks");
 
         List<String> words = new LinkedList<>();
 
@@ -212,8 +202,9 @@ public class TSLParser {
             char character = rule.charAt(i);
 
             if (escaping) {
-                if (character != ESCAPE_CHAR && character != QUOTE)
-                    throw new TSLSyntaxError("Invalid escape sequence at index " + i);
+                if (/*character != ESCAPE_CHAR && */character != QUOTE)
+                    word += ESCAPE_CHAR; // Invalid escapes count as literal escape chars
+//                    throw new TSLSyntaxError("Invalid escape sequence at index " + i);
 
                 word += character;
                 escaping = false;
@@ -257,7 +248,19 @@ public class TSLParser {
         return words;
     }
 
-    public TSLAction parseAction(List<String> words) throws TSLSyntaxError {
+    /* ------------------------------------------------------------------ */
+
+    private int wordIndex;
+    private List<String> rules;
+    private Map<String, TSLEvent> events;
+
+    public TSLParser(String script) throws TSLSyntaxError {
+        this.rules = parseRules(script);
+        this.events = new HashMap<>();
+        this.wordIndex = 0;
+    }
+
+    private TSLAction parseAction(List<String> words) throws TSLSyntaxError {
         String word = words.get(wordIndex++);
 
         String actionName = word;
@@ -277,7 +280,7 @@ public class TSLParser {
         return createInstance(actionClass, actionArguments);
     }
 
-    public TSLEvent parseEvent(List<String> words) throws TSLSyntaxError {
+    private TSLEvent parseEvent(List<String> words) throws TSLSyntaxError {
         if (!words.get(wordIndex++).equalsIgnoreCase("ON"))
             throw new InternalError("Called TSLParser::parseEvent in an illegal state");
 
@@ -309,7 +312,7 @@ public class TSLParser {
         return event;
     }
 
-    public List<TSLPredicate> parsePredicates(List<String> words) throws TSLSyntaxError {
+    private List<TSLPredicate> parsePredicates(List<String> words) throws TSLSyntaxError {
         if (wordIndex < words.size() && !words.get(wordIndex++).equalsIgnoreCase("WITH"))
             throw new InternalError("Called TSLParser::parsePredicates in an illegal state");
 
@@ -340,7 +343,7 @@ public class TSLParser {
         return predicates;
     }
 
-    public TSLPredicate createPredicate(List<String> arguments) throws TSLSyntaxError {
+    private TSLPredicate createPredicate(List<String> arguments) throws TSLSyntaxError {
         if (arguments.size() < 3)
             throw new TSLSyntaxError("Expected at least 3 words after WITH.");
 
@@ -351,7 +354,7 @@ public class TSLParser {
         return new TSLPredicate(fieldAlias, createComparator(symbol, rightHandRaw));
     }
 
-    public TSLComparator createComparator(String symbol, String rightHandRaw) throws TSLSyntaxError {
+    private TSLComparator createComparator(String symbol, String rightHandRaw) throws TSLSyntaxError {
         Class<? extends TSLComparator> comparatorClass;
 
         // No comparator with given symbol

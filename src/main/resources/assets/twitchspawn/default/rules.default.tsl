@@ -12,20 +12,20 @@ DROP minecraft:diamond_block 1
  ON Streamlabs Donation
  WITH amount IN RANGE [21,999]
 
-EXECUTE "/gamerule keepInventory true"
+EXECUTE %/gamerule keepInventory true%
  ON Streamlabs Donation
  WITH amount >= 1000
 
 # Follow Rules
-DROP "minecraft:stick{display:{Name:\"\\\"Foo\\\"\"}}" 1
+DROP %minecraft:stick{display:{Name:"\"Foo\""}}% 1
  ON Twitch Follow
 
 # Host Rules
-EXECUTE "/give @p stick 1"
+EXECUTE %/give @p stick 1%
  ON Twitch Host
  WITH #viewer >= 10
 
 # Raid Rules
-EXECUTE "/weather thunder"
+EXECUTE %/weather thunder%
  ON Twitch Raid
  WITH #raider > 100
