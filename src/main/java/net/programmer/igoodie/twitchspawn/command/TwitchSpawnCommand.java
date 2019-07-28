@@ -11,6 +11,7 @@ import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tracer.StreamlabsSocketClient;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
+import net.programmer.igoodie.twitchspawn.util.TwitchSpawnLoadingErrors;
 
 public class TwitchSpawnCommand {
 
@@ -118,7 +119,7 @@ public class TwitchSpawnCommand {
             source.sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.success"), false);
             return 1;
 
-        } catch (TSLSyntaxErrors e) {
+        } catch (TwitchSpawnLoadingErrors e) {
             source.sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.invalid_syntax",
                     e.getMessage()), false);
             return 0;
