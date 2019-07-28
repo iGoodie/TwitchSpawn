@@ -54,7 +54,7 @@ public class ConfigManager {
     }
 
     @FunctionalInterface
-    private static interface ExceptionAccumulator {
+    private interface ExceptionAccumulator {
         void execute() throws Exception;
     }
 

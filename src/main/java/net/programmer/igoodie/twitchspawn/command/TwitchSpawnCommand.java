@@ -121,7 +121,7 @@ public class TwitchSpawnCommand {
 
         } catch (TwitchSpawnLoadingErrors e) {
             source.sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.invalid_syntax",
-                    e.getMessage()), false);
+                    e.toString()), false);
             return 0;
         }
     }

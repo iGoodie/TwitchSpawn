@@ -54,7 +54,17 @@ public class TwitchSpawnLoadingErrors extends Exception {
                     modInfo, stage, i18nMessage, exception.getMessage()
             ));
         }
-
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        String delimiter = "";
+        for (Exception exception : exceptions) {
+            sb.append(delimiter);
+            sb.append(exception.getMessage());
+            delimiter = "\n";
+        }
+        return sb.toString();
+    }
 }
