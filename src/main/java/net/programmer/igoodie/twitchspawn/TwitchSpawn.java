@@ -3,9 +3,7 @@ package net.programmer.igoodie.twitchspawn;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingException;
-import net.minecraftforge.fml.ModLoadingStage;
+import net.minecraftforge.fml.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -19,6 +17,8 @@ import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tracer.StreamlabsSocketClient;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
+import net.programmer.igoodie.twitchspawn.util.TwitchSpawnLoadingErrors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,14 +45,15 @@ public class TwitchSpawn {
             TSLParser.initialize();
             ConfigManager.loadConfigs();
 
-        } catch (Exception exception) {
-            // TODO Print exceptions on the screen
-            throw new ModLoadingException(
-                    ModList.get().getModContainerById(MOD_ID).get().getModInfo(),
-                    ModLoadingStage.COMMON_SETUP,
-                    "fml.modloading.failedtoloadmod",
-                    exception
-            );
+        } catch (TwitchSpawnLoadingErrors e) {
+            e.bindFMLWarnings(ModLoadingStage.COMMON_SETUP);
+            throw new RuntimeException("Foo bar baz");
+            //            throw new ModLoadingException(
+//                    ModList.get().getModContainerById(MOD_ID).get().getModInfo(),
+//                    ModLoadingStage.COMMON_SETUP,
+//                    "fml.modloading.failedtoloadmod",
+//                    exception
+//            );
         }
     }
 
@@ -74,7 +75,7 @@ public class TwitchSpawn {
     public void onServerStopping(FMLServerStoppingEvent event) {
         SERVER = null;
 
-        if(StreamlabsSocketClient.isRunning()) {
+        if (StreamlabsSocketClient.isRunning()) {
             StreamlabsSocketClient.stop(null, "Server stopping");
         }
     }

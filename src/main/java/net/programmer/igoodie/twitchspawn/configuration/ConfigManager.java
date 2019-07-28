@@ -4,6 +4,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLRules;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
+import net.programmer.igoodie.twitchspawn.util.TwitchSpawnLoadingErrors;
 
 import java.io.File;
 
@@ -16,24 +17,45 @@ public class ConfigManager {
     public static TitlesConfig TITLES;
     public static SubtitlesConfig SUBTITLES;
 
-    public static void loadConfigs() throws TSLSyntaxErrors {
+    public static void loadConfigs() throws TwitchSpawnLoadingErrors {
         TwitchSpawn.LOGGER.info("Loading configs...");
+        TwitchSpawnLoadingErrors errors = new TwitchSpawnLoadingErrors();
 
         File configDirectory = new File(CONFIG_DIR_PATH);
 
         if (!configDirectory.exists())
             configDirectory.mkdirs();
 
-        CREDENTIALS = CredentialsConfig.create(getPath("credentials.toml"));
-        HANDLING_RULES = RulesConfig.createRules(CONFIG_DIR_PATH);
-        TITLES = TitlesConfig.create(new File(getPath("messages.title.json")));
-        SUBTITLES = SubtitlesConfig.create(new File(getPath("messages.subtitle.json")));
+        accumulateExceptions(errors,
+                () -> CREDENTIALS = CredentialsConfig.create(getPath("credentials.toml")));
+        accumulateExceptions(errors,
+                () -> HANDLING_RULES = RulesConfig.createRules(CONFIG_DIR_PATH));
+        accumulateExceptions(errors,
+                () -> TITLES = TitlesConfig.create(new File(getPath("messages.title.json"))));
+        accumulateExceptions(errors,
+                () -> SUBTITLES = SubtitlesConfig.create(new File(getPath("messages.subtitle.json"))));
+
+        if(!errors.isEmpty())
+            throw errors;
 
         TwitchSpawn.LOGGER.info("Configs loaded successfully!");
     }
 
     public static String getPath(String relativePath) {
         return CONFIG_DIR_PATH + File.separator + relativePath;
+    }
+
+    private static void accumulateExceptions(TwitchSpawnLoadingErrors container, ExceptionAccumulator task) {
+        try {
+            task.execute();
+        } catch (Exception e) {
+            container.addException(e);
+        }
+    }
+
+    @FunctionalInterface
+    private static interface ExceptionAccumulator {
+        void execute() throws Exception;
     }
 
 }
