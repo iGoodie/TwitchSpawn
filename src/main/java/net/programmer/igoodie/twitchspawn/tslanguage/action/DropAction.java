@@ -60,9 +60,10 @@ public class DropAction extends TSLAction {
 
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
-        if(expression.equals("itemName"))
-            return itemStack.getItem().getName().getString();
-        if(expression.equals("itemCount"))
+        if (expression.equals("itemName"))
+            return itemStack.getItem().getDisplayName(itemStack).getString();
+//            return itemStack.getItem().getName().getString(); // getName() is client only...
+        if (expression.equals("itemCount"))
             return String.valueOf(itemStack.getCount());
         return null;
     }
