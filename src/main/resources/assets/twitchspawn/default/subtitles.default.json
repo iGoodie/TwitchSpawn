@@ -23,7 +23,7 @@
       "color": "white"
     },
     {
-      "text": "${mobName}x${mobCount}",
+      "text": "${mobName}",
       "color": "gold"
     }
   ],

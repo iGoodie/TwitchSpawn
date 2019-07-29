@@ -29,7 +29,7 @@ public class ExecuteAction extends TSLAction {
                 .withFeedbackDisabled();
 
         commands.forEach(command -> {
-            int result = TwitchSpawn.SERVER.getCommandManager().handleCommand(source, command);
+            int result = player.getServer().getCommandManager().handleCommand(source, command);
             TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, command);
         });
     }
