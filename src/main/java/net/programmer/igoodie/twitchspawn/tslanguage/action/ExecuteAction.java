@@ -34,9 +34,4 @@ public class ExecuteAction extends TSLAction {
         });
     }
 
-    @Override
-    protected String subtitleEvaluator(String expression, EventArguments args) {
-        return null; // No extra evaluation
-    }
-
 }
