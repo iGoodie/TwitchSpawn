@@ -38,7 +38,9 @@ public abstract class TSLAction implements TSLFlowNode {
      * @param args       Arguments of the event
      * @return Evaluated value of given expression
      */
-    protected abstract String subtitleEvaluator(String expression, EventArguments args);
+    protected String subtitleEvaluator(String expression, EventArguments args) {
+        return null;
+    }
 
     /**
      * Some TSL actions might need other

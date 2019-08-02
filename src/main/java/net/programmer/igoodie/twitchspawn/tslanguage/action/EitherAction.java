@@ -11,8 +11,8 @@ import java.util.List;
 
 public class EitherAction extends TSLAction {
 
-    List<TSLAction> actions;
-    TSLAction selectedAction;
+    private List<TSLAction> actions;
+    private TSLAction selectedAction;
 
     public EitherAction(List<String> words) throws TSLSyntaxError {
         this.actions = new ArrayList<>();

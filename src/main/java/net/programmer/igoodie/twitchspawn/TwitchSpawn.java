@@ -47,13 +47,7 @@ public class TwitchSpawn {
 
         } catch (TwitchSpawnLoadingErrors e) {
             e.bindFMLWarnings(ModLoadingStage.COMMON_SETUP);
-            throw new RuntimeException("Foo bar baz");
-            //            throw new ModLoadingException(
-//                    ModList.get().getModContainerById(MOD_ID).get().getModInfo(),
-//                    ModLoadingStage.COMMON_SETUP,
-//                    "fml.modloading.failedtoloadmod",
-//                    exception
-//            );
+            throw new RuntimeException("TwitchSpawn loading errors occurred");
         }
     }
 

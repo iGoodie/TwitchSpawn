@@ -16,9 +16,4 @@ public class NothingAction extends TSLAction {
     @Override
     protected void performAction(ServerPlayerEntity player) {}
 
-    @Override
-    protected String subtitleEvaluator(String expression, EventArguments args) {
-        return null; // No extra evaluation
-    }
-
 }
