@@ -59,8 +59,8 @@ public class TwitchSpawnCommand {
     public static int startModule(CommandContext<CommandSource> context) {
         String sourceNickname = context.getSource().getName();
 
-        // If not command block and has no permission
-        if (!sourceNickname.equals("@") && !ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
+        // If has no permission
+        if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
             context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.start.no_perm"), true);
             TwitchSpawn.LOGGER.info("{} tried to run TwitchSpawn, but no permission", sourceNickname);
             return 0;
@@ -80,8 +80,8 @@ public class TwitchSpawnCommand {
     public static int stopModule(CommandContext<CommandSource> context) {
         String sourceNickname = context.getSource().getName();
 
-        // If not command block and has no permission
-        if (!sourceNickname.equals("@") && !ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
+        // If has no permission
+        if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
             context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.stop.no_perm"), true);
             TwitchSpawn.LOGGER.info("{} tried to stop TwitchSpawn, but no permission", sourceNickname);
             return 0;
@@ -102,8 +102,8 @@ public class TwitchSpawnCommand {
         CommandSource source = context.getSource();
         String sourceNickname = source.getName();
 
-        // If not command block and has no permission
-        if (sourceNickname.equals("@") && !ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
+        // If has no permission
+        if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
             context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.no_perm"), true);
             TwitchSpawn.LOGGER.info("{} tried to reload TwitchSpawn configs, but no permission", sourceNickname);
             return 0;
@@ -120,8 +120,8 @@ public class TwitchSpawnCommand {
             return 1;
 
         } catch (TwitchSpawnLoadingErrors e) {
-            source.sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.invalid_syntax",
-                    e.toString()), false);
+            String errorLog = "• " + e.toString().replace("\n", "\n• ");
+            source.sendFeedback(new TranslationTextComponent("commands.twitchspawn.reloadcfg.invalid_syntax", errorLog), false);
             return 0;
         }
     }
