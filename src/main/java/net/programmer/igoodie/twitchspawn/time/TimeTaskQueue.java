@@ -50,4 +50,8 @@ public class TimeTaskQueue {
         return queue.size();
     }
 
+    public void cleanAll() {
+        timer.cancel();
+    }
+
 }

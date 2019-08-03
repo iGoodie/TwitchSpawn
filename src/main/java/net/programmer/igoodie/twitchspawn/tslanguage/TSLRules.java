@@ -54,4 +54,8 @@ public class TSLRules {
         });
     }
 
+    public void cleanQueue() {
+        eventQueue.cleanAll();
+    }
+
 }
