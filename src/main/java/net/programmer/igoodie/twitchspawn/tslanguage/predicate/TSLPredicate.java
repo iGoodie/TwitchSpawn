@@ -22,11 +22,11 @@ public class TSLPredicate implements TSLFlowNode {
         loadAliases(EventArguments.getField("donationAmount"),
                 "amount", "donation_amount");
         loadAliases(EventArguments.getField("subscriptionMonths"),
-                "months", "#months", "subscription_months");
+                "months", "month_count", "subscription_months");
         loadAliases(EventArguments.getField("viewerCount"),
-                "#viewer", "viewer_count");
+                "viewers", "viewer_count");
         loadAliases(EventArguments.getField("raiderCount"),
-                "#raider", "raider_count");
+                "raiders", "raider_count");
         // TODO: Include "chance" field, which needs no extraction
     }
 

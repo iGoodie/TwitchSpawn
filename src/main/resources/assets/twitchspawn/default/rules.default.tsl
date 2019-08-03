@@ -23,9 +23,9 @@ DROP %diamond{display:{Name:"\"99.99\% Percent Real Diamond\""}}% 2
 # Host Rules
 EXECUTE %/give @s stick 1%
  ON Twitch Host
- WITH #viewer >= 10
+ WITH viewers >= 10
 
 # Raid Rules
 EXECUTE %/weather thunder%
  ON Twitch Raid
- WITH #raider > 100
+ WITH raiders > 100
