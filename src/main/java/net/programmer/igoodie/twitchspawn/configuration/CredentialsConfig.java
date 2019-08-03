@@ -105,14 +105,18 @@ public class CredentialsConfig {
     }
 
     public boolean hasPermission(String nickname) {
+        if(nickname.equals("@")) // Command block
+            return true;
+
+        if(nickname.equalsIgnoreCase("Server")) // Dedicated server
+            return true;
+
         if (moderatorsMinecraft.stream()
-                .filter(mod -> mod.equalsIgnoreCase(nickname))
-                .findFirst().orElse(null) != null)
+                .anyMatch(mod -> mod.equalsIgnoreCase(nickname)))
             return true;
 
         if (streamers.stream()
-                .filter(streamer -> streamer.minecraftNick.equalsIgnoreCase(nickname))
-                .findFirst().orElse(null) != null)
+                .anyMatch(streamer -> streamer.minecraftNick.equalsIgnoreCase(nickname)))
             return true;
 
         return false;
