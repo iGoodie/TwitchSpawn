@@ -72,6 +72,8 @@ public class TwitchSpawn {
         if (StreamlabsSocketClient.isRunning()) {
             StreamlabsSocketClient.stop(null, "Server stopping");
         }
+
+        ConfigManager.HANDLING_RULES.cleanQueue();
     }
 
 }
