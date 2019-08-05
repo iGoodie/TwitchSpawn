@@ -2,13 +2,13 @@ package net.programmer.igoodie.twitchspawn.tslanguage;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.time.TimeTaskQueue;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-public class TSLRules {
+public class TSLRulesetCollection {
 
     private static long TITLE_DURATION = 5 * 1000; // milliseconds
 
@@ -16,7 +16,7 @@ public class TSLRules {
     private Map<String, TSLTree> streamerTrees; // Maps lowercase nicks to TSLTree
     private TimeTaskQueue eventQueue;
 
-    public TSLRules(TSLTree defaultTree, List<TSLTree> streamerTrees) {
+    public TSLRulesetCollection(TSLTree defaultTree, List<TSLTree> streamerTrees) {
         if (defaultTree == null)
             throw new InternalError("Default tree must be not null");
 
@@ -52,6 +52,16 @@ public class TSLRules {
             TwitchSpawn.LOGGER.info("No associated tree for {} found. Handling with default rules", args.streamerNickname);
             defaultTree.handleEvent(args);
         });
+    }
+
+    public Set<String> getStreamers() {
+        return streamerTrees.keySet();
+    }
+
+    public TSLTree getRuleset(String streamerNick) {
+        if (streamerNick.equalsIgnoreCase("default"))
+            return defaultTree;
+        return streamerTrees.get(streamerNick);
     }
 
     public void cleanQueue() {

@@ -74,4 +74,14 @@ public class TSLTests {
                 " ON Twitch Follow", rules.get(1));
     }
 
+    @Test
+    @DisplayName("should trim comments correctly.")
+    public void commentTest() throws TSLSyntaxError {
+        String script = "# Line Comment\n" +
+                "DROP stuff ON Twitch Follow # Other Comment";
+
+        List<String> rules = TSLParser.parseRules(script);
+        Assertions.assertEquals("DROP stuff ON Twitch Follow", rules.get(0));
+    }
+
 }

@@ -1,6 +1,5 @@
 package net.programmer.igoodie.twitchspawn.tracer;
 
-import com.google.gson.GsonBuilder;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import net.minecraft.command.CommandSource;
@@ -148,7 +147,7 @@ public class StreamlabsSocketClient {
             eventArguments.viewerCount = extractNumberFrom(message, "viewers", 0).intValue();
 
             // Pass the model to the handler
-            ConfigManager.HANDLING_RULES.handleEvent(eventArguments);
+            ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);
         });
     }
 
