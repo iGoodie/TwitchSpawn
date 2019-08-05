@@ -7,6 +7,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
 
 import java.awt.*;
 import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -30,33 +31,29 @@ public class EventArguments {
     }
 
     public static EventArguments createRandom(String streamerNickname) {
-        Random random = new Random();
-
         EventArguments eventArguments = new EventArguments(randomPair());
+
         eventArguments.streamerNickname = streamerNickname;
-        eventArguments.actorNickname = "RandomActor";
-        eventArguments.message = "Random event message";
-        eventArguments.donationAmount = random.nextDouble();
-        eventArguments.donationCurrency = new String[]{"USD", "TRY", "EUR"}[random.nextInt(3)];
-        eventArguments.subscriptionMonths = random.nextInt();
-        eventArguments.viewerCount = random.nextInt();
-        eventArguments.raiderCount = random.nextInt();
+        eventArguments.randomize();
 
         return eventArguments;
     }
 
     private static TSLEventPair randomPair() {
         Set<TSLEventPair> eventPairs = TSLEvent.EVENT_NAME_ALIASES.keySet();
-        int index = (int) Math.floor(Math.random() * eventPairs.size());
+        int randomIndex = (int) Math.floor(Math.random() * eventPairs.size());
 
-        assert 0 <= index && index < eventPairs.size();
+        assert 0 <= randomIndex && randomIndex < eventPairs.size();
 
-        for (TSLEventPair pair : eventPairs) {
-            if ((index--) == 0)
-                return pair;
+        Iterator<TSLEventPair> iterator = eventPairs.iterator();
+
+        // Skip N-1 pairs
+        for (int i = 0; i < randomIndex; i++) {
+            iterator.next();
         }
 
-        return null; // Impossible to reach here
+        // Return N'th pair
+        return iterator.next();
     }
 
     /* ------------------------------ */
@@ -85,6 +82,22 @@ public class EventArguments {
 
     public EventArguments(TSLEventPair eventPair) {
         this(eventPair.getEventType(), eventPair.getEventFor());
+    }
+
+    public void randomize() {
+        randomize("RandomDude", "Random event message");
+    }
+
+    public void randomize(String actorNickname, String message) {
+        Random random = new Random();
+
+        this.actorNickname = actorNickname;
+        this.message = message;
+        this.donationAmount = random.nextDouble() * 1000;
+        this.donationCurrency = new String[]{"USD", "TRY", "EUR"}[random.nextInt(3)];
+        this.subscriptionMonths = random.nextInt(100 - 1) + 1;
+        this.viewerCount = random.nextInt(100 - 1) + 1;
+        this.raiderCount = random.nextInt(100 - 1) + 1;
     }
 
     @Override

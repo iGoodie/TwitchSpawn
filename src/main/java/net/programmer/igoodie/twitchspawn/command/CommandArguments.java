@@ -5,10 +5,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.command.arguments.EntitySelector;
-import net.minecraft.command.arguments.ItemArgument;
-import net.minecraft.command.arguments.ItemInput;
+import net.minecraft.command.arguments.*;
+import net.minecraft.nbt.CompoundNBT;
 
 public class CommandArguments {
 
@@ -38,6 +36,10 @@ public class CommandArguments {
 
     public static RequiredArgumentBuilder<CommandSource, String> rulesetStreamer(String name) {
         return Commands.argument(name, StreamerNickType.streamerNickOrDefault());
+    }
+
+    public static RequiredArgumentBuilder<CommandSource, CompoundNBT> nbtCompound(String name) {
+        return Commands.argument(name, NBTCompoundTagArgument.func_218043_a());
     }
 
 }

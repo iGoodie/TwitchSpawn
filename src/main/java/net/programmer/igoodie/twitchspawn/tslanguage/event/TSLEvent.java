@@ -1,5 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.event;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
@@ -8,10 +10,10 @@ import java.util.*;
 
 public class TSLEvent implements TSLFlowNode {
 
-    public static Map<TSLEventPair, String> EVENT_NAME_ALIASES;
+    public static BiMap<TSLEventPair, String> EVENT_NAME_ALIASES;
 
     public static void loadEventAliases() {
-        EVENT_NAME_ALIASES = new HashMap<>();
+        EVENT_NAME_ALIASES = HashBiMap.create();
 
         registerEventName("donation", "streamlabs", "streamlabs donation");
 

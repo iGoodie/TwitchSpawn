@@ -25,5 +25,9 @@
   "commands.twitchspawn.rules.one": "§3>> Ruleset loaded for {0} includes following:\n{1}",
   "commands.twitchspawn.rules.one.fail": "§4>> No ruleset was loaded for {0}",
 
+  "commands.twitchspawn.simulate.missing": "§4>> Missing event name in simulation object. Expected \"event\" field.",
+  "commands.twitchspawn.simulate.invalid_event": "§4>> Invalid event name -> {0}",
+  "commands.twitchspawn.simulate.success": "§a>> Simulation fired off successfully {0}",
+
   "errors.twitchspawn.loading": "Cannot load TwitchSpawn"
 }
