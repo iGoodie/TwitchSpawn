@@ -165,6 +165,16 @@ public class TwitchSpawnCommand {
     /* ------------------------------------------------------------ */
 
     public static int simulateModule(CommandContext<CommandSource> context) {
+        String sourceName = context.getSource().getName();
+
+        // If has no permission
+        if (!ConfigManager.CREDENTIALS.hasPermission(sourceName)) {
+            context.getSource().sendFeedback(new TranslationTextComponent(
+                    "commands.twitchspawn.simulate.no_perm"), true);
+            TwitchSpawn.LOGGER.info("{} tried to simulate an event, but no permission", sourceName);
+            return 0;
+        }
+
         CompoundNBT nbt = context.getArgument("event_simulation_json", CompoundNBT.class);
         String eventName = nbt.getString("event");
 

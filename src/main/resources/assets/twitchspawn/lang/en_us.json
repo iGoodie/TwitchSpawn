@@ -28,6 +28,7 @@
   "commands.twitchspawn.simulate.missing": "§4>> Missing event name in simulation object. Expected \"event\" field.",
   "commands.twitchspawn.simulate.invalid_event": "§4>> Invalid event name -> {0}",
   "commands.twitchspawn.simulate.success": "§a>> Simulation fired off successfully {0}",
+  "commands.twitchspawn.simulate.no_perm": "§4>> You do not have permission to simulate an event.",
 
   "errors.twitchspawn.loading": "Cannot load TwitchSpawn"
 }
