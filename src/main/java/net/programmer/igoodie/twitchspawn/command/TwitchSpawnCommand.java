@@ -207,7 +207,7 @@ public class TwitchSpawnCommand {
             simulatedEvent.donationCurrency = nbt.getString("currency");
             simulatedEvent.subscriptionMonths = nbt.getInt("months");
             simulatedEvent.raiderCount = nbt.getInt("raiders");
-            simulatedEvent.viewerCount = nbt.getInt("viewer");
+            simulatedEvent.viewerCount = nbt.getInt("viewers");
         }
 
         ConfigManager.RULESET_COLLECTION.handleEvent(simulatedEvent);
