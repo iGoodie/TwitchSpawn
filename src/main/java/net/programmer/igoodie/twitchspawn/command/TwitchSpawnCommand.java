@@ -14,9 +14,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLTree;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
-import net.programmer.igoodie.twitchspawn.util.TwitchSpawnLoadingErrors;
-
-import java.util.Random;
+import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
 
 public class TwitchSpawnCommand {
 
