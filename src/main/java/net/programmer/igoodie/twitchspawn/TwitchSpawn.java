@@ -16,13 +16,9 @@ import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tracer.StreamlabsSocketClient;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
 import net.programmer.igoodie.twitchspawn.util.TwitchSpawnLoadingErrors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
 
 @Mod(TwitchSpawn.MOD_ID)
 public class TwitchSpawn {
@@ -73,7 +69,7 @@ public class TwitchSpawn {
             StreamlabsSocketClient.stop(null, "Server stopping");
         }
 
-        ConfigManager.HANDLING_RULES.cleanQueue();
+        ConfigManager.RULESET_COLLECTION.cleanQueue();
     }
 
 }

@@ -2,8 +2,7 @@ package net.programmer.igoodie.twitchspawn.configuration;
 
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.tslanguage.TSLRules;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
+import net.programmer.igoodie.twitchspawn.tslanguage.TSLRulesetCollection;
 import net.programmer.igoodie.twitchspawn.util.TwitchSpawnLoadingErrors;
 
 import java.io.File;
@@ -13,7 +12,7 @@ public class ConfigManager {
     public static final String CONFIG_DIR_PATH = FMLPaths.CONFIGDIR.get().toString() + File.separator + "TwitchSpawn";
 
     public static CredentialsConfig CREDENTIALS;
-    public static TSLRules HANDLING_RULES;
+    public static TSLRulesetCollection RULESET_COLLECTION;
     public static TitlesConfig TITLES;
     public static SubtitlesConfig SUBTITLES;
 
@@ -29,7 +28,7 @@ public class ConfigManager {
         accumulateExceptions(errors,
                 () -> CREDENTIALS = CredentialsConfig.create(getPath("credentials.toml")));
         accumulateExceptions(errors,
-                () -> HANDLING_RULES = RulesConfig.createRules(CONFIG_DIR_PATH));
+                () -> RULESET_COLLECTION = RulesConfig.createRules(CONFIG_DIR_PATH));
         accumulateExceptions(errors,
                 () -> TITLES = TitlesConfig.create(new File(getPath("messages.title.json"))));
         accumulateExceptions(errors,

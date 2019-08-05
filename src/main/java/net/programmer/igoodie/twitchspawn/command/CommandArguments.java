@@ -32,4 +32,12 @@ public class CommandArguments {
         return Commands.argument(name, EntityArgument.player());
     }
 
+    public static RequiredArgumentBuilder<CommandSource, String> streamer(String name) {
+        return Commands.argument(name, StreamerNickType.streamerNick());
+    }
+
+    public static RequiredArgumentBuilder<CommandSource, String> rulesetStreamer(String name) {
+        return Commands.argument(name, StreamerNickType.streamerNickOrDefault());
+    }
+
 }

@@ -20,6 +20,10 @@
   "commands.twitchspawn.stop.illegal_state": "§4>> TwitchSpawn is already stopped.",
   "commands.twitchspawn.stop.no_perm": "§4>> You do not have permission to stop TwitchSpawn.",
 
+  "commands.twitchspawn.rules.list": "§3>> Rulesets loaded for: {0}",
+  "commands.twitchspawn.rules.default": "§3>> Default ruleset loaded includes following:\n{1}",
+  "commands.twitchspawn.rules.one": "§3>> Ruleset loaded for {0} includes following:\n{1}",
+  "commands.twitchspawn.rules.one.fail": "§4>> No ruleset was loaded for {0}",
 
   "errors.twitchspawn.loading": "Cannot load TwitchSpawn"
 }

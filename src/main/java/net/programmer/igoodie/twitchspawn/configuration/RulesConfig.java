@@ -2,7 +2,7 @@ package net.programmer.igoodie.twitchspawn.configuration;
 
 import com.google.common.io.Resources;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.tslanguage.TSLRules;
+import net.programmer.igoodie.twitchspawn.tslanguage.TSLRulesetCollection;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLTree;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
 import org.apache.commons.io.FileUtils;
@@ -18,8 +18,8 @@ import java.util.regex.Pattern;
 
 public class RulesConfig {
 
-    public static TSLRules createRules(String directory) throws TSLSyntaxErrors {
-        return new TSLRules(
+    public static TSLRulesetCollection createRules(String directory) throws TSLSyntaxErrors {
+        return new TSLRulesetCollection(
                 create(directory + File.separator + "rules.default.tsl"),
                 fromDirectory(new File(directory)));
     }
