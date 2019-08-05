@@ -254,6 +254,28 @@ public class TSLParser {
         return words;
     }
 
+    public static String buildRule(List<String> words) {
+        StringBuilder builder = new StringBuilder();
+
+        for (String word : words) {
+            // Escape any QUOTE
+            word = word.replace(QUOTE + "",
+                    ESCAPE_CHAR + "" + QUOTE);
+
+            // Group word, if it contains SPACE
+            if (word.contains(SPACE + ""))
+                word = QUOTE + word + QUOTE;
+
+            // Append delimiter if not the first word
+            if (builder.length() != 0) builder.append(SPACE);
+
+            // Append word
+            builder.append(word);
+        }
+
+        return builder.toString();
+    }
+
     /* ------------------------------------------------------------------ */
 
     private int wordIndex;
@@ -371,23 +393,28 @@ public class TSLParser {
     }
 
     public Map<String, TSLEvent> parse(String rule) throws TSLSyntaxError {
-        this.wordIndex = 0; // Reset index cursor on fresh parse
-        List<String> words = parseWords(rule);
+        try {
+            this.wordIndex = 0; // Reset index cursor on fresh parse
+            List<String> words = parseWords(rule);
 
-        validate(words);
+            validate(words);
 
-        TSLAction action = parseAction(words);
-        TSLEvent event = parseEvent(words);
-        List<TSLPredicate> predicates = parsePredicates(words);
+            TSLAction action = parseAction(words);
+            TSLEvent event = parseEvent(words);
+            List<TSLPredicate> predicates = parsePredicates(words);
 
-        // Chain them all
-        TSLFlowNode current = event;
-        for (int i = 0; i < predicates.size(); i++) {
-            current = current.chain(predicates.get(i));
+            // Chain them all
+            TSLFlowNode current = event;
+            for (int i = 0; i < predicates.size(); i++) {
+                current = current.chain(predicates.get(i));
+            }
+            current = current.chain(action);
+
+            return this.events;
+        } catch (TSLSyntaxError e) {
+            e.setAssociatedRule(rule);
+            throw e;
         }
-        current = current.chain(action);
-
-        return this.events;
     }
 
     public Map<String, TSLEvent> parse() throws TSLSyntaxErrors {

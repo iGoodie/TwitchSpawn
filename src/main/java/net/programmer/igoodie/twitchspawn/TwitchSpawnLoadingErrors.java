@@ -1,4 +1,4 @@
-package net.programmer.igoodie.twitchspawn.util;
+package net.programmer.igoodie.twitchspawn;
 
 import com.electronwill.nightconfig.core.io.ParsingException;
 import com.google.gson.JsonSyntaxException;
