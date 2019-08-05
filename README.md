@@ -9,14 +9,18 @@
   <a href="https://minecraft.curseforge.com/projects/twitchspawn"><img src="http://cf.way2muchnoise.eu/versions/273382.svg"></a>
 </p>
 
-❗ This branch is currently holding early development of TwitchSpawn for 1.14.x
-
 ## Brief Summary
+TwitchSpawn is a Minecraft mod designed for Twitch streamers using Streamlabs!
 
-TwitchSpawn is an in-dev mod, which is designed for Twitch streamers using Streamlabs. 
+It listens for live events related to your Twitch channel using Streamlabs Socket API.
+Then it handles those events with the rules handcrafted by you!
 
-## Configuration
+![image](preview/preview1.png)
+![image](preview/preview2.png)
 
 ## How to use?
+Complete user manual can be found on https://igoodie.gitbook.io/twitchspawn/
 
-## Future Goals
+## Facing an Issue?
+- Contact iGoodie via Discord: iGoodie#1945
+- Create an issue on Github: https://github.com/iGoodie/TwitchSpawn/issues

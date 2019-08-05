@@ -15,7 +15,7 @@ public class LessThanOrEqComparator extends BasicComparator {
         if (!(leftHand instanceof Number))
             return false;
 
-        return ((Double) leftHand) <= value;
+        return ((Number) leftHand).doubleValue() <= value;
     }
 
 }
