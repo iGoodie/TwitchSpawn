@@ -123,7 +123,7 @@ public class StreamlabsSocketClient {
             return; // No message field (in expected format), stop here
 
         String responseType = extractFrom(response, "type", String.class, null);
-        String responseFor = extractFrom(response, "for", String.class, null);
+        String responseFor = extractFrom(response, "for", String.class, "streamlabs" /*here because of Streamlabs' inconsistency*/);
 
         JSONArray messages = extractFrom(response, "message", JSONArray.class, null);
 
