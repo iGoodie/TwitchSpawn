@@ -23,7 +23,7 @@ public class ExecuteAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player) {
+    protected void performAction(ServerPlayerEntity player, EventArguments args) {
         CommandSource source = player.getCommandSource()
                 .withPermissionLevel(9999) // OVER 9000!
                 .withFeedbackDisabled();

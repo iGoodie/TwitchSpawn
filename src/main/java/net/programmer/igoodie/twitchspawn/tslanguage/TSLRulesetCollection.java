@@ -2,6 +2,7 @@ package net.programmer.igoodie.twitchspawn.tslanguage;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.time.TimeTaskQueue;
+import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,21 +37,16 @@ public class TSLRulesetCollection {
             TwitchSpawn.LOGGER.info("Handling event {} for {}",
                     args, args.streamerNickname);
 
-            // Fetch TSLTree associated with the streamer
-            TSLTree responsibleTree = streamerTrees.get(args.streamerNickname.toLowerCase());
+            // Fetch associated Ruleset
+            TSLTree ruleset = getRuleset(args.streamerNickname.toLowerCase());
 
-            // TODO: Collect predicate passing TSLAction nodes
-            // TODO: Select random one to perform (?)
-
-            if (responsibleTree != null) {
+            if (ruleset == defaultTree)
+                TwitchSpawn.LOGGER.info("No associated tree for {} found. Handling with default rules", args.streamerNickname);
+            else
                 TwitchSpawn.LOGGER.info("Found associated tree for {}. Handling with their rules", args.streamerNickname);
-                responsibleTree.handleEvent(args);
-                return;
-            }
 
-            // No tree found for the streamer
-            TwitchSpawn.LOGGER.info("No associated tree for {} found. Handling with default rules", args.streamerNickname);
-            defaultTree.handleEvent(args);
+            // Handle incoming event arguments
+            ruleset.handleEvent(args);
         });
     }
 
@@ -62,6 +58,10 @@ public class TSLRulesetCollection {
         if (streamerNick.equalsIgnoreCase("default"))
             return defaultTree;
         return streamerTrees.get(streamerNick);
+    }
+
+    public void queue(Runnable task) {
+        this.eventQueue.queue(task);
     }
 
     public void cleanQueue() {

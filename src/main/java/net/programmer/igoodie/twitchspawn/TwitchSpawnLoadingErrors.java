@@ -53,6 +53,8 @@ public class TwitchSpawnLoadingErrors extends Exception {
             ModLoader.get().addWarning(new ModLoadingWarning(
                     modInfo, stage, i18nMessage, exception.getMessage()
             ));
+
+            TwitchSpawn.LOGGER.error(exception.getMessage());
         }
     }
 

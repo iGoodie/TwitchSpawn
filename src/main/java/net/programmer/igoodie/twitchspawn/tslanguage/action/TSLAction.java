@@ -24,11 +24,17 @@ import java.util.List;
 public abstract class TSLAction implements TSLFlowNode {
 
     /**
+     * Determines whether action should be notified to the player or not
+     */
+    protected boolean silent = false;
+
+    /**
      * Performs the Action on targeted player
      *
      * @param player Target player of the action
+     * @param args   Arguments of the event
      */
-    protected abstract void performAction(ServerPlayerEntity player);
+    protected abstract void performAction(ServerPlayerEntity player, EventArguments args);
 
     /**
      * Evaluates a value for given expression
@@ -75,67 +81,72 @@ public abstract class TSLAction implements TSLFlowNode {
             return false;
         }
 
-        // Fetch title and format it
-        String title = ConfigManager.TITLES.getTitleJsonRaw(args.eventAlias);
-        title = MessageEvaluator.replaceExpressions(title, expression -> {
-            // TODO: Implement better expression evaluator
-            if (expression.equals("actor"))
-                return args.actorNickname;
-            if (expression.equals("streamer"))
-                return args.streamerNickname;
-            if (expression.equals("amount") && args.donationAmount != 0.0)
-                return String.valueOf(args.donationAmount);
-            if (expression.equals("amount_i") && args.donationAmount != 0.0)
-                return String.valueOf((int) args.donationAmount);
-            if (expression.equals("amount_f") && args.donationAmount != 0.0)
-                return String.format("%.2f", args.donationAmount);
-            if (expression.equals("currency") && args.donationCurrency != null)
-                return args.donationCurrency;
-            if (expression.equals("month") && args.subscriptionMonths != 0)
-                return String.valueOf(args.subscriptionMonths);
-            if (expression.equals("viewers") && args.viewerCount != 0)
-                return String.valueOf(args.viewerCount);
-            if (expression.equals("raiders") && args.raiderCount != 0)
-                return String.valueOf(args.raiderCount);
-            if (expression.equals("time"))
-                return new SimpleDateFormat("HH:mm:ss").format(new Date());
-            return "${" + expression + "}";
-        });
+        // If not silent, notify player
+        if (!silent) {
+            // Fetch title and format it
+            String title = ConfigManager.TITLES.getTitleJsonRaw(args.eventAlias);
+            title = MessageEvaluator.replaceExpressions(title, expression -> {
+                // TODO: Implement better expression evaluator
+                if (expression.equals("actor"))
+                    return args.actorNickname;
+                if (expression.equals("streamer"))
+                    return args.streamerNickname;
+                if (expression.equals("amount") && args.donationAmount != 0.0)
+                    return String.valueOf(args.donationAmount);
+                if (expression.equals("amount_i") && args.donationAmount != 0.0)
+                    return String.valueOf((int) args.donationAmount);
+                if (expression.equals("amount_f") && args.donationAmount != 0.0)
+                    return String.format("%.2f", args.donationAmount);
+                if (expression.equals("currency") && args.donationCurrency != null)
+                    return args.donationCurrency;
+                if (expression.equals("months") && args.subscriptionMonths != 0)
+                    return String.valueOf(args.subscriptionMonths);
+                if (expression.equals("viewers") && args.viewerCount != 0)
+                    return String.valueOf(args.viewerCount);
+                if (expression.equals("raiders") && args.raiderCount != 0)
+                    return String.valueOf(args.raiderCount);
+                if (expression.equals("time"))
+                    return new SimpleDateFormat("HH:mm:ss").format(new Date());
+                return "${" + expression + "}";
+            });
 
-        // Fetch subtitle and format it
-        String actionName = associatedSubtitleAction();
-        String subtitle = ConfigManager.SUBTITLES.getSubtitleJsonRaw(actionName);
-        subtitle = MessageEvaluator.replaceExpressions(subtitle, expression -> {
-            // TODO Implement better way to evaluate
-            if (expression.equals("actor"))
-                return args.actorNickname;
-            if (expression.equals("streamer"))
-                return args.streamerNickname;
-            if (expression.equals("amount") && args.donationAmount != 0.0)
-                return String.valueOf(args.donationAmount);
-            if (expression.equals("amount_i") && args.donationAmount != 0.0)
-                return String.valueOf((int) args.donationAmount);
-            if (expression.equals("amount_f") && args.donationAmount != 0.0)
-                return String.format("%.2f", args.donationAmount);
-            if (expression.equals("currency") && args.donationCurrency != null)
-                return args.donationCurrency;
-            if (expression.equals("month") && args.subscriptionMonths != 0)
-                return String.valueOf(args.subscriptionMonths);
-            if (expression.equals("viewers") && args.viewerCount != 0)
-                return String.valueOf(args.viewerCount);
-            if (expression.equals("raiders") && args.raiderCount != 0)
-                return String.valueOf(args.raiderCount);
-            if (expression.equals("time"))
-                return new SimpleDateFormat("HH:mm:ss").format(new Date());
+            // Fetch subtitle and format it
+            String actionName = associatedSubtitleAction();
+            String subtitle = ConfigManager.SUBTITLES.getSubtitleJsonRaw(actionName);
+            subtitle = MessageEvaluator.replaceExpressions(subtitle, expression -> {
+                // TODO Implement better way to evaluate
+                if (expression.equals("actor"))
+                    return args.actorNickname;
+                if (expression.equals("streamer"))
+                    return args.streamerNickname;
+                if (expression.equals("amount") && args.donationAmount != 0.0)
+                    return String.valueOf(args.donationAmount);
+                if (expression.equals("amount_i") && args.donationAmount != 0.0)
+                    return String.valueOf((int) args.donationAmount);
+                if (expression.equals("amount_f") && args.donationAmount != 0.0)
+                    return String.format("%.2f", args.donationAmount);
+                if (expression.equals("currency") && args.donationCurrency != null)
+                    return args.donationCurrency;
+                if (expression.equals("months") && args.subscriptionMonths != 0)
+                    return String.valueOf(args.subscriptionMonths);
+                if (expression.equals("viewers") && args.viewerCount != 0)
+                    return String.valueOf(args.viewerCount);
+                if (expression.equals("raiders") && args.raiderCount != 0)
+                    return String.valueOf(args.raiderCount);
+                if (expression.equals("time"))
+                    return new SimpleDateFormat("HH:mm:ss").format(new Date());
 
-            // Not a common one, go for action specific routine
-            String actionEvaluation = subtitleEvaluator(expression, args);
-            return actionEvaluation != null ? actionEvaluation : "${" + expression + "}";
-        });
+                // Not a common one, go for action specific routine
+                String actionEvaluation = subtitleEvaluator(expression, args);
+                return actionEvaluation != null ? actionEvaluation : "${" + expression + "}";
+            });
 
-        // Notify player and perform the action
-        notifyPlayer(player, title, subtitle);
-        performAction(player);
+            // Finally notify player
+            notifyPlayer(player, title, subtitle);
+        }
+
+        // Perform action for found player
+        performAction(player, args);
 
         TwitchSpawn.LOGGER.info("{} action performed for {}",
                 this.getClass().getSimpleName(), args.streamerNickname);

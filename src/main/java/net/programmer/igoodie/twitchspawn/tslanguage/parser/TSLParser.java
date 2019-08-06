@@ -36,6 +36,7 @@ public class TSLParser {
         registerAction("SUMMON", SummonAction.class);
         registerAction("EXECUTE", ExecuteAction.class);
         registerAction("EITHER", EitherAction.class);
+        registerAction("BOTH", BothAction.class);
         registerAction("NOTHING", NothingAction.class);
 
         registerComparator(InRangeComparator.class);

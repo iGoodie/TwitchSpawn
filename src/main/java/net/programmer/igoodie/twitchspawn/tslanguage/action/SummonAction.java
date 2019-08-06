@@ -75,7 +75,7 @@ public class SummonAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player) {
+    protected void performAction(ServerPlayerEntity player, EventArguments args) {
 //        Vec3d summonPosition = player.getPositionVector().add(offset);
 //        ServerWorld serverWorld = player.getServerWorld();
 //
