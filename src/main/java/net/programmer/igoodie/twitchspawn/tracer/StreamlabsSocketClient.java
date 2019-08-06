@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -167,10 +168,8 @@ public class StreamlabsSocketClient {
 
             return (Number) value;
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             return defaultValue;
-        } catch (NumberFormatException e) {
-            throw new InternalError("That is bad.. Streamlabs Socket API sent malformed number. -> " + value);
         }
     }
 
@@ -179,11 +178,8 @@ public class StreamlabsSocketClient {
             Object value = json.get(key);
             return type.cast(value);
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             return defaultValue;
-
-        } catch (ClassCastException e) {
-            throw new InternalError(String.format("Unable to cast %s key into %s", key, type.getSimpleName()));
         }
     }
 

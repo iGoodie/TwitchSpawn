@@ -95,7 +95,7 @@ public class SummonAction extends TSLAction {
                 "~" + offset.getX(),
                 "~" + offset.getY(),
                 "~" + offset.getZ(),
-                nbt.toString());
+                (nbt == null ? "" : nbt.toString()));
 
         player.getServer().getCommandManager().handleCommand(player.getCommandSource()
                 .withPermissionLevel(9999).withFeedbackDisabled(), command);
@@ -118,7 +118,7 @@ public class SummonAction extends TSLAction {
 
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
-        if(expression.equals("mobName"))
+        if (expression.equals("mobName"))
             return entityType.getName().getString();
         return null;
     }
