@@ -2,8 +2,8 @@ package net.programmer.igoodie.twitchspawn.configuration;
 
 import com.google.common.io.Resources;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLRulesetCollection;
-import net.programmer.igoodie.twitchspawn.tslanguage.TSLTree;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
 import org.apache.commons.io.FileUtils;
 
@@ -24,11 +24,11 @@ public class RulesConfig {
                 fromDirectory(new File(directory)));
     }
 
-    private static TSLTree create(String filepath) throws TSLSyntaxErrors {
+    private static TSLRuleset create(String filepath) throws TSLSyntaxErrors {
         return create(new File(filepath));
     }
 
-    private static TSLTree create(File file) throws TSLSyntaxErrors {
+    private static TSLRuleset create(File file) throws TSLSyntaxErrors {
         String script = "";
 
         try {
@@ -50,7 +50,7 @@ public class RulesConfig {
             throw new InternalError("Tried to read from or save to a non-existing file");
         }
 
-        return new TSLTree(script);
+        return new TSLRuleset(script);
     }
 
     private static String readScript(String filepath) {
@@ -72,8 +72,8 @@ public class RulesConfig {
         }
     }
 
-    private static List<TSLTree> fromDirectory(File directory) throws TSLSyntaxErrors {
-        List<TSLTree> trees = new LinkedList<>();
+    private static List<TSLRuleset> fromDirectory(File directory) throws TSLSyntaxErrors {
+        List<TSLRuleset> trees = new LinkedList<>();
 
         String directoryPath = directory.toString();
         Pattern pattern = Pattern.compile("^rules\\.(\\w+)\\.tsl$");
@@ -89,7 +89,7 @@ public class RulesConfig {
 
                 TwitchSpawn.LOGGER.info("Loaded rule set for {} ({})", streamer, filename);
                 String script = readScript(directoryPath + File.separator + filename);
-                trees.add(new TSLTree(streamer, script));
+                trees.add(new TSLRuleset(streamer, script));
             }
         }
 

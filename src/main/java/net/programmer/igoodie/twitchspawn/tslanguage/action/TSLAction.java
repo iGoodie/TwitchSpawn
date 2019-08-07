@@ -1,5 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+import com.google.gson.JsonArray;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.server.SPlaySoundPacket;
 import net.minecraft.network.play.server.STitlePacket;
@@ -11,15 +12,11 @@ import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
-import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.util.MessageEvaluator;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public abstract class TSLAction implements TSLFlowNode {
 
@@ -27,6 +24,12 @@ public abstract class TSLAction implements TSLFlowNode {
      * Determines whether action should be notified to the player or not
      */
     protected boolean silent = false;
+
+    /**
+     * If message field is not null,
+     * then the action is overriding the default subtitle message.
+     */
+    protected JsonArray message;
 
     /**
      * Performs the Action on targeted player
@@ -57,7 +60,7 @@ public abstract class TSLAction implements TSLFlowNode {
      * @return Associated subtitle action's name
      */
     protected String associatedSubtitleAction() {
-        return TSLParser.getActionName(getClass());
+        return TSLActionKeyword.ofClass(getClass());
     }
 
     /**

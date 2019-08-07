@@ -2,29 +2,13 @@ package net.programmer.igoodie.twitchspawn.configuration;
 
 import com.google.common.io.Resources;
 import com.google.gson.*;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.text.ITextComponent;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
-import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
 import net.programmer.igoodie.twitchspawn.util.GsonUtils;
-import net.programmer.igoodie.twitchspawn.util.MessageEvaluator;
 import org.apache.commons.io.FileUtils;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TitlesConfig {
 
@@ -85,7 +69,7 @@ public class TitlesConfig {
     }
 
     public String getTitleJsonRaw(String eventAlias) {
-        return titles.getAsJsonArray(eventAlias).toString();
+        return titles.getAsJsonArray(eventAlias.toLowerCase()).toString();
     }
 
 }

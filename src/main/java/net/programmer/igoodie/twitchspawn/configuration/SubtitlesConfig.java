@@ -1,17 +1,12 @@
 package net.programmer.igoodie.twitchspawn.configuration;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.io.Resources;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.programmer.igoodie.twitchspawn.tslanguage.action.EitherAction;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.util.GsonUtils;
 import org.apache.commons.io.FileUtils;
-import org.json.JSONArray;
 
 import java.io.File;
 import java.io.IOException;

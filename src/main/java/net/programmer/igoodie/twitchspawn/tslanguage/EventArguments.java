@@ -3,6 +3,7 @@ package net.programmer.igoodie.twitchspawn.tslanguage;
 import com.google.common.base.Defaults;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
 
 import java.awt.*;
@@ -13,47 +14,13 @@ import java.util.Set;
 
 public class EventArguments {
 
-    /**
-     * Used by {@link net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate}
-     * to map TSL predicate field keys to EventArguments class fields.
-     * <b>NOT INTENDED FOR EXTERNAL USE</b>
-     *
-     * @param fieldName Name of the field
-     * @return Java Reflection field with given name
-     */
-    public static Field getField(String fieldName) {
-        try {
-            return EventArguments.class.getField(fieldName);
-
-        } catch (NoSuchFieldException e) {
-            throw new InternalError("Tried to fetch a non-existing argument field -> " + fieldName);
-        }
-    }
-
     public static EventArguments createRandom(String streamerNickname) {
-        EventArguments eventArguments = new EventArguments(randomPair());
+        EventArguments eventArguments = new EventArguments(TSLEventKeyword.randomPair());
 
         eventArguments.streamerNickname = streamerNickname;
         eventArguments.randomize();
 
         return eventArguments;
-    }
-
-    private static TSLEventPair randomPair() {
-        Set<TSLEventPair> eventPairs = TSLEvent.EVENT_NAME_ALIASES.keySet();
-        int randomIndex = (int) Math.floor(Math.random() * eventPairs.size());
-
-        assert 0 <= randomIndex && randomIndex < eventPairs.size();
-
-        Iterator<TSLEventPair> iterator = eventPairs.iterator();
-
-        // Skip N-1 pairs
-        for (int i = 0; i < randomIndex; i++) {
-            iterator.next();
-        }
-
-        // Return N'th pair
-        return iterator.next();
     }
 
     /* ------------------------------ */
@@ -77,7 +44,7 @@ public class EventArguments {
     public EventArguments(String eventType, String eventFor) {
         this.eventType = eventType;
         this.eventFor = eventFor;
-        this.eventAlias = TSLEvent.getEventAlias(eventType, eventFor);
+        this.eventAlias = TSLEventKeyword.ofPair(eventType, eventFor);
     }
 
     public EventArguments(TSLEventPair eventPair) {

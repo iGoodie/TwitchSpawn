@@ -15,7 +15,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tracer.StreamlabsSocketClient;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +36,6 @@ public class TwitchSpawn {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         try {
-            TSLParser.initialize();
             ConfigManager.loadConfigs();
 
         } catch (TwitchSpawnLoadingErrors e) {

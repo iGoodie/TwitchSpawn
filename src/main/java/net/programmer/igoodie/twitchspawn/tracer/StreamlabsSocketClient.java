@@ -10,6 +10,7 @@ import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -133,7 +134,7 @@ public class StreamlabsSocketClient {
                     new TSLEventPair(responseType, responseFor), message);
 
             // Unregistered event alias
-            if (TSLEvent.getEventAlias(responseType, responseFor) == null)
+            if (TSLEventKeyword.ofPair(responseType, responseFor) == null)
                 return; // Stop here, do not handle
 
             // Refine incoming data into EventArguments model

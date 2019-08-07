@@ -1,0 +1,15 @@
+# Total comment
+# Comment with another %
+BOTH # Comment with %
+ DROP stick 1
+ # Inbetween comment
+ AND
+ DROP %diamond{display:{Name:"\"# Not a \\ comment\""}}% 1
+ AND
+ DROP %diamond{display:{Name:"\"#Not a \% comment\""}}% 1
+ AND
+ SEED  foo\*#%
+ ON Twitch Follow
+ # Comment starting with whitespace
+
+

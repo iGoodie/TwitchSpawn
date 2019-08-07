@@ -52,6 +52,8 @@ public class TimeTaskQueue {
 
     public void cleanAll() {
         timer.cancel();
+        queue.clear();
+        timer = new Timer();
     }
 
 }

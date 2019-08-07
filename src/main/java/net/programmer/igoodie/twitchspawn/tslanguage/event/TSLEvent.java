@@ -10,50 +10,20 @@ import java.util.*;
 
 public class TSLEvent implements TSLFlowNode {
 
-    public static BiMap<TSLEventPair, String> EVENT_NAME_ALIASES;
-
-    public static void loadEventAliases() {
-        EVENT_NAME_ALIASES = HashBiMap.create();
-
-        registerEventName("donation", "streamlabs", "streamlabs donation");
-
-        registerEventName("follow", "twitch_account", "twitch follow");
-        registerEventName("subscription", "twitch_account", "twitch subscription");
-        registerEventName("host", "twitch_account", "twitch host");
-        registerEventName("bits", "twitch_account", "twitch bits");
-        registerEventName("raid", "twitch_account", "twitch raid");
-
-        registerEventName("follow", "youtube_account", "youtube subscription");
-        registerEventName("subscription", "youtube_account", "youtube sponsor");
-        registerEventName("superchat", "youtube_account", "youtube superchat");
-
-        registerEventName("follow", "mixer_account", "mixer follow");
-        registerEventName("subscription", "mixer_account", "mixer subscription");
-        registerEventName("host", "mixer_account", "mixer host");
-    }
-
-    private static void registerEventName(String eventType, String eventFor, String tslAlias) {
-        TSLEventPair pair = new TSLEventPair(eventType, eventFor);
-
-        if (EVENT_NAME_ALIASES.containsKey(pair))
-            throw new InternalError("Tried to register an already existing event pair -> "
-                    + String.format("(%s, %s)", eventType, eventFor));
-
-        EVENT_NAME_ALIASES.put(pair, tslAlias);
-
-        TwitchSpawn.LOGGER.debug("Registered Event name alias {} -> {}", pair, tslAlias);
-    }
-
-    public static String getEventAlias(String eventType, String eventFor) {
-        return EVENT_NAME_ALIASES.get(new TSLEventPair(eventType, eventFor));
-    }
-
-    /* ----------------------------------- */
-
+    protected String name;
     protected List<TSLFlowNode> nextNodes;
 
-    public TSLEvent() {
+    public TSLEvent(String name) {
+        this.name = name;
         this.nextNodes = new LinkedList<>();
+    }
+
+    public List<TSLFlowNode> getNextNodes() {
+        return nextNodes;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

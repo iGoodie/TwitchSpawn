@@ -2,7 +2,7 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class EitherAction extends ChainableAction {
 
     @Override
     protected String associatedSubtitleAction() {
-        return TSLParser.getActionName(selectedAction.getClass());
+        return TSLActionKeyword.ofClass(selectedAction.getClass());
     }
 
 }

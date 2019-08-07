@@ -1,39 +1,33 @@
 package net.programmer.igoodie.twitchspawn.tslanguage;
 
-import com.google.common.collect.Lists;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
-import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLTokenizer;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TSLTree {
+public class TSLRuleset {
 
     private List<String> rawRules;
     private String streamer;
     private Map<String, TSLEvent> eventMap;
 
-    public TSLTree(String script) throws TSLSyntaxErrors {
+    public TSLRuleset(String script) throws TSLSyntaxErrors {
         this(null, script);
     }
 
-    public TSLTree(String streamer, String script) throws TSLSyntaxErrors {
+    public TSLRuleset(String streamer, String script) throws TSLSyntaxErrors {
         try {
             this.streamer = streamer;
             this.eventMap = new TSLParser(script).parse();
-            this.rawRules = TSLParser.parseRules(script);
+            this.rawRules = TSLTokenizer.intoRules(script);
 
         } catch (TSLSyntaxError e) {
             throw new TSLSyntaxErrors(e);
@@ -53,14 +47,14 @@ public class TSLTree {
     }
 
     public boolean handleEvent(EventArguments args) {
-        String eventAlias = TSLEvent.getEventAlias(args.eventType, args.eventFor);
+        String eventAlias = TSLEventKeyword.ofPair(args.eventType, args.eventFor);
 
         // Cannot resolve event alias
         if (eventAlias == null)
             throw new InternalError("Handler was called with invalid event arguments "
                     + new TSLEventPair(args.eventType, args.eventFor));
 
-        TSLEvent event = eventMap.get(eventAlias);
+        TSLEvent event = eventMap.get(eventAlias.toLowerCase());
 
         // No handler was bound, skip handling
         if (event == null)
@@ -77,7 +71,7 @@ public class TSLTree {
 
         for (String rule : rawRules) {
             try {
-                List<String> words = TSLParser.parseWords(rule);
+                List<String> words = TSLTokenizer.intoWords(rule);
                 String actionAlias = words.get(0).toUpperCase();
                 Integer currentCount = occurrences.get(actionAlias);
 

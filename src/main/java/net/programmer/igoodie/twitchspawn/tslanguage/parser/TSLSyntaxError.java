@@ -8,18 +8,8 @@ public class TSLSyntaxError extends Exception {
 
     private String associatedRule;
 
-    public TSLSyntaxError(String message) {
-        super(message);
-    }
-
-    public TSLSyntaxError(List<String> associatedWords, String message) {
-        super(message);
-        this.associatedRule = TSLParser.buildRule(associatedWords);
-    }
-
-    public TSLSyntaxError(String associatedRule, String message) {
-        super(message);
-        this.associatedRule = associatedRule;
+    public TSLSyntaxError(String messageFormat, Object...args) {
+        super(String.format(messageFormat, args));
     }
 
     public void setAssociatedRule(String associatedRule) {
@@ -27,7 +17,7 @@ public class TSLSyntaxError extends Exception {
     }
 
     public void setAssociatedRule(List<String> associatedWords) {
-        this.associatedRule = TSLParser.buildRule(associatedWords);
+        this.associatedRule = TSLTokenizer.buildRule(associatedWords);
     }
 
     @Override

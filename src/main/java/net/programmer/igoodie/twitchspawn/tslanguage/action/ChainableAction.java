@@ -1,5 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
@@ -12,7 +13,7 @@ public abstract class ChainableAction extends TSLAction {
     protected List<TSLAction> actions;
     protected String delimiter;
 
-    protected ChainableAction(String delimiter) throws TSLSyntaxError {
+    protected ChainableAction(String delimiter) {
         this.actions = new ArrayList<>();
         this.delimiter = delimiter;
     }
@@ -22,14 +23,11 @@ public abstract class ChainableAction extends TSLAction {
         String actionAlias = "";
         List<String> actionArgs = new LinkedList<>();
 
-        System.out.println(words);
-
         for (int i = 0; i < words.size(); i++) {
             String word = words.get(i);
 
             // Found a delimiter
             if (word.equalsIgnoreCase(delimiter)) {
-                System.out.println(actionAlias + " " + actionArgs);
                 if (actionAlias.isEmpty())
                     throw new TSLSyntaxError(String.format("Found %s word at an unexpected position. (Word#%d)", delimiter, i));
                 addAction(actionAlias, actionArgs);
@@ -56,14 +54,7 @@ public abstract class ChainableAction extends TSLAction {
     }
 
     protected void addAction(String actionAlias, List<String> actionArgs) throws TSLSyntaxError {
-        Class<? extends TSLAction> actionClass = TSLParser.getActionClass(actionAlias);
-
-        // No class found with that input
-        if (actionClass == null)
-            throw new TSLSyntaxError("Unexpected action -> " + actionAlias);
-
-        // Parse action and save it here
-        TSLAction action = TSLParser.createInstance(actionClass, actionArgs);
+        TSLAction action = TSLParser.parseAction(actionAlias, actionArgs);
         this.actions.add(action);
     }
 

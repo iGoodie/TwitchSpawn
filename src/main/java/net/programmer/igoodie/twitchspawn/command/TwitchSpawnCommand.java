@@ -11,10 +11,10 @@ import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tracer.StreamlabsSocketClient;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
-import net.programmer.igoodie.twitchspawn.tslanguage.TSLTree;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
+import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 
 public class TwitchSpawnCommand {
 
@@ -146,7 +146,7 @@ public class TwitchSpawnCommand {
 
     public static int rulesOfPlayerModule(CommandContext<CommandSource> context) {
         String streamerNick = context.getArgument("streamer_nick", String.class);
-        TSLTree ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNick);
+        TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNick);
 
         if (ruleset == null) {
             context.getSource().sendFeedback(new TranslationTextComponent(
@@ -165,57 +165,61 @@ public class TwitchSpawnCommand {
     /* ------------------------------------------------------------ */
 
     public static int simulateModule(CommandContext<CommandSource> context) {
-        String sourceName = context.getSource().getName();
+        try {
+            String sourceName = context.getSource().getName();
 
-        // If has no permission
-        if (!ConfigManager.CREDENTIALS.hasPermission(sourceName)) {
+            // If has no permission
+            if (!ConfigManager.CREDENTIALS.hasPermission(sourceName)) {
+                context.getSource().sendFeedback(new TranslationTextComponent(
+                        "commands.twitchspawn.simulate.no_perm"), true);
+                TwitchSpawn.LOGGER.info("{} tried to simulate an event, but no permission", sourceName);
+                return 0;
+            }
+
+            CompoundNBT nbt = context.getArgument("event_simulation_json", CompoundNBT.class);
+            String eventName = nbt.getString("event");
+
+            if (eventName.isEmpty()) {
+                context.getSource().sendFeedback(new TranslationTextComponent(
+                        "commands.twitchspawn.simulate.missing"), true);
+                return 0;
+            }
+
+            TSLEventPair eventPair = TSLEventKeyword.toPair(eventName);
+
+            if (eventPair == null) {
+                context.getSource().sendFeedback(new TranslationTextComponent(
+                        "commands.twitchspawn.simulate.invalid_event", eventName), true);
+                return 0;
+            }
+
+            boolean random = nbt.getBoolean("random");
+            EventArguments simulatedEvent = new EventArguments(eventPair.getEventType(), eventPair.getEventFor());
+            simulatedEvent.streamerNickname = context.getSource().getName();
+
+            if (random) {
+                simulatedEvent.randomize("SimulatorDude", "Simulating a message");
+
+            } else {
+                simulatedEvent.actorNickname = "SimulatorDude";
+                simulatedEvent.message = "Simulating a message";
+                simulatedEvent.donationAmount = nbt.getDouble("amount");
+                simulatedEvent.donationCurrency = nbt.getString("currency");
+                simulatedEvent.subscriptionMonths = nbt.getInt("months");
+                simulatedEvent.raiderCount = nbt.getInt("raiders");
+                simulatedEvent.viewerCount = nbt.getInt("viewers");
+            }
+
+            ConfigManager.RULESET_COLLECTION.handleEvent(simulatedEvent);
+
             context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.simulate.no_perm"), true);
-            TwitchSpawn.LOGGER.info("{} tried to simulate an event, but no permission", sourceName);
+                    "commands.twitchspawn.simulate.success", nbt), true);
+
+            return 1;
+        } catch(Exception e) {
+            e.printStackTrace();
             return 0;
         }
-
-        CompoundNBT nbt = context.getArgument("event_simulation_json", CompoundNBT.class);
-        String eventName = nbt.getString("event");
-
-        if (eventName.isEmpty()) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.simulate.missing"), true);
-            return 0;
-        }
-
-        TSLEventPair eventPair = TSLEvent.EVENT_NAME_ALIASES
-                .inverse().get(eventName.toLowerCase());
-
-        if (eventPair == null) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.simulate.invalid_event", eventName), true);
-            return 0;
-        }
-
-        boolean random = nbt.getBoolean("random");
-        EventArguments simulatedEvent = new EventArguments(eventPair.getEventType(), eventPair.getEventFor());
-        simulatedEvent.streamerNickname = context.getSource().getName();
-
-        if (random) {
-            simulatedEvent.randomize("SimulatorDude", "Simulating a message");
-
-        } else {
-            simulatedEvent.actorNickname = "SimulatorDude";
-            simulatedEvent.message = "Simulating a message";
-            simulatedEvent.donationAmount = nbt.getDouble("amount");
-            simulatedEvent.donationCurrency = nbt.getString("currency");
-            simulatedEvent.subscriptionMonths = nbt.getInt("months");
-            simulatedEvent.raiderCount = nbt.getInt("raiders");
-            simulatedEvent.viewerCount = nbt.getInt("viewers");
-        }
-
-        ConfigManager.RULESET_COLLECTION.handleEvent(simulatedEvent);
-
-        context.getSource().sendFeedback(new TranslationTextComponent(
-                "commands.twitchspawn.simulate.success", nbt), true);
-
-        return 1;
     }
 
     /* ------------------------------------------------------------ */
