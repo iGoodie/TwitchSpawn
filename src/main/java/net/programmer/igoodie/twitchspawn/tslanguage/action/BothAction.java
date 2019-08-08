@@ -1,9 +1,9 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+import com.google.gson.JsonArray;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
-import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
@@ -21,13 +21,21 @@ public class BothAction extends ChainableAction {
         List<String> actionWords = actionPart(words);
 
         if (instant) {
-            this.message = TSLParser.parseMessage(words);
+            this.message = TSLParser.parseMessage(words); // Expecting only 1 DISPLAYING
             parseActions(actionWords.subList(1, actionWords.size()));
             this.actions.forEach(action -> action.silent = true);
 
         } else {
             this.silent = true; // No notification for BOTH INSTANTLY action
-            parseActions(words);
+            if (words.get(words.size() - 3).equals("ALL")) { // ... ALL DISPLAYING %[...]% ...
+                JsonArray message = TSLParser.parseMessage(words); // Expecting only 1 DISPLAYING
+                actionWords = actionPart(words, "ALL"); // Re-split actions until ALL keyword
+                parseActions(actionWords);
+                this.actions.forEach(action -> action.message = message); // Put the message to each event
+
+            } else {
+                parseActions(words);
+            }
         }
 
         if (this.actions.size() < 2)

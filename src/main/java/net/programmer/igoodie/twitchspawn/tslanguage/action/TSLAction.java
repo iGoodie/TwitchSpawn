@@ -37,15 +37,25 @@ public abstract class TSLAction implements TSLFlowNode {
     protected JsonArray message;
 
     /**
-     * Splits action part from message part
+     * Splits action part from message part on the display keyword
      * @param words Words to be searched
      * @return Action part
      */
     protected List<String> actionPart(List<String> words) {
+        return actionPart(words, TSLRuleTokenizer.DISPLAY_KEYWORD);
+    }
+
+    /**
+     * Splits action part from message part
+     * @param words Words to be searched
+     * @param until The word to stop collecting
+     * @return Action part
+     */
+    protected List<String> actionPart(List<String> words, String until) {
         LinkedList<String> actionPart = new LinkedList<>();
 
         for(String word : words) {
-            if(word.equalsIgnoreCase(TSLRuleTokenizer.DISPLAY_KEYWORD))
+            if(word.equalsIgnoreCase(until))
                 break;
             actionPart.add(word);
         }

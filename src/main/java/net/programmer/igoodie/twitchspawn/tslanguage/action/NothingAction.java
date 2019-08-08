@@ -14,7 +14,7 @@ public class NothingAction extends TSLAction {
         List<String> actionWords = actionPart(words);
 
         if (actionWords.size() != 0)
-            throw new TSLSyntaxError("Expected 0 arguments, found -> " + words.size());
+            throw new TSLSyntaxError("Expected 0 arguments, found -> %s", words);
     }
 
     @Override
