@@ -28,7 +28,7 @@ import java.util.Optional;
 public class SummonAction extends TSLAction {
 
     private EntityType<?> entityType;
-    private Vec3d offset;
+    private String rawCoordX, rawCoordY, rawCoordZ;
     private CompoundNBT nbt;
 
     public SummonAction(List<String> words) throws TSLSyntaxError {
@@ -40,9 +40,9 @@ public class SummonAction extends TSLAction {
 
         // Fetch TSL input
         String entityName = actionWords.get(0);
-        double offsetX = actionWords.size() < 4 ? 0 : parsePositionOffset(actionWords.get(1));
-        double offsetY = actionWords.size() < 4 ? 0 : parsePositionOffset(actionWords.get(2));
-        double offsetZ = actionWords.size() < 4 ? 0 : parsePositionOffset(actionWords.get(3));
+        String rawCoordX = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(1));
+        String rawCoordY = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(2));
+        String rawCoordZ = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(3));
         String nbtRaw = actionWords.size() != 5 ? null : actionWords.get(4);
 
         // Fetch entity type
@@ -54,8 +54,10 @@ public class SummonAction extends TSLAction {
 
         // Save parsed words
         try {
-            this.nbt = nbtRaw != null ? new JsonToNBT(new StringReader(nbtRaw)).readStruct() : null;
-            this.offset = new Vec3d(offsetX, offsetY, offsetZ);
+            this.nbt = nbtRaw == null ? null : new JsonToNBT(new StringReader(nbtRaw)).readStruct();
+            this.rawCoordX = rawCoordX;
+            this.rawCoordY = rawCoordY;
+            this.rawCoordZ = rawCoordZ;
             this.entityType = entityType;
 
         } catch (CommandSyntaxException e) {
@@ -63,61 +65,36 @@ public class SummonAction extends TSLAction {
         }
     }
 
-    private double parsePositionOffset(String positionExpression) throws TSLSyntaxError {
-        if (positionExpression.equals("~"))
-            return 0.0;
-
-        if (!positionExpression.startsWith("~"))
-            throw new TSLSyntaxError("Malformed position expression -> " + positionExpression);
+    private String validateCoordinateExpression(String expression) throws TSLSyntaxError {
+        if (expression.equals("~"))
+            return expression;
 
         try {
-            return Double.parseDouble(positionExpression.substring(1)); // ~ is the first char
+            if (expression.startsWith("~"))
+                Double.parseDouble(expression.substring(1));
+            else
+                Double.parseDouble(expression);
 
         } catch (NumberFormatException e) {
-            throw new TSLSyntaxError("Malformed position expression -> " + positionExpression);
+            throw new TSLSyntaxError("Malformed position expression -> " + expression);
         }
+
+        return expression;
     }
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
-//        Vec3d summonPosition = player.getPositionVector().add(offset);
-//        ServerWorld serverWorld = player.getServerWorld();
-//
-//        System.out.println("NBT -> " + nbt);
-//
-//        Entity summonedEntity = EntityType.func_220335_a(nbt.copy(), serverWorld, createdEntity -> {
-//            createdEntity.setLocationAndAngles(
-//                    summonPosition.x, summonPosition.y, summonPosition.y,
-//                    -player.cameraYaw, 0.0f);
-//            return !serverWorld.summonEntity(createdEntity) ? null : createdEntity;
-////            return !serverWorld.summonEntity(createdEntity) ? null : createdEntity;
-//        });
-
-        // TODO: fix this ugly (?) hack
         String command = String.format("/summon %s %s %s %s %s",
                 entityType.getRegistryName(),
-                "~" + offset.getX(),
-                "~" + offset.getY(),
-                "~" + offset.getZ(),
-                (nbt == null ? "" : nbt.toString()));
+                rawCoordX,
+                rawCoordY,
+                rawCoordZ,
+                (nbt == null ? "{}" : nbt.toString()));
+
+        System.out.printf("Running %s\n", command);
 
         player.getServer().getCommandManager().handleCommand(player.getCommandSource()
                 .withPermissionLevel(9999).withFeedbackDisabled(), command);
-
-//        Entity summonedEntity = entityType.spawn(
-//                serverWorld,
-//                null,
-//                null,
-//                null,
-//                new BlockPos(summonPosition),
-//                SpawnReason.COMMAND,
-//                true, true);
-//        summonedEntity.read(nbt);
-//        summonedEntity.read(nbt);
-
-//        System.out.println("Summoned " + summonedEntity);
-
-//        player.getServerWorld().summonEntity()
     }
 
     @Override
