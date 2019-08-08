@@ -3,6 +3,8 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.List;
@@ -14,11 +16,19 @@ public class BothAction extends ChainableAction {
     public BothAction(List<String> words) throws TSLSyntaxError {
         super("AND");
 
-        this.instant = words.get(0).equalsIgnoreCase("INSTANT");
+        this.instant = words.get(0).equalsIgnoreCase("INSTANTLY");
 
-        parseActions(instant ? words.subList(1, words.size()) : words);
+        List<String> actionWords = actionPart(words);
 
-        this.silent = true; // No notification for BOTH action
+        if (instant) {
+            this.message = TSLParser.parseMessage(words);
+            parseActions(actionWords.subList(1, actionWords.size()));
+            this.actions.forEach(action -> action.silent = true);
+
+        } else {
+            this.silent = true; // No notification for BOTH INSTANTLY action
+            parseActions(words);
+        }
 
         if (this.actions.size() < 2)
             throw new TSLSyntaxError("Expected at least 2 actions, found -> " + this.actions.size());
@@ -26,10 +36,14 @@ public class BothAction extends ChainableAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        if (instant)
-            ConfigManager.RULESET_COLLECTION.queue(() -> this.actions.forEach(action -> action.process(args)));
-        else
-            this.actions.forEach(action -> ConfigManager.RULESET_COLLECTION.queue(() -> action.process(args)));
+        if (instant) { // Perform them all instantly
+            this.actions.forEach(action -> action.performAction(player, args));
+
+        } else {
+            this.actions.get(0).process(args); // Perform first one immediately
+            this.actions.subList(1, this.actions.size()) // Queue rest of it
+                    .forEach(action -> ConfigManager.RULESET_COLLECTION.queue(() -> action.process(args)));
+        }
     }
 
 }

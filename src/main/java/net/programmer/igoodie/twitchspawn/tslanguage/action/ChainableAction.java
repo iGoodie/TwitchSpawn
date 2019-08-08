@@ -48,12 +48,15 @@ public abstract class ChainableAction extends TSLAction {
 
         // Execute once for the last action script
         if (actionAlias.isEmpty())
-            throw new TSLSyntaxError(String.format("Found %s word at an unexpected position. (Word#%d)",
-                    delimiter, words.size() - 1));
+            throw new TSLSyntaxError(String.format("Found %s word at an unexpected position. (Word#%d)", delimiter, words.size() - 1));
         addAction(actionAlias, actionArgs);
     }
 
     protected void addAction(String actionAlias, List<String> actionArgs) throws TSLSyntaxError {
+        if (TSLActionKeyword.toClass(actionAlias) == this.getClass())
+            throw new TSLSyntaxError("Cannot chain %s action with another %s action",
+                    TSLActionKeyword.ofClass(this.getClass()), TSLActionKeyword.ofClass(this.getClass()));
+
         TSLAction action = TSLParser.parseAction(actionAlias, actionArgs);
         this.actions.add(action);
     }

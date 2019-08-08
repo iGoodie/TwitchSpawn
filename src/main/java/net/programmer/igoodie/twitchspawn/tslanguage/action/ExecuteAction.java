@@ -4,8 +4,10 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class ExecuteAction extends TSLAction {
@@ -13,13 +15,16 @@ public class ExecuteAction extends TSLAction {
     private List<String> commands;
 
     public ExecuteAction(List<String> words) throws TSLSyntaxError {
-        if (words.size() == 0)
+        this.message = TSLParser.parseMessage(words);
+        List<String> actionWords = actionPart(words);
+
+        if (actionWords.size() == 0)
             throw new TSLSyntaxError("Expected at least one command.");
 
-        if (!words.stream().allMatch(word -> word.startsWith("/")))
+        if (!actionWords.stream().allMatch(word -> word.startsWith("/")))
             throw new TSLSyntaxError("Every command must start with '/' character");
 
-        this.commands = words;
+        this.commands = new LinkedList<>(words);
     }
 
     @Override

@@ -17,6 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.rmi.server.Skeleton;
@@ -31,15 +32,18 @@ public class SummonAction extends TSLAction {
     private CompoundNBT nbt;
 
     public SummonAction(List<String> words) throws TSLSyntaxError {
-        if (words.size() != 1 && words.size() != 4 && words.size() != 5)
-            throw new TSLSyntaxError("Invalid length of words (expected 1, 4 or 5): " + words);
+        this.message = TSLParser.parseMessage(words);
+        List<String> actionWords = actionPart(words);
+
+        if (actionWords.size() != 1 && actionWords.size() != 4 && actionWords.size() != 5)
+            throw new TSLSyntaxError("Invalid length of words (expected 1, 4 or 5): " + actionWords);
 
         // Fetch TSL input
-        String entityName = words.get(0);
-        double offsetX = words.size() < 4 ? 0 : parsePositionOffset(words.get(1));
-        double offsetY = words.size() < 4 ? 0 : parsePositionOffset(words.get(2));
-        double offsetZ = words.size() < 4 ? 0 : parsePositionOffset(words.get(3));
-        String nbtRaw = words.size() != 5 ? null : words.get(4);
+        String entityName = actionWords.get(0);
+        double offsetX = actionWords.size() < 4 ? 0 : parsePositionOffset(actionWords.get(1));
+        double offsetY = actionWords.size() < 4 ? 0 : parsePositionOffset(actionWords.get(2));
+        double offsetZ = actionWords.size() < 4 ? 0 : parsePositionOffset(actionWords.get(3));
+        String nbtRaw = actionWords.size() != 5 ? null : actionWords.get(4);
 
         // Fetch entity type
         EntityType<?> entityType = EntityType.byKey(entityName).orElse(null);

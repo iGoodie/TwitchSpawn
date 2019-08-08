@@ -29,7 +29,8 @@ public class EitherAction extends ChainableAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        selectedAction.performAction(player, args);
+        if (!silent) selectedAction.process(args); // process() to include notification
+        else selectedAction.performAction(player, args); // No need to include notification
         selectRandomAction();
     }
 

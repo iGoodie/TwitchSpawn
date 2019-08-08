@@ -77,6 +77,7 @@ public class TSLParser {
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof TSLSyntaxError)
                 throw (TSLSyntaxError) e.getCause();
+            e.getCause().printStackTrace();
             throw new InternalError("Constructor threw unexpected Throwable: " + e.getCause().getClass().getSimpleName());
 
         } catch (ClassCastException e) {

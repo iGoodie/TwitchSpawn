@@ -19,6 +19,7 @@ import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.Arrays;
@@ -35,12 +36,15 @@ public class DropAction extends TSLAction {
      * diamond_sword{Enchantments:[{id:smite,lvl:2},{id:sweeping,lvl:2},{id:unbreaking,lvl:3}]}
      */
     public DropAction(List<String> words) throws TSLSyntaxError {
-        if (words.size() != 1 && words.size() != 2)
-            throw new TSLSyntaxError("Invalid length of words: " + words);
+        this.message = TSLParser.parseMessage(words);
+        List<String> actionWords = actionPart(words);
+
+        if (actionWords.size() != 1 && actionWords.size() != 2)
+            throw new TSLSyntaxError("Invalid length of words: " + actionWords);
 
         try {
-            ItemParser itemParser = new ItemParser(new StringReader(words.get(0)), true).parse();
-            int amount = words.size() != 2 ? 1 : Integer.parseInt(words.get(1));
+            ItemParser itemParser = new ItemParser(new StringReader(actionWords.get(0)), true).parse();
+            int amount = actionWords.size() != 2 ? 1 : Integer.parseInt(actionWords.get(1));
 
             this.itemStack = new ItemStack(itemParser.getItem(), amount);
             this.itemStack.setTag(itemParser.getNbt());
@@ -49,7 +53,7 @@ public class DropAction extends TSLAction {
             throw new TSLSyntaxError(e.getRawMessage().getString());
 
         } catch (Exception e) {
-            throw new TSLSyntaxError("Invalid action words: " + words);
+            throw new TSLSyntaxError("Invalid action words: " + actionWords);
         }
     }
 

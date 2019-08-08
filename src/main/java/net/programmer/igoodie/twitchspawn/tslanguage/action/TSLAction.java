@@ -13,10 +13,15 @@ import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLRuleTokenizer;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.util.MessageEvaluator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class TSLAction implements TSLFlowNode {
 
@@ -30,6 +35,23 @@ public abstract class TSLAction implements TSLFlowNode {
      * then the action is overriding the default subtitle message.
      */
     protected JsonArray message;
+
+    /**
+     * Splits action part from message part
+     * @param words Words to be searched
+     * @return Action part
+     */
+    protected List<String> actionPart(List<String> words) {
+        LinkedList<String> actionPart = new LinkedList<>();
+
+        for(String word : words) {
+            if(word.equalsIgnoreCase(TSLRuleTokenizer.DISPLAY_KEYWORD))
+                break;
+            actionPart.add(word);
+        }
+
+        return actionPart;
+    }
 
     /**
      * Performs the Action on targeted player
@@ -115,7 +137,9 @@ public abstract class TSLAction implements TSLFlowNode {
 
             // Fetch subtitle and format it
             String actionName = associatedSubtitleAction();
-            String subtitle = ConfigManager.SUBTITLES.getSubtitleJsonRaw(actionName);
+            String subtitle = message == null
+                    ? ConfigManager.SUBTITLES.getSubtitleJsonRaw(actionName)
+                    : message.toString();
             subtitle = MessageEvaluator.replaceExpressions(subtitle, expression -> {
                 // TODO Implement better way to evaluate
                 if (expression.equals("actor"))
