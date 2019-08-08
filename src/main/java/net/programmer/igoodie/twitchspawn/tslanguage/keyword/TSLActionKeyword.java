@@ -6,6 +6,8 @@ public enum TSLActionKeyword {
 
     DROP(DropAction.class),
     SUMMON(SummonAction.class),
+    THROW(ThrowAction.class),
+    CLEAR(ClearAction.class),
     EXECUTE(ExecuteAction.class),
 
     EITHER(EitherAction.class),
