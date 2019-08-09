@@ -38,18 +38,30 @@ DROP minecraft:stick 2
  ON Streamlabs Donation
  WITH amount IN RANGE [0,20]
  
-EITHER
+EITHER # My very important comment
  DROP diamond_block 1
  OR
  DROP %iron_block{display:{Name:"\"Iron Golem Body\""}}% 2
  OR
  SUMMON minecraft:zombie ~ ~+10 ~
+ ALL DISPLAYING %["Get ready for spoils of battle!"]%
  ON Streamlabs Donation
  WITH amount IN RANGE [21, 999]
 
 EXECUTE %/gamerule keepInventory true%
+ DISPLAYING %[
+  {text:"${actor}", color:"red"},
+  {text:" turned immortality on!", color:"white"},
+ ]%
  ON Streamlabs Donation
  WITH amount >= 1000
+ 
+ # Subscription Rules
+BOTH INSTANTLY
+ THROW leggings AND THROW boots
+ DISPLAYING %["You forgot to wear your pants!"]%
+ ON Twitch Subscription
+ WITH months >= 2
 
 # Follow Rules
 DROP %minecraft:stick{display:{Name:"\"Stick of Truth!\""}}% 1

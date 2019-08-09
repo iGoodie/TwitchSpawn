@@ -37,6 +37,26 @@
       "color": "white"
     }
   ],
+  "THROW": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " makes you throw something!",
+      "color": "white"
+    }
+  ],
+  "CLEAR": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " makes you lose something!",
+      "color": "white"
+    }
+  ],
   "NOTHING": [
     {
       "text": "${actor}",
