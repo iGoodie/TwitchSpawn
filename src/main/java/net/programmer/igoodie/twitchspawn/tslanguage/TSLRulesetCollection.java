@@ -12,20 +12,20 @@ public class TSLRulesetCollection {
 
     private static long TITLE_DURATION = 5 * 1000; // milliseconds
 
-    private TSLRuleset defaultTree;
-    private Map<String, TSLRuleset> streamerTrees; // Maps lowercase nicks to TSLTree
+    private TSLRuleset defaultRuleset;
+    private Map<String, TSLRuleset> streamerRulesets; // Maps lowercase nicks to TSLTree
     private TimeTaskQueue eventQueue;
 
     public TSLRulesetCollection(TSLRuleset defaultTree, List<TSLRuleset> streamerTrees) {
         if (defaultTree == null)
             throw new InternalError("Default tree must be not null");
 
-        this.defaultTree = defaultTree;
-        this.streamerTrees = new HashMap<>();
+        this.defaultRuleset = defaultTree;
+        this.streamerRulesets = new HashMap<>();
         this.eventQueue = new TimeTaskQueue(TITLE_DURATION);
 
         for (TSLRuleset streamerTree : streamerTrees) {
-            this.streamerTrees.put(streamerTree.getStreamer().toLowerCase(), streamerTree);
+            this.streamerRulesets.put(streamerTree.getStreamer().toLowerCase(), streamerTree);
             TwitchSpawn.LOGGER.debug("Loaded TSL tree for {}", streamerTree.getStreamer());
         }
     }
@@ -39,10 +39,10 @@ public class TSLRulesetCollection {
             // Fetch associated Ruleset
             TSLRuleset ruleset = getRuleset(args.streamerNickname.toLowerCase());
 
-            if (ruleset == defaultTree)
-                TwitchSpawn.LOGGER.info("No associated tree for {} found. Handling with default rules", args.streamerNickname);
+            if (ruleset == defaultRuleset)
+                TwitchSpawn.LOGGER.info("No associated ruleset for {} found. Handling with default rules", args.streamerNickname);
             else
-                TwitchSpawn.LOGGER.info("Found associated tree for {}. Handling with their rules", args.streamerNickname);
+                TwitchSpawn.LOGGER.info("Found associated ruleset for {}. Handling with their rules", args.streamerNickname);
 
             // Handle incoming event arguments
             ruleset.handleEvent(args);
@@ -50,13 +50,15 @@ public class TSLRulesetCollection {
     }
 
     public Set<String> getStreamers() {
-        return streamerTrees.keySet();
+        return streamerRulesets.keySet();
     }
 
     public TSLRuleset getRuleset(String streamerNick) {
         if (streamerNick.equalsIgnoreCase("default"))
-            return defaultTree;
-        return streamerTrees.get(streamerNick);
+            return defaultRuleset;
+        if (!streamerRulesets.containsKey(streamerNick))
+            return defaultRuleset;
+        return streamerRulesets.get(streamerNick);
     }
 
     public void queue(Runnable task) {

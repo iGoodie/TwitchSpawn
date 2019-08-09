@@ -38,7 +38,8 @@ public class TSLEvent implements TSLFlowNode {
         boolean success = false;
 
         while (iterator.hasNext()) {
-            success |= iterator.next().process(args);
+            success = iterator.next().process(args);
+            if(success) break; // Stop if handled once
         }
 
         return success;
