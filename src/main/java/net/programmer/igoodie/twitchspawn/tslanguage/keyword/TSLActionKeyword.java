@@ -4,15 +4,15 @@ import net.programmer.igoodie.twitchspawn.tslanguage.action.*;
 
 public enum TSLActionKeyword {
 
-    DROP(DropAction.class),
-    SUMMON(SummonAction.class),
-    THROW(ThrowAction.class),
-    CLEAR(ClearAction.class),
-    EXECUTE(ExecuteAction.class),
+    DROP(true, DropAction.class),
+    SUMMON(true, SummonAction.class),
+    THROW(true, ThrowAction.class),
+    CLEAR(true, ClearAction.class),
+    EXECUTE(true, ExecuteAction.class),
+    NOTHING(true, NothingAction.class),
 
-    EITHER(EitherAction.class),
-    BOTH(BothAction.class),
-    NOTHING(NothingAction.class),
+    EITHER(false, EitherAction.class),
+    BOTH(false, BothAction.class),
     ;
 
     public static boolean exists(String actionName) {
@@ -41,9 +41,11 @@ public enum TSLActionKeyword {
 
     /* --------------------------- */
 
+    public final boolean displayable;
     public final Class<? extends TSLAction> actionClass;
 
-    TSLActionKeyword(Class<? extends TSLAction> actionClass) {
+    TSLActionKeyword(boolean displayable, Class<? extends TSLAction> actionClass) {
+        this.displayable = displayable;
         this.actionClass = actionClass;
     }
 }

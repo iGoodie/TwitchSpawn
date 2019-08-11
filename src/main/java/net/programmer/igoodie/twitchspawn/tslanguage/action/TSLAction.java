@@ -119,7 +119,7 @@ public abstract class TSLAction implements TSLFlowNode {
         // If not silent, notify player
         if (!silent) {
             // Fetch title and format it
-            String title = ConfigManager.TITLES.getTitleJsonRaw(args.eventAlias);
+            String title = ConfigManager.TITLES.getTextComponentRaw(args.eventAlias);
             title = MessageEvaluator.replaceExpressions(title, expression -> {
                 // TODO: Implement better expression evaluator
                 if (expression.equals("actor"))
@@ -148,7 +148,7 @@ public abstract class TSLAction implements TSLFlowNode {
             // Fetch subtitle and format it
             String actionName = associatedSubtitleAction();
             String subtitle = message == null
-                    ? ConfigManager.SUBTITLES.getSubtitleJsonRaw(actionName)
+                    ? ConfigManager.SUBTITLES.getTextComponentRaw(actionName)
                     : message.toString();
             subtitle = MessageEvaluator.replaceExpressions(subtitle, expression -> {
                 // TODO Implement better way to evaluate

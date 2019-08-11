@@ -83,7 +83,7 @@
   "mixer follow": [
     "Incoming mixer follow"
   ],
-  "mixer subscriptions": [
+  "mixer subscription": [
     "Incoming mixer subscription"
   ],
   "mixer host": [

@@ -28,9 +28,9 @@ public enum TSLEventKeyword {
             "bits", "twitch_account",
             "Twitch Bits"
     ),
-    YOUTUBE_FOLLOW(
+    YOUTUBE_SUBSCRIPTION(
             "follow", "youtube_account",
-            "Youtube Follow"
+            "Youtube Subscription"
     ),
     YOUTUBE_SPONSOR(
             "sponsor", "youtube_account",

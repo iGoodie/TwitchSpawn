@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class GsonUtils {
@@ -28,16 +29,16 @@ public class GsonUtils {
             JsonElement element = array.get(i);
 
             // Primitives are valid text components
-            if(element.isJsonPrimitive())
+            if (element.isJsonPrimitive())
                 continue;
 
             // Json objects with primitive "text" field are valid text components
-            if(element.isJsonObject() && element.getAsJsonObject().has("text")
+            if (element.isJsonObject() && element.getAsJsonObject().has("text")
                     && element.getAsJsonObject().get("text").isJsonPrimitive())
                 continue;
 
             // Recursive text component
-            if(element.isJsonArray()) {
+            if (element.isJsonArray()) {
                 removeInvalidTextComponent(element.getAsJsonArray());
                 continue;
             }
@@ -47,9 +48,14 @@ public class GsonUtils {
     }
 
     public static void forEachField(JsonObject json, Consumer<String> consumer) {
-        json.entrySet().forEach(entry -> {
-            consumer.accept(entry.getKey());
-        });
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            try {
+                consumer.accept(entry.getKey());
+
+            } catch (Exception e) {
+                throw e;
+            }
+        }
     }
 
 }
