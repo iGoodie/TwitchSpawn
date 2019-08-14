@@ -29,10 +29,16 @@ public class ClearAction extends ItemSelectiveAction {
             getInventory(player, inventoryType).set(inventoryIndex, ItemStack.EMPTY);
 
         } else if (selectionType == SelectionType.EVERYTHING) {
-            player.inventory.clear();
+            if (inventoryType == null) {
+                player.inventory.clear();
+            } else {
+                getInventory(player, inventoryType).clear();
+            }
 
         } else if (selectionType == SelectionType.RANDOM) {
-            InventorySlot randomSlot = randomInventorySlot(player);
+            InventorySlot randomSlot = inventoryType == null
+                    ? randomInventorySlot(player)
+                    : randomInventorySlot(getInventory(player, inventoryType));
             if (randomSlot != null) {
                 randomSlot.pullOut();
             }

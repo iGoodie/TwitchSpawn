@@ -21,8 +21,6 @@ public abstract class ItemSelectiveAction extends TSLAction {
 
         public int capacity = Integer.MAX_VALUE;
 
-        InventoryType() {}
-
         InventoryType(int capacity) { this.capacity = capacity; }
     }
 
