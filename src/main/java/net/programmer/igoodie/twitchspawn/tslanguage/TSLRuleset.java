@@ -1,9 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage;
 
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
-import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
@@ -15,8 +12,8 @@ import java.util.Map;
 
 public class TSLRuleset {
 
-    private List<String> rawRules;
     private String streamer;
+    private List<String> rulesRaw;
     private Map<String, TSLEvent> eventMap;
 
     public TSLRuleset(String script) throws TSLSyntaxErrors {
@@ -27,7 +24,7 @@ public class TSLRuleset {
         try {
             this.streamer = streamer;
             this.eventMap = new TSLParser(script).parse();
-            this.rawRules = TSLTokenizer.intoRules(script);
+            this.rulesRaw = TSLTokenizer.intoRules(script);
 
         } catch (TSLSyntaxError e) {
             throw new TSLSyntaxErrors(e);
@@ -38,47 +35,28 @@ public class TSLRuleset {
         return streamer;
     }
 
-    public TSLEvent getEventHandler(String eventAlias) {
-        return eventMap.get(eventAlias);
+    public TSLEvent getEventHandler(String eventKeyword) {
+        return eventMap.get(eventKeyword.toLowerCase());
     }
 
-    public List<String> getRawRules() {
-        return rawRules;
-    }
-
-    public boolean handleEvent(EventArguments args) {
-        String eventAlias = TSLEventKeyword.ofPair(args.eventType, args.eventFor);
-
-        // Cannot resolve event alias
-        if (eventAlias == null)
-            throw new InternalError("Handler was called with invalid event arguments "
-                    + new TSLEventPair(args.eventType, args.eventFor));
-
-        TSLEvent event = eventMap.get(eventAlias.toLowerCase());
-
-        // No handler was bound, skip handling
-        if (event == null)
-            return false;
-
-        // Pass the args to the TSLEvent
-        TwitchSpawn.LOGGER.debug("Processing {} -> {}", eventAlias, args);
-        return event.process(args);
+    public List<String> getRulesRaw() {
+        return rulesRaw;
     }
 
     @Override
     public String toString() {
         Map<String, Integer> occurrences = new HashMap<>();
 
-        for (String rule : rawRules) {
+        for (String rule : rulesRaw) {
             try {
                 List<String> words = TSLTokenizer.intoWords(rule);
-                String actionAlias = words.get(0).toUpperCase();
-                Integer currentCount = occurrences.get(actionAlias);
+                String actionKeyword = words.get(0).toUpperCase();
+                Integer currentCount = occurrences.get(actionKeyword);
 
                 if (currentCount == null)
                     currentCount = 0;
 
-                occurrences.put(actionAlias, currentCount + 1);
+                occurrences.put(actionKeyword, currentCount + 1);
 
             } catch (TSLSyntaxError e) {
                 // MUST not be able to throw a syntax error
@@ -90,9 +68,9 @@ public class TSLRuleset {
 
         StringBuilder builder = new StringBuilder();
 
-        occurrences.forEach((actionAlias, occurrence) -> {
+        occurrences.forEach((actionKeyword, occurrence) -> {
             if(builder.length() != 0) builder.append("\n");
-            builder.append(String.format("%s action %d time(s).", actionAlias, occurrence));
+            builder.append(String.format("%s action %d time(s).", actionKeyword, occurrence));
         });
 
         return builder.toString();

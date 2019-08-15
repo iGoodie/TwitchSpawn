@@ -50,7 +50,9 @@ public class BothAction extends ChainableAction {
         } else {
             this.actions.get(0).process(args); // Perform first one immediately
             this.actions.subList(1, this.actions.size()) // Queue rest of it
-                    .forEach(action -> ConfigManager.RULESET_COLLECTION.queue(() -> action.process(args)));
+                    .forEach(action -> ConfigManager.RULESET_COLLECTION
+                            .getQueue(args.streamerNickname)
+                            .queue(() -> action.process(args)));
         }
     }
 
