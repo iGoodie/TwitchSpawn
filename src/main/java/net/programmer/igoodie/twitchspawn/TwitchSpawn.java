@@ -14,7 +14,7 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
-import net.programmer.igoodie.twitchspawn.tracer.StreamlabsSocketClient;
+import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,6 +25,7 @@ public class TwitchSpawn {
     public static final Logger LOGGER = LogManager.getLogger(TwitchSpawn.class);
 
     public static MinecraftServer SERVER;
+    public static TraceManager TRACE_MANAGER;
 
     public TwitchSpawn() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
@@ -51,6 +52,7 @@ public class TwitchSpawn {
     @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
         SERVER = event.getServer();
+        TRACE_MANAGER = new TraceManager();
     }
 
     @SubscribeEvent
@@ -62,9 +64,8 @@ public class TwitchSpawn {
     public void onServerStopping(FMLServerStoppingEvent event) {
         SERVER = null;
 
-        if (StreamlabsSocketClient.isRunning()) {
-            StreamlabsSocketClient.stop(null, "Server stopping");
-        }
+        if (TRACE_MANAGER.isRunning())
+            TRACE_MANAGER.stop(null, "Server stopping");
 
         ConfigManager.RULESET_COLLECTION.cleanQueue();
     }

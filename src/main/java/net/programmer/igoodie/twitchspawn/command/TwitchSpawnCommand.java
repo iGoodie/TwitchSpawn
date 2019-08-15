@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
-import net.programmer.igoodie.twitchspawn.tracer.StreamlabsSocketClient;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
@@ -51,7 +50,7 @@ public class TwitchSpawnCommand {
     /* ------------------------------------------------------------ */
 
     public static int statusModule(CommandContext<CommandSource> context) {
-        String translationKey = StreamlabsSocketClient.isRunning() ?
+        String translationKey = TwitchSpawn.TRACE_MANAGER.isRunning() ?
                 "commands.twitchspawn.status.on" : "commands.twitchspawn.status.off";
 
         context.getSource().sendFeedback(new TranslationTextComponent(translationKey), false);
@@ -71,7 +70,7 @@ public class TwitchSpawnCommand {
         }
 
         try {
-            StreamlabsSocketClient.start();
+            TwitchSpawn.TRACE_MANAGER.start();
             return 1;
 
         } catch (IllegalStateException e) {
@@ -93,7 +92,7 @@ public class TwitchSpawnCommand {
         }
 
         try {
-            StreamlabsSocketClient.stop(context.getSource(), "Command execution");
+            TwitchSpawn.TRACE_MANAGER.stop(context.getSource(), "Command execution");
             return 1;
 
         } catch (IllegalStateException e) {
@@ -115,7 +114,7 @@ public class TwitchSpawnCommand {
             return 0;
         }
 
-        if (StreamlabsSocketClient.isRunning()) {
+        if (TwitchSpawn.TRACE_MANAGER.isRunning()) {
             source.sendFeedback(new TranslationTextComponent(
                     "commands.twitchspawn.reloadcfg.already_started"), false);
             return 0;

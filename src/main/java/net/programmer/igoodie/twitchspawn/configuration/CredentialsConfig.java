@@ -8,6 +8,7 @@ import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.io.ParsingException;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.tracer.Platform;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -91,16 +92,14 @@ public class CredentialsConfig {
     public static class Streamer {
         public String minecraftNick = "MC_NICK";
         public String twitchNick = "TWITCH_NICK";
-        public String accessToken = "ACCESS_TOKEN";
-        public String socketToken = "SOCKET_TOKEN";
+        public Platform platform = Platform.STREAMLABS_SOCKET;
+        public String token = "YOUR_TOKEN_HERE";
 
         public Streamer() {}
 
         public Streamer(int number) {
             this.minecraftNick += number;
             this.twitchNick += number;
-            this.accessToken += number;
-            this.socketToken += number;
         }
     }
 

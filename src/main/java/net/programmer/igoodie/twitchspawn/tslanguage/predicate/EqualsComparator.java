@@ -12,10 +12,7 @@ public class EqualsComparator extends BasicComparator {
 
     @Override
     public boolean compare(Object leftHand) {
-        if (!(leftHand instanceof Number))
-            return false;
-
-        return ((Number) leftHand).doubleValue() == value;
+        return leftHand.equals(value);
     }
 
 }
