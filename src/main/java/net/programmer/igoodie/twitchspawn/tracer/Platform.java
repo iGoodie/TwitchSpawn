@@ -2,13 +2,21 @@ package net.programmer.igoodie.twitchspawn.tracer;
 
 public enum Platform {
 
-    STREAMLABS_SOCKET(
+    STREAMLABS(
             "Streamlabs",
             "https://sockets.streamlabs.com"),
-    STREAMELEMENTS_SOCKET(
+    STREAMELEMENTS(
             "StreamElements",
             "https://realtime.streamelements.com"),
     ;
+
+    public static Platform withName(String name) {
+        for (Platform platform : values()) {
+            if (platform.name.equalsIgnoreCase(name))
+                return platform;
+        }
+        return null;
+    }
 
     /* ----------------------------- */
 
@@ -18,11 +26,6 @@ public enum Platform {
     Platform(String name, String url) {
         this.name = name;
         this.url = url;
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 
 }

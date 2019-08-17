@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TestResources {
 
-    public static String loadTSL(String filename) {
+    public static String loadAsString(String filename) {
         try {
             URL resourceURL = Resources.getResource(filename);
             List<String> lines = Resources.readLines(resourceURL, StandardCharsets.UTF_8);

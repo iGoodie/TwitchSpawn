@@ -22,9 +22,8 @@ public abstract class TextComponentConfig {
     }
 
     protected JsonObject readComponents(File from, JsonObject defaultComponents) throws JsonSyntaxException {
-        JsonObject components;
-
         try {
+            JsonObject components;
             String jsonRaw;
 
             if (!from.exists()) {

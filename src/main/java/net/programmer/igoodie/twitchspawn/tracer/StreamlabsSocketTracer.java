@@ -12,9 +12,7 @@ import net.programmer.igoodie.twitchspawn.util.JSONUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class StreamlabsSocketTracer extends SocketIOTracer {
@@ -22,7 +20,7 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
     public Set<Socket> authorized;
 
     public StreamlabsSocketTracer(TraceManager manager) {
-        super(Platform.STREAMLABS_SOCKET, manager);
+        super(Platform.STREAMLABS, manager);
         this.authorized = new HashSet<>();
     }
 

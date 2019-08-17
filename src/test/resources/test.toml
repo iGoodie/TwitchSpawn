@@ -1,0 +1,38 @@
+moderatorsTwitch = "Malformed"
+# Missing moderatorsMinecraft
+
+[[streamers]]
+	socketToken = "Old format"
+	minecraftNick = "iGoodie"
+	twitchNick = "iGoodiex"
+	accessToken = "Old formatted"
+
+[[streamers]]
+	socketToken = "Old format"
+	minecraftNick = "iGoodie"
+	twitchNick = "iGoodiex"
+	accessToken = "Old formatted"
+
+[[streamers]]
+	socketToken = "Old format"
+	minecraftNick = "iGoodie"
+	twitchNick = "iGoodiex"
+	accessToken = "Old formatted"
+
+[[streamers]]
+	socketToken = "Old format"
+	minecraftNick = "iGoodie"
+	twitchNick = "iGoodiex"
+	accessToken = "Old formatted"
+
+[[streamers]]
+	socketToken = "Old format"
+	minecraftNick = "iGoodie"
+	twitchNick = "iGoodiex"
+	accessToken = "Old formatted"
+
+[[streamers]]
+	socketToken = "Old format"
+	minecraftNick = "iGoodie"
+	twitchNick = "iGoodiex"
+	accessToken = "Old formatted"

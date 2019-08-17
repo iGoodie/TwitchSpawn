@@ -16,8 +16,8 @@ public class TSLTests {
     @Test
     @DisplayName("should tokenize words correctly.")
     public void tokenizeWordsTest() throws TSLSyntaxError {
-        String[] expected = TestResources.loadTSL("comment_expected.tsl").split("\\R");
-        String script = TestResources.loadTSL("comment_test.tsl");
+        String[] expected = TestResources.loadAsString("comment_expected.tsl").split("\\R");
+        String script = TestResources.loadAsString("comment_test.tsl");
 
         TSLTokenizer tokenizer = new TSLTokenizer(script);
         tokenizer.intoRules(); // Tokenize into rules first
@@ -58,8 +58,8 @@ public class TSLTests {
     @Test
     @DisplayName("should trim comments correctly.")
     public void trimCommentsTest() throws TSLSyntaxError {
-        String[] expected = TestResources.loadTSL("comment_expected.tsl").split("\\R");
-        String script = TestResources.loadTSL("comment_test.tsl");
+        String[] expected = TestResources.loadAsString("comment_expected.tsl").split("\\R");
+        String script = TestResources.loadAsString("comment_test.tsl");
 
         TSLTokenizer tokenizer = new TSLTokenizer(script);
         List<String> actual = tokenizer.intoRules();

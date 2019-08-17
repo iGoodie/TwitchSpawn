@@ -1,5 +1,10 @@
 package net.programmer.igoodie.twitchspawn;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.toml.TomlFormat;
+import com.electronwill.nightconfig.toml.TomlParser;
+import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
 import net.programmer.igoodie.twitchspawn.configuration.SubtitlesConfig;
 import net.programmer.igoodie.twitchspawn.configuration.TitlesConfig;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
@@ -13,8 +18,8 @@ import java.io.File;
 public class ConfigTests {
 
     @Test
-    @DisplayName("should generate default configs correctly.")
-    public void defaultGenerationTest() {
+    @DisplayName("should generate default JSON configs correctly.")
+    public void defaultJSONGenerationTest() {
         File titlesFile = new File("C:\\Users\\Public\\titles.json");
         File subtitlesFile = new File("C:\\Users\\Public\\subtitles.json");
 
@@ -40,6 +45,28 @@ public class ConfigTests {
             Assertions.assertTrue(subtitlesConfig.getTextComponent(action.name()).isJsonArray());
         }
 
+    }
+
+    @Test
+    @DisplayName("should generate default TOML configs correctly.")
+    public void defaultTOMLGenerationTest() {
+        String testToml = TestResources.loadAsString("test.toml");
+        CommentedConfig parsedConfig = new TomlParser().parse(testToml);
+
+        System.out.println("# --------- CORRECTING ------------- #");
+        CredentialsConfig.correct(parsedConfig, new ObjectConverter());
+        System.out.println();
+
+        String formatted = TomlFormat.instance()
+                .createWriter()//.setIndent(IndentStyle.SPACES_2)
+                .writeToString(parsedConfig);
+
+        System.out.println("# --------- PARSED ------------- #");
+        System.out.println(parsedConfig);
+        System.out.println();
+
+        System.out.println("# --------- FORMATTED ------------- #");
+        System.out.println(formatted);
     }
 
 }
