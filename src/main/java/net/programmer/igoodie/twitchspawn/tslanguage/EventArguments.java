@@ -1,16 +1,11 @@
 package net.programmer.igoodie.twitchspawn.tslanguage;
 
 import com.google.common.base.Defaults;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
-import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
 
-import java.awt.*;
 import java.lang.reflect.Field;
-import java.util.Iterator;
 import java.util.Random;
-import java.util.Set;
 
 public class EventArguments {
 
@@ -26,8 +21,8 @@ public class EventArguments {
     /* ------------------------------ */
 
     public final String eventType;
-    public final String eventFor;
-    public final String eventAlias;
+    public final String eventAccount;
+    public final String eventName;
 
     public String streamerNickname;
     public String actorNickname;
@@ -41,14 +36,14 @@ public class EventArguments {
     public int viewerCount;
     public int raiderCount;
 
-    public EventArguments(String eventType, String eventFor) {
+    public EventArguments(String eventType, String eventAccount) {
         this.eventType = eventType;
-        this.eventFor = eventFor;
-        this.eventAlias = TSLEventKeyword.ofPair(eventType, eventFor);
+        this.eventAccount = eventAccount;
+        this.eventName = TSLEventKeyword.ofPair(eventType, eventAccount);
     }
 
     public EventArguments(TSLEventPair eventPair) {
-        this(eventPair.getEventType(), eventPair.getEventFor());
+        this(eventPair.getEventType(), eventPair.getEventAccount());
     }
 
     public void randomize() {

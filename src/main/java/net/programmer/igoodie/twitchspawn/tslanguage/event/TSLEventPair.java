@@ -3,24 +3,24 @@ package net.programmer.igoodie.twitchspawn.tslanguage.event;
 public class TSLEventPair {
 
     private final String eventType;
-    private final String eventFor;
+    private final String eventAccount;
 
-    public TSLEventPair(String eventType, String eventFor) {
+    public TSLEventPair(String eventType, String eventAccount) {
         this.eventType = eventType;
-        this.eventFor = eventFor;
+        this.eventAccount = eventAccount;
     }
 
     public String getEventType() {
         return eventType;
     }
 
-    public String getEventFor() {
-        return eventFor;
+    public String getEventAccount() {
+        return eventAccount;
     }
 
     @Override
     public int hashCode() {
-        return eventType.hashCode() ^ eventFor.hashCode();
+        return eventType.hashCode() ^ eventAccount.hashCode();
     }
 
     @Override
@@ -30,12 +30,12 @@ public class TSLEventPair {
 
         TSLEventPair other = (TSLEventPair) o;
 
-        return this.eventType.equals(other.eventType)
-                && this.eventFor.equals(other.eventFor);
+        return this.eventType.equalsIgnoreCase(other.eventType)
+                && this.eventAccount.equalsIgnoreCase(other.eventAccount);
     }
 
     @Override
     public String toString() {
-        return String.format("(%s, %s)", eventType, eventFor);
+        return String.format("(%s, %s)", eventType, eventAccount);
     }
 }

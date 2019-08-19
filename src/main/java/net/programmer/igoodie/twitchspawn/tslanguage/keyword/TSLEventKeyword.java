@@ -2,55 +2,70 @@ package net.programmer.igoodie.twitchspawn.tslanguage.keyword;
 
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 public enum TSLEventKeyword {
 
-    STREAMLABS_DONATION(
-            "donation", "streamlabs",
-            "Streamlabs Donation"
+    STREAMLABS_DONATION_LEGACY( // Here for legacy TSL
+            "Streamlabs Donation",
+            new TSLEventPair("donation", "streamlabs")
+    ),
+    DONATION(
+            "Donation",
+            new TSLEventPair("donation", ""), // This alias might be redundant (?)
+            new TSLEventPair("donation", "streamlabs"),
+            new TSLEventPair("tips", "twitch"),
+            new TSLEventPair("tips", "youtube")
     ),
     TWITCH_FOLLOW(
-            "follow", "twitch_account",
-            "Twitch Follow"
+            "Twitch Follow",
+            new TSLEventPair("follow", "twitch")
     ),
     TWITCH_SUBSCRIPTION(
-            "subscription", "twitch_account",
-            "Twitch Subscription"
+            "Twitch Subscription",
+            new TSLEventPair("subscription", "twitch"),
+            new TSLEventPair("subscriber", "twitch")
     ),
     TWITCH_HOST(
-            "host", "twitch_account",
-            "Twitch Host"
+            "Twitch Host",
+            new TSLEventPair("host", "twitch")
     ),
     TWITCH_RAID(
-            "raid", "twitch_account",
-            "Twitch Raid"
+            "Twitch Raid",
+            new TSLEventPair("raid", "twitch")
     ),
     TWITCH_BITS(
-            "bits", "twitch_account",
-            "Twitch Bits"
+            "Twitch Bits",
+            new TSLEventPair("bits", "twitch"),
+            new TSLEventPair("cheer", "twitch")
     ),
     YOUTUBE_SUBSCRIPTION(
-            "follow", "youtube_account",
-            "Youtube Subscription"
+            "Youtube Subscription",
+            new TSLEventPair("follow", "youtube"),
+            new TSLEventPair("subscriber", "youtube")
     ),
     YOUTUBE_SPONSOR(
-            "sponsor", "youtube_account",
-            "Youtube Sponsor"
+            "Youtube Sponsor",
+            new TSLEventPair("sponsor", "youtube")
     ),
     YOUTUBE_SUPERCHAT(
-            "superchat", "youtube_account",
-            "Youtube Superchat"
+            "Youtube Superchat",
+            new TSLEventPair("superchat", "youtube")
     ),
     MIXER_FOLLOW(
-            "follow", "mixer_account",
-            "Mixer Follow"
+            "Mixer Follow",
+            new TSLEventPair("follow", "mixer")
     ),
     MIXER_SUBSCRIPTION(
-            "subscription", "mixer_account",
-            "Mixer Subscription"
+            "Mixer Subscription",
+            new TSLEventPair("subscription", "mixer")
     ),
     MIXER_HOST(
-            "host", "mixer_account",
-            "Mixer Host"
+            "Mixer Host",
+            new TSLEventPair("host", "mixer")
     ),
     ;
 
@@ -67,15 +82,15 @@ public enum TSLEventKeyword {
 
     public static String ofPair(TSLEventPair eventPair) {
         for (TSLEventKeyword keyword : values())
-            if (keyword.eventPair.equals(eventPair))
+            if (keyword.eventPairs.contains(eventPair))
                 return keyword.eventName;
         return null;
     }
 
-    public static TSLEventPair toPair(String eventName) {
+    public static Set<TSLEventPair> toPairs(String eventName) {
         for (TSLEventKeyword keyword : values())
             if (keyword.eventName.equalsIgnoreCase(eventName))
-                return keyword.eventPair;
+                return keyword.eventPairs;
         return null;
     }
 
@@ -85,22 +100,24 @@ public enum TSLEventKeyword {
         int randomIndex = (int) Math.floor(Math.random() * events.length);
         assert 0 <= randomIndex && randomIndex < events.length;
 
-        return events[randomIndex].eventPair;
+        return events[randomIndex].eventPairs.iterator().next();
     }
 
     /* ----------------------------------- */
 
-    public final TSLEventPair eventPair;
+    public final Set<TSLEventPair> eventPairs;
     public final String eventName;
 
-    TSLEventKeyword(String eventType, String eventFor, String eventName) {
-        this.eventPair = new TSLEventPair(eventType, eventFor);
+    TSLEventKeyword(String eventName, TSLEventPair... eventPairs) {
+        if (eventPairs.length == 0) throw new InternalError("Event keywords require at least one event pair!");
+
+        this.eventPairs = new HashSet<>(Arrays.asList(eventPairs));
         this.eventName = eventName;
     }
 
     @Override
     public String toString() {
-        return String.format("%s %s", eventName, eventPair);
+        return String.format("%s %s", eventName, eventPairs);
     }
 
 }

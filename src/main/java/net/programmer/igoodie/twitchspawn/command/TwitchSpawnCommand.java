@@ -184,7 +184,7 @@ public class TwitchSpawnCommand {
                 return 0;
             }
 
-            TSLEventPair eventPair = TSLEventKeyword.toPair(eventName);
+            TSLEventPair eventPair = TSLEventKeyword.toPairs(eventName).iterator().next();
 
             if (eventPair == null) {
                 context.getSource().sendFeedback(new TranslationTextComponent(
@@ -193,7 +193,7 @@ public class TwitchSpawnCommand {
             }
 
             boolean random = nbt.getBoolean("random");
-            EventArguments simulatedEvent = new EventArguments(eventPair.getEventType(), eventPair.getEventFor());
+            EventArguments simulatedEvent = new EventArguments(eventPair.getEventType(), eventPair.getEventAccount());
             simulatedEvent.streamerNickname = context.getSource().getName();
 
             if (random) {

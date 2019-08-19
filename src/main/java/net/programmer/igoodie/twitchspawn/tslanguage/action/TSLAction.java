@@ -13,9 +13,7 @@ import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLRuleTokenizer;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.util.MessageEvaluator;
 
 import java.text.SimpleDateFormat;
@@ -119,7 +117,7 @@ public abstract class TSLAction implements TSLFlowNode {
         // If not silent, notify player
         if (!silent) {
             // Fetch title and format it
-            String title = ConfigManager.TITLES.getTextComponentRaw(args.eventAlias);
+            String title = ConfigManager.TITLES.getTextComponentRaw(args.eventName);
             title = MessageEvaluator.replaceExpressions(title, expression -> {
                 // TODO: Implement better expression evaluator
                 if (expression.equals("actor"))

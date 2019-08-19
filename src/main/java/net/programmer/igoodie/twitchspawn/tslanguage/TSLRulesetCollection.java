@@ -37,7 +37,7 @@ public class TSLRulesetCollection {
         TwitchSpawn.LOGGER.info("Handling (for {}) arguments {}", args.streamerNickname, args);
 
         // Fetch event pair and keyword
-        TSLEventPair eventPair = new TSLEventPair(args.eventType, args.eventFor);
+        TSLEventPair eventPair = new TSLEventPair(args.eventType, args.eventAccount);
         String eventKeyword = TSLEventKeyword.ofPair(eventPair);
 
         // Event pair is not known by TSL
