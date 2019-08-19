@@ -1,5 +1,5 @@
 {
-  "streamlabs donation": [
+  "donation": [
     {
       "text": "${actor}",
       "color": "aqua"

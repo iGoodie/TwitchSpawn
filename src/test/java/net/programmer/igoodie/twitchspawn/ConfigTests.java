@@ -28,7 +28,7 @@ public class ConfigTests {
 
         // Test for titles
         for (TSLEventKeyword event : TSLEventKeyword.values()) {
-            String eventName = event.name().replace("_", " ");
+            String eventName = event.eventName;
             System.out.println("Looking for " + eventName);
 
             Assertions.assertNotNull(titlesConfig.getTextComponent(eventName));
