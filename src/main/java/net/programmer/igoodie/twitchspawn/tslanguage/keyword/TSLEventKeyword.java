@@ -9,10 +9,6 @@ import java.util.Set;
 
 public enum TSLEventKeyword {
 
-    STREAMLABS_DONATION_LEGACY( // Here for legacy TSL
-            "Streamlabs Donation",
-            new TSLEventPair("donation", "streamlabs")
-    ),
     DONATION(
             "Donation",
             new TSLEventPair("donation", ""), // This alias might be redundant (?)

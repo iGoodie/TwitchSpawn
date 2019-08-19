@@ -5,15 +5,15 @@
 
 # Donation Rules
 DROP minecraft:stick 2
- ON Streamlabs Donation
+ ON Donation
  WITH amount IN RANGE [0,20]
 
 DROP minecraft:diamond_block 1
- ON Streamlabs Donation
+ ON Donation
  WITH amount IN RANGE [21,999]
 
 EXECUTE %/gamerule keepInventory true%
- ON Streamlabs Donation
+ ON Donation
  WITH amount >= 1000
 
 # Follow Rules

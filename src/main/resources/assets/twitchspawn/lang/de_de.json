@@ -2,7 +2,7 @@
   "modloader.twitchspawn.error.tsl":  "TSL Error: §4{2}",
   "modloader.twitchspawn.error.json":  "JSON Error: §4{2}",
   "modloader.twitchspawn.error.toml":  "TOML Error: §4{2}",
-  "modloader.twitchspawn.error.unknown":  "Unbekannter Fehler: §4{2}",
+  "modloader.twitchspawn.error.unknown":  "Unbekannter Fehler: §4{2} ({3})",
 
   "commands.twitchspawn.reloadcfg.success": "§3>> Alle Konfigurationen erfolgreich neu geladen",
   "commands.twitchspawn.reloadcfg.invalid_syntax": "§4>> Neu laden gescheitert. Syntax Fehler: \n{0}",

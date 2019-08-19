@@ -15,6 +15,8 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 
+import java.util.stream.Stream;
+
 public class TwitchSpawnCommand {
 
     public static final String COMMAND_NAME = "twitchspawn";
@@ -36,7 +38,9 @@ public class TwitchSpawnCommand {
 
         root.then(Commands.literal("simulate")
                 .then(CommandArguments.nbtCompound("event_simulation_json")
-                        .executes(TwitchSpawnCommand::simulateModule))
+                        .executes(context -> simulateModule(context, null))
+                        .then(CommandArguments.streamer("streamer_nick")
+                                .executes(context -> simulateModule(context, context.getArgument("streamer_nick", String.class)))))
         );
 
         root.then(Commands.literal("debug")
@@ -106,8 +110,11 @@ public class TwitchSpawnCommand {
         CommandSource source = context.getSource();
         String sourceNickname = source.getName();
 
-        // If has no permission
-        if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
+        boolean isOp = Stream.of(TwitchSpawn.SERVER.getPlayerList().getOppedPlayerNames())
+                .anyMatch(oppedPlayerName -> oppedPlayerName.equalsIgnoreCase(sourceNickname));
+
+        // If is not OP or has no permission
+        if (!isOp && !ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
             context.getSource().sendFeedback(new TranslationTextComponent(
                     "commands.twitchspawn.reloadcfg.no_perm"), true);
             TwitchSpawn.LOGGER.info("{} tried to reload TwitchSpawn configs, but no permission", sourceNickname);
@@ -163,9 +170,10 @@ public class TwitchSpawnCommand {
 
     /* ------------------------------------------------------------ */
 
-    public static int simulateModule(CommandContext<CommandSource> context) {
+    public static int simulateModule(CommandContext<CommandSource> context, String streamerNick) {
         try {
             String sourceName = context.getSource().getName();
+            String streamerName = streamerNick != null ? streamerNick : sourceName;
 
             // If has no permission
             if (!ConfigManager.CREDENTIALS.hasPermission(sourceName)) {
@@ -194,7 +202,7 @@ public class TwitchSpawnCommand {
 
             boolean random = nbt.getBoolean("random");
             EventArguments simulatedEvent = new EventArguments(eventPair.getEventType(), eventPair.getEventAccount());
-            simulatedEvent.streamerNickname = context.getSource().getName();
+            simulatedEvent.streamerNickname = streamerName;
 
             if (random) {
                 simulatedEvent.randomize("SimulatorDude", "Simulating a message");
@@ -215,7 +223,7 @@ public class TwitchSpawnCommand {
                     "commands.twitchspawn.simulate.success", nbt), true);
 
             return 1;
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }

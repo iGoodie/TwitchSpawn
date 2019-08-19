@@ -38,6 +38,7 @@ public abstract class TextComponentConfig {
             components = new JsonParser().parse(jsonRaw).getAsJsonObject();
 
             GsonUtils.copyNonExistingFields(defaultComponents, components);
+            GsonUtils.removeExtraFields(defaultComponents, components);
 
             GsonUtils.forEachField(components, field -> {
                 if (!components.get(field).isJsonArray()) {

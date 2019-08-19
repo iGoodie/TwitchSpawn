@@ -5,7 +5,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class GsonUtils {
@@ -22,6 +25,19 @@ public class GsonUtils {
             if (!to.has(field))
                 to.add(field, value);
         });
+    }
+
+    public static void removeExtraFields(JsonObject ideal, JsonObject from) {
+        List<String> extraFields = new LinkedList<>();
+
+        from.entrySet().forEach(entry -> {
+            String field = entry.getKey();
+
+            if (!ideal.has(field))
+                extraFields.add(field);
+        });
+
+        extraFields.forEach(from::remove);
     }
 
     public static void removeInvalidTextComponent(JsonArray array) {

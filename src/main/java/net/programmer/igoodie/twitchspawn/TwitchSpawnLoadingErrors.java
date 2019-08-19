@@ -51,7 +51,7 @@ public class TwitchSpawnLoadingErrors extends Exception {
                 i18nMessage = "modloader.twitchspawn.error.unknown";
 
             ModLoader.get().addWarning(new ModLoadingWarning(
-                    modInfo, stage, i18nMessage, exception.getMessage()
+                    modInfo, stage, i18nMessage, exception.getMessage(), exception.getClass().getSimpleName()
             ));
 
             TwitchSpawn.LOGGER.error(exception.getMessage());
