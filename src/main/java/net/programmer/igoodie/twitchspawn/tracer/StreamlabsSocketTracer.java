@@ -74,17 +74,18 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
     protected void onLiveEvent(Socket socket, CredentialsConfig.Streamer streamer, Object... args) {
         JSONObject event = (JSONObject) args[0];
 
-        if (!event.has("message") || event.optJSONArray("message") == null)
+        if (!event.has("message") || event.optJSONArray("message") == null) {
+            TwitchSpawn.LOGGER.info("Received unexpected Streamlabs packet -> {}", event);
             return; // Contains no message (in expected format), stop here
+        }
 
         String eventType = JSONUtils.extractFrom(event, "type", String.class, null);
         String eventFor = JSONUtils.extractFrom(event, "for", String.class, "streamlabs");
         String eventAccount = eventFor.replace("_account", "");
-
         JSONArray messages = JSONUtils.extractFrom(event, "message", JSONArray.class, new JSONArray());
 
         JSONUtils.forEach(messages, message -> {
-            TwitchSpawn.LOGGER.info("Received Streamlabs package {} -> {}",
+            TwitchSpawn.LOGGER.info("Received Streamlabs packet {} -> {}",
                     new TSLEventPair(eventType, eventFor), message);
 
             // Unregistered event alias

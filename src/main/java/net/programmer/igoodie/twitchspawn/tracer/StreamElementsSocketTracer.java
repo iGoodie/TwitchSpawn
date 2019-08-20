@@ -82,15 +82,16 @@ public class StreamElementsSocketTracer extends SocketIOTracer {
     protected void onLiveEvent(Socket socket, CredentialsConfig.Streamer streamer, Object... args) {
         JSONObject event = (JSONObject) args[0];
 
-        if (!event.has("data") || event.optJSONArray("data") == null)
+        if (!event.has("data") || event.optJSONObject("data") == null) {
+            TwitchSpawn.LOGGER.info("Received unexpected StreamElements packet -> {}", event);
             return; // Contains no data (in expected format), stop here
+        }
 
         String eventType = JSONUtils.extractFrom(event, "type", String.class, null);
         String eventAccount = JSONUtils.extractFrom(event, "provider", String.class, "streamelements");
-
         JSONObject data = JSONUtils.extractFrom(event, "data", JSONObject.class, new JSONObject());
 
-        TwitchSpawn.LOGGER.info("Received StreamElements package {} -> {}",
+        TwitchSpawn.LOGGER.info("Received StreamElements packet {} -> {}",
                 new TSLEventPair(eventType, eventAccount), data);
 
         // Unregistered event alias
