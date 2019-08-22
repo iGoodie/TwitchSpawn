@@ -1,5 +1,7 @@
 package net.programmer.igoodie.twitchspawn.time;
 
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -21,7 +23,13 @@ public class TimeTaskQueue {
         TimerTask actualTask = new TimerTask() {
             @Override
             public void run() {
-                task.run();
+                try {
+                    task.run();
+
+                } catch (Exception e) {
+                    TwitchSpawn.LOGGER.info("Failed to run task");
+                    e.printStackTrace();
+                }
             }
         };
 
