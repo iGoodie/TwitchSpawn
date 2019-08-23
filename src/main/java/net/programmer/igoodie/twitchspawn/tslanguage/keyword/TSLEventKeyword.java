@@ -13,8 +13,8 @@ public enum TSLEventKeyword {
             "Donation",
             new TSLEventPair("donation", ""), // This alias might be redundant (?)
             new TSLEventPair("donation", "streamlabs"),
-            new TSLEventPair("tips", "twitch"),
-            new TSLEventPair("tips", "youtube")
+            new TSLEventPair("tip", "twitch"),
+            new TSLEventPair("tip", "youtube")
     ),
     TWITCH_FOLLOW(
             "Twitch Follow",
