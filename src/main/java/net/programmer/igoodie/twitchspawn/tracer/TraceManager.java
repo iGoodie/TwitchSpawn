@@ -1,8 +1,12 @@
 package net.programmer.igoodie.twitchspawn.tracer;
 
 import net.minecraft.command.CommandSource;
+import net.minecraft.network.play.server.SPlaySoundPacket;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.network.NetworkManager;
+import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +40,11 @@ public class TraceManager {
 
         TwitchSpawn.SERVER.getPlayerList().sendMessage(
                 new TranslationTextComponent("commands.twitchspawn.start.success"), true);
+        TwitchSpawn.SERVER.getPlayerList().getPlayers().forEach(player -> {
+            NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(true),
+                    player.connection.netManager,
+                    NetworkDirection.PLAY_TO_CLIENT);
+        });
     }
 
     public void stop(CommandSource source, String reason) {
@@ -52,6 +61,11 @@ public class TraceManager {
             TwitchSpawn.SERVER.getPlayerList().sendMessage(
                     new TranslationTextComponent("commands.twitchspawn.stop.success",
                             source == null ? "Server" : source.getName(), reason), true);
+            TwitchSpawn.SERVER.getPlayerList().getPlayers().forEach(player -> {
+                NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(false),
+                        player.connection.netManager,
+                        NetworkDirection.PLAY_TO_CLIENT);
+            });
         }
     }
 

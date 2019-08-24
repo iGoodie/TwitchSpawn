@@ -1,9 +1,13 @@
 package net.programmer.igoodie.twitchspawn;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.*;
+import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -12,8 +16,12 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.network.NetworkManager;
+import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
 import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +46,7 @@ public class TwitchSpawn {
     private void commonSetup(final FMLCommonSetupEvent event) {
         try {
             ConfigManager.loadConfigs();
+            NetworkManager.initialize();
 
         } catch (TwitchSpawnLoadingErrors e) {
             e.bindFMLWarnings(ModLoadingStage.COMMON_SETUP);
@@ -45,7 +54,9 @@ public class TwitchSpawn {
         }
     }
 
-    private void clientSetup(final FMLClientSetupEvent event) {}
+    private void clientSetup(final FMLClientSetupEvent event) {
+        MinecraftForge.EVENT_BUS.register(StatusIndicatorOverlay.class);
+    }
 
     private void dedicatedServerSetup(final FMLDedicatedServerSetupEvent event) {}
 
@@ -68,6 +79,20 @@ public class TwitchSpawn {
             TRACE_MANAGER.stop(null, "Server stopping");
 
         ConfigManager.RULESET_COLLECTION.cleanQueue();
+    }
+
+    @SubscribeEvent
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        PlayerEntity entity = event.getPlayer();
+
+        String translationKey = TRACE_MANAGER.isRunning() ?
+                "commands.twitchspawn.status.on" : "commands.twitchspawn.status.off";
+
+        entity.sendMessage(new TranslationTextComponent(translationKey));
+
+        NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(TRACE_MANAGER.isRunning()),
+                ((ServerPlayerEntity) entity).connection.netManager,
+                NetworkDirection.PLAY_TO_CLIENT);
     }
 
 }
