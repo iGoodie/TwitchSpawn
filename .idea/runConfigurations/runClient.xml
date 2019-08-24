@@ -1,16 +1,16 @@
-Str<component name="ProjectRunConfigurationManager">
+<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="runClient" type="Application" factoryName="Application" singleton="false">
     <envs>
       <env name="MOD_CLASSES" value="examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\resources\main;examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\classes\java\main" />
-      <env name="MCP_MAPPINGS" value="snapshot_20190621-1.14.2" />
-      <env name="MCP_VERSION" value="20190624.152911" />
-      <env name="FORGE_VERSION" value="27.0.50" />
+      <env name="MCP_MAPPINGS" value="snapshot_20190719-1.14.3" />
+      <env name="MCP_VERSION" value="20190719.225934" />
+      <env name="FORGE_VERSION" value="28.0.45" />
       <env name="assetIndex" value="1.14" />
       <env name="assetDirectory" value="C:\Users\xgen_\.gradle\caches\forge_gradle\assets" />
       <env name="nativesDirectory" value="D:\IntelliJ IDEA Workspace\TwitchSpawn\build\natives" />
       <env name="FORGE_GROUP" value="net.minecraftforge" />
       <env name="target" value="fmluserdevclient" />
-      <env name="MC_VERSION" value="1.14.3" />
+      <env name="MC_VERSION" value="1.14.4" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="net.minecraftforge.userdev.LaunchTesting" />
     <module name="TwitchSpawn.main" />
