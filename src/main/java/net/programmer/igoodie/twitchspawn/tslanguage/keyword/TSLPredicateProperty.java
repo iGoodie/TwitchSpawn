@@ -10,6 +10,14 @@ import java.util.Set;
 
 public enum TSLPredicateProperty {
 
+    ACTOR(
+            "actorNickname",
+            "actor"
+    ),
+    MESSAGE(
+            "message",
+            "message"
+    ),
     CURRENCY(
             "donationCurrency",
             "currency", "donation_currency"

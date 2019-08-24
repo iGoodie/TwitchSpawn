@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
 
 public class InRangeComparator extends TSLComparator {
 
-    public static final String SYMBOL = "IN RANGE";
+    public static Pattern RANGE_PATTERN = Pattern.compile("^\\[(?<min>.+),(?<max>.+)\\]$");
 
-    double min, max;
+    private double min, max;
 
     /**
      * Constructs a range comparator
@@ -17,15 +17,14 @@ public class InRangeComparator extends TSLComparator {
      * @param rightHandRaw Raw right hand script. (E.g [0.20])
      */
     public InRangeComparator(String rightHandRaw) throws TSLSyntaxError {
-        Pattern pattern = Pattern.compile("^\\[(.+)\\,(.+)\\]$");
-        Matcher matcher = pattern.matcher(rightHandRaw);
+        Matcher matcher = RANGE_PATTERN.matcher(rightHandRaw);
 
         if (!matcher.find())
             throw new TSLSyntaxError("Expected format like [1.0,2.0], found -> " + rightHandRaw);
 
         try {
-            min = Double.parseDouble(matcher.group(1));
-            max = Double.parseDouble(matcher.group(2));
+            min = Double.parseDouble(matcher.group("min"));
+            max = Double.parseDouble(matcher.group("max"));
 
         } catch (NumberFormatException e) {
             throw new TSLSyntaxError("Expected valid numbers, found -> "

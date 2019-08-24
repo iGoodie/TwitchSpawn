@@ -4,9 +4,9 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 public abstract class BasicComparator extends TSLComparator {
 
-    public double value;
+    protected double value;
 
-    public BasicComparator(String rightHandRaw) throws TSLSyntaxError {
+    protected BasicComparator(String rightHandRaw) throws TSLSyntaxError {
         try {
             this.value = Double.parseDouble(rightHandRaw);
 
