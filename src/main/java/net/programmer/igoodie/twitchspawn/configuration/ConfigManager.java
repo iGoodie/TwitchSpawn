@@ -15,6 +15,7 @@ public class ConfigManager {
     public static TSLRulesetCollection RULESET_COLLECTION;
     public static TitlesConfig TITLES;
     public static SubtitlesConfig SUBTITLES;
+    public static PreferencesConfig PREFERENCES;
 
     public static void loadConfigs() throws TwitchSpawnLoadingErrors {
         TwitchSpawn.LOGGER.info("Loading configs...");
@@ -33,6 +34,8 @@ public class ConfigManager {
                 () -> TITLES = TitlesConfig.create(new File(getPath("messages.title.json"))));
         accumulateExceptions(errors,
                 () -> SUBTITLES = SubtitlesConfig.create(new File(getPath("messages.subtitle.json"))));
+        accumulateExceptions(errors,
+                () -> PREFERENCES = PreferencesConfig.create(new File(getPath("preferences.toml"))));
 
         if(!errors.isEmpty())
             throw errors;

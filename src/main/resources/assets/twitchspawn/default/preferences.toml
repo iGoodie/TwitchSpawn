@@ -1,0 +1,5 @@
+# Displaying style of the status indicator. Can be:
+# "enabled" to fully enable
+# "circle_only" to show the circle only, without the logo
+# "disabled" to fully disable
+indicatorDisplay = "enabled"

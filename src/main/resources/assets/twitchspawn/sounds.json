@@ -1,0 +1,14 @@
+{
+  "pop_in": {
+    "category": "master",
+    "sounds": [
+      "twitchspawn:pop_in"
+    ]
+  },
+  "pop_out": {
+    "category": "master",
+    "sounds": [
+      "twitchspawn:pop_out"
+    ]
+  }
+}

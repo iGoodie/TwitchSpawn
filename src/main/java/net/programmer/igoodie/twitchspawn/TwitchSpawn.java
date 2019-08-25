@@ -3,8 +3,12 @@ package net.programmer.igoodie.twitchspawn;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingStage;
@@ -59,6 +63,12 @@ public class TwitchSpawn {
     }
 
     private void dedicatedServerSetup(final FMLDedicatedServerSetupEvent event) {}
+
+    @SubscribeEvent
+    public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
+        event.getRegistry().register(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, "pop_in")));
+        event.getRegistry().register(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, "pop_out")));
+    }
 
     @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
