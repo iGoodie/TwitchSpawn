@@ -4,8 +4,6 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 public class LessThanOrEqComparator extends BasicComparator {
 
-    public static final String SYMBOL = "<=";
-
     public LessThanOrEqComparator(String rightHandRaw) throws TSLSyntaxError {
         super(rightHandRaw);
     }
