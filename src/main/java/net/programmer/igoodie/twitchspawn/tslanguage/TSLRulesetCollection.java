@@ -68,6 +68,10 @@ public class TSLRulesetCollection {
         TwitchSpawn.LOGGER.info("Queued handler for {} event.", eventKeyword);
     }
 
+    public boolean hasStreamer(String streamerNick) {
+        return streamerRulesets.containsKey(streamerNick.toLowerCase());
+    }
+
     public Set<String> getStreamers() {
         return streamerRulesets.keySet();
     }
@@ -93,8 +97,8 @@ public class TSLRulesetCollection {
         return queue;
     }
 
-    public void cleanQueue() {
-        eventQueues.values().forEach(TimeTaskQueue::cleanAll);
+    public void clearQueue() {
+        eventQueues.values().forEach(TimeTaskQueue::clearAll);
     }
 
 }

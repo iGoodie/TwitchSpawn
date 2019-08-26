@@ -58,7 +58,7 @@ public class TimeTaskQueue {
         return queue.size();
     }
 
-    public void cleanAll() {
+    public void clearAll() {
         timer.cancel();
         queue.clear();
         timer = new Timer();

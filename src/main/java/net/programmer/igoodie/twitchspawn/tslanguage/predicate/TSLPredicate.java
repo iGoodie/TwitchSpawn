@@ -25,6 +25,10 @@ public class TSLPredicate implements TSLFlowNode {
         this.comparator = comparator;
     }
 
+    public TSLFlowNode getNext() {
+        return next;
+    }
+
     @Override
     public TSLFlowNode chain(TSLFlowNode next) {
         this.next = next;

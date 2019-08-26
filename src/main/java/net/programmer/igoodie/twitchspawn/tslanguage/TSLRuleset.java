@@ -6,6 +6,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLTokenizer;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,10 @@ public class TSLRuleset {
 
     public List<String> getRulesRaw() {
         return rulesRaw;
+    }
+
+    public Collection<TSLEvent> getEvents() {
+        return eventMap.values();
     }
 
     @Override

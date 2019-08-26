@@ -3,18 +3,29 @@ package net.programmer.igoodie.twitchspawn.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.play.server.STitlePacket;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
+import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
+import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class TwitchSpawnCommand {
@@ -43,9 +54,9 @@ public class TwitchSpawnCommand {
                                 .executes(context -> simulateModule(context, context.getArgument("streamer_nick", String.class)))))
         );
 
-        root.then(Commands.literal("debug")
-                .then(Commands.literal("random_event")
-                        .executes(TwitchSpawnCommand::debugRandomEventModule))
+        root.then(Commands.literal("test")
+                .then(CommandArguments.streamer("streamer_nick")
+                        .executes(context -> testModule(context, context.getArgument("streamer_nick", String.class))))
         );
 
         dispatcher.register(root);
@@ -229,15 +240,58 @@ public class TwitchSpawnCommand {
         }
     }
 
-    /* ------------------------------------------------------------ */
+    private static final int DEFAULT_FADE_IN_TICKS = 10;
+    private static final int DEFAULT_STAY_TICKS = 70;
+    private static final int DEFAULT_FADE_OUT_TICKS = 20;
 
-    public static int debugRandomEventModule(CommandContext<CommandSource> context) {
-        String sourceNickname = context.getSource().getName();
+    public static int testModule(CommandContext<CommandSource> context, String streamerNick) throws CommandSyntaxException {
+        if (!ConfigManager.RULESET_COLLECTION.hasStreamer(streamerNick)) {
+            TwitchSpawn.LOGGER.info("There are no ruleset associated with {}", streamerNick);
+            context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.test.not_found", streamerNick), true);
+            return 0;
+        }
 
-        EventArguments eventArguments = EventArguments.createRandom(sourceNickname);
+        ServerPlayerEntity streamerPlayer = context.getSource().asPlayer();
+        TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNick);
+        TimeTaskQueue queue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNick);
 
-        ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);
+        Collection<TSLEvent> events = ruleset.getEvents();
+        Iterator<TSLEvent> eventIterator = events.iterator();
+        TSLEvent event;
+        int index = 0;
 
+        while (eventIterator.hasNext()) {
+            event = eventIterator.next();
+
+            TSLEventPair eventPair = TSLEventKeyword.toPairs(event.getName()).iterator().next();
+            EventArguments eventArguments = new EventArguments(eventPair);
+            eventArguments.streamerNickname = streamerNick;
+            eventArguments.actorNickname = "TesterKid";
+
+            for (TSLAction action : event.getActions()) {
+                ITextComponent text = ITextComponent.Serializer.fromJsonLenient(
+                        String.format("{text:\"Testing %s action\", color:\"dark_purple\"}", TSLActionKeyword.ofClass(action.getClass())));
+                STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text,
+                        DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+
+                ITextComponent subtext = ITextComponent.Serializer.fromJsonLenient(
+                        String.format("{text:\"Rules traversed: %.02f%%\", color:\"dark_purple\"}", 100 * (index + 1f) / ruleset.getRulesRaw().size()));
+                STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
+                        DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+
+                queue.queue(() -> {
+                    streamerPlayer.connection.sendPacket(packet);
+                    streamerPlayer.connection.sendPacket(subtitlePacket);
+                });
+                queue.queue(() -> action.process(eventArguments));
+
+                index++;
+            }
+
+        }
+
+        TwitchSpawn.LOGGER.info("Tests queued for {}", streamerNick);
+        context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.test.success", streamerNick), true);
         return 1;
     }
 

@@ -5,7 +5,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -88,7 +87,7 @@ public class TwitchSpawn {
         if (TRACE_MANAGER.isRunning())
             TRACE_MANAGER.stop(null, "Server stopping");
 
-        ConfigManager.RULESET_COLLECTION.cleanQueue();
+        ConfigManager.RULESET_COLLECTION.clearQueue();
     }
 
     @SubscribeEvent

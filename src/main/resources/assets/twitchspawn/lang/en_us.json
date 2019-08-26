@@ -30,5 +30,8 @@
   "commands.twitchspawn.simulate.success": "§a>> Simulation fired off successfully {0}",
   "commands.twitchspawn.simulate.no_perm": "§4>> You do not have permission to simulate an event.",
 
+  "commands.twitchspawn.test.not_found": "§4>> No ruleset associated with {0}",
+  "commands.twitchspawn.test.success": "§a>> Successfully queued rules for {0}",
+
   "errors.twitchspawn.loading": "Cannot load TwitchSpawn"
 }
