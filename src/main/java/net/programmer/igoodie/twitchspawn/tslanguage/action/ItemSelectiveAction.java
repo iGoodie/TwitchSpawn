@@ -24,7 +24,7 @@ public abstract class ItemSelectiveAction extends TSLAction {
         InventoryType(int capacity) { this.capacity = capacity; }
     }
 
-    public enum SelectionType {WITH_INDEX, ONLY_HELD_ITEM, EVERYTHING, RANDOM}
+    public enum SelectionType {WITH_INDEX, ONLY_HELD_ITEM, HOTBAR, EVERYTHING, RANDOM}
 
     protected static class InventorySlot {
         public NonNullList<ItemStack> inventory;
@@ -149,6 +149,9 @@ public abstract class ItemSelectiveAction extends TSLAction {
 
         } else if (word.equalsIgnoreCase("main-hand")) {
             selectionType = SelectionType.ONLY_HELD_ITEM;
+
+        } else if (word.equalsIgnoreCase("hotbar")) {
+            selectionType = SelectionType.HOTBAR;
 
         } else if (word.equalsIgnoreCase("everything")) {
             selectionType = SelectionType.EVERYTHING;

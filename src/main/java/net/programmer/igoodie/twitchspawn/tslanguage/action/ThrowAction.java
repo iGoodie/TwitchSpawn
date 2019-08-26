@@ -38,7 +38,7 @@ public class ThrowAction extends ItemSelectiveAction {
                 NonNullList<ItemStack> inventory = getInventory(player, inventoryType);
                 for (int i = 0; i < inventory.size(); i++) {
                     ItemStack itemStack = inventory.get(i);
-                    if(!itemStack.isEmpty()) {
+                    if (!itemStack.isEmpty()) {
                         player.dropItem(itemStack, false, true);
                         inventory.set(i, ItemStack.EMPTY);
                     }
@@ -59,6 +59,13 @@ public class ThrowAction extends ItemSelectiveAction {
             ItemStack extracted = player.inventory.mainInventory.set(selectedHotbarIndex, ItemStack.EMPTY);
             if (!extracted.isEmpty())
                 player.dropItem(extracted, false, true);
+
+        } else if (selectionType == SelectionType.HOTBAR) {
+            for (int i = 0; i <= 8; i++) {
+                ItemStack extracted = player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+                if (!extracted.isEmpty())
+                    player.dropItem(extracted, false, true);
+            }
         }
 
         CommandSource commandSource = player.getCommandSource()

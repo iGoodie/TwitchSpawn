@@ -46,6 +46,11 @@ public class ClearAction extends ItemSelectiveAction {
         } else if (selectionType == SelectionType.ONLY_HELD_ITEM) {
             int selectedHotbarIndex = player.inventory.currentItem;
             player.inventory.mainInventory.set(selectedHotbarIndex, ItemStack.EMPTY);
+
+        } else if (selectionType == SelectionType.HOTBAR) {
+            for (int i = 0; i <= 8; i++) {
+                player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+            }
         }
 
         CommandSource commandSource = player.getCommandSource()
