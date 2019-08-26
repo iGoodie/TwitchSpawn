@@ -17,8 +17,32 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TSLParser {
+
+    private static Pattern PERCENTAGE_PATTERN = Pattern.compile("(?<decimal>\\d{1,3})(\\.(?<fraction>\\d{1,2}))?");
+
+    public static int parsePercentage(String percentageString) {
+        Matcher matcher = PERCENTAGE_PATTERN.matcher(percentageString);
+
+        if (!matcher.matches())
+            throw new IllegalArgumentException("Unexpected percentage format -> " + percentageString);
+
+        try {
+            String decimalGroup = matcher.group("decimal");
+            String fractionGroup = matcher.group("fraction");
+
+            int decimal = Integer.parseInt(decimalGroup);
+            int fraction = fractionGroup == null ? 0 : Integer.parseInt(fractionGroup);
+
+            return decimal * 100 + fraction;
+
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Unexpected percentage format -> " + percentageString);
+        }
+    }
 
     public static JsonArray parseMessage(List<String> words) throws TSLSyntaxError {
         long messageKeywordCount = words.stream()

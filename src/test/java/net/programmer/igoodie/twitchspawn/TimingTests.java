@@ -1,12 +1,11 @@
 package net.programmer.igoodie.twitchspawn;
 
-import net.programmer.igoodie.twitchspawn.time.TimeTaskQueue;
+import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class TimingTests {
 

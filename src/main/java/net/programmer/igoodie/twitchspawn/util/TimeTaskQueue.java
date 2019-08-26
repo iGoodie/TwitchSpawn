@@ -1,4 +1,4 @@
-package net.programmer.igoodie.twitchspawn.time;
+package net.programmer.igoodie.twitchspawn.util;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 
