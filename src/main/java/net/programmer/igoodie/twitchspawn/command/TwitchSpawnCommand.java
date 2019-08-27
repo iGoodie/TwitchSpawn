@@ -265,7 +265,7 @@ public class TwitchSpawnCommand {
 
             TSLEventPair eventPair = TSLEventKeyword.toPairs(event.getName()).iterator().next();
             EventArguments eventArguments = new EventArguments(eventPair);
-            eventArguments.streamerNickname = streamerNick;
+            eventArguments.streamerNickname = streamerPlayer.getName().getString();
             eventArguments.actorNickname = "TesterKid";
 
             for (TSLAction action : event.getActions()) {
