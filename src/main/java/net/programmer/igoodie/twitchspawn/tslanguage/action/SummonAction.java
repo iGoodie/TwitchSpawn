@@ -78,8 +78,6 @@ public class SummonAction extends TSLAction {
                 rawCoordZ,
                 (nbt == null ? "{}" : nbt.toString()));
 
-        System.out.printf("Running %s\n", command);
-
         player.getServer().getCommandManager().handleCommand(player.getCommandSource()
                 .withPermissionLevel(9999).withFeedbackDisabled(), command);
     }

@@ -13,6 +13,7 @@ public enum TSLActionKeyword {
 
     EITHER(false, EitherAction.class),
     BOTH(false, BothAction.class),
+    FOR(false, ForAction.class),
     ;
 
     public static boolean exists(String actionName) {
