@@ -25,7 +25,7 @@ public class StatusChangedPacket {
 
     /* ---------------------------- */
 
-    boolean status;
+    private boolean status;
 
     public StatusChangedPacket(boolean status) {
         this.status = status;

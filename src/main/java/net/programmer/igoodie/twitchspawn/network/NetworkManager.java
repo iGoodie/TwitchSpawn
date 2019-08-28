@@ -1,14 +1,20 @@
 package net.programmer.igoodie.twitchspawn.network;
 
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.network.packet.OsRunPacket;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
+
+import java.lang.reflect.Method;
+import java.util.function.Supplier;
 
 public class NetworkManager {
 
-    private static final String PROTOCOL_VERSION = "0.0.1";
+    private static final String PROTOCOL_VERSION = "0.0.2";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(TwitchSpawn.MOD_ID, "network"))
@@ -22,15 +28,11 @@ public class NetworkManager {
                 StatusChangedPacket::encode,
                 StatusChangedPacket::decode,
                 StatusChangedPacket::handle);
-    }
 
-    private static void registerPacket(int index, Class<?> packetType) {
-        // TODO: Automatize encode/decode/handle registration
-//        int index,
-//        Class<MSG> messageType,
-//        java.util.function.BiConsumer<MSG, net.minecraft.network.PacketBuffer> encoder,
-//        java.util.function.Function<net.minecraft.network.PacketBuffer, MSG> decoder,
-//        java.util.function.BiConsumer<MSG, java.util.function.Supplier<net.minecraftforge.fml.network.NetworkEvent.Context>> messageConsumer
+        CHANNEL.registerMessage(1, OsRunPacket.class,
+                OsRunPacket::encode,
+                OsRunPacket::decode,
+                OsRunPacket::handle);
     }
 
 }

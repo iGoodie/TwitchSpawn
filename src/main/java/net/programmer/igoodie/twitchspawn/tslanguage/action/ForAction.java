@@ -35,6 +35,7 @@ public class ForAction extends TSLAction {
         try {
             this.iterationCount = Integer.parseInt(actionWords.get(0));
             this.action = TSLParser.parseAction(words.get(2), words.subList(3, words.size()));
+            this.action.silent = true;
 
         } catch (NumberFormatException e) {
             throw new TSLSyntaxError("Malformed number word -> %s", actionWords.get(0));

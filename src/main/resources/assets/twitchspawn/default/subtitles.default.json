@@ -66,5 +66,15 @@
       "text": " triggered no action!",
       "color": "white"
     }
+  ],
+  "OS_RUN": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " triggered a shell script!",
+      "color": "white"
+    }
   ]
 }

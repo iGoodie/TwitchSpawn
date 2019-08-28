@@ -14,6 +14,8 @@ public enum TSLActionKeyword {
     EITHER(false, EitherAction.class),
     BOTH(false, BothAction.class),
     FOR(false, ForAction.class),
+
+    OS_RUN(true, OsRunAction.class),
     ;
 
     public static boolean exists(String actionName) {

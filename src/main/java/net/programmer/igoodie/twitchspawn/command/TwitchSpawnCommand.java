@@ -287,7 +287,6 @@ public class TwitchSpawnCommand {
 
                 index++;
             }
-
         }
 
         TwitchSpawn.LOGGER.info("Tests queued for {}", streamerNick);
