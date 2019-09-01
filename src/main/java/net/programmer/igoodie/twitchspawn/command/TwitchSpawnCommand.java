@@ -25,7 +25,6 @@ import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class TwitchSpawnCommand {
@@ -43,7 +42,7 @@ public class TwitchSpawnCommand {
 
         root.then(Commands.literal("rules")
                 .executes(TwitchSpawnCommand::rulesModule)
-                .then(CommandArguments.rulesetStreamer("streamer_nick")
+                .then(CommandArguments.rulesetName("streamer_nick")
                         .executes(TwitchSpawnCommand::rulesOfPlayerModule))
         );
 
@@ -51,12 +50,12 @@ public class TwitchSpawnCommand {
                 .then(CommandArguments.nbtCompound("event_simulation_json")
                         .executes(context -> simulateModule(context, null))
                         .then(CommandArguments.streamer("streamer_nick")
-                                .executes(context -> simulateModule(context, context.getArgument("streamer_nick", String.class)))))
+                                .executes(context -> simulateModule(context, StreamerArgumentType.getStreamer(context, "streamer_nick")))))
         );
 
         root.then(Commands.literal("test")
                 .then(CommandArguments.streamer("streamer_nick")
-                        .executes(context -> testModule(context, context.getArgument("streamer_nick", String.class))))
+                        .executes(context -> testModule(context, StreamerArgumentType.getStreamer(context, "streamer_nick"))))
         );
 
         dispatcher.register(root);
@@ -162,7 +161,7 @@ public class TwitchSpawnCommand {
     }
 
     public static int rulesOfPlayerModule(CommandContext<CommandSource> context) {
-        String streamerNick = context.getArgument("streamer_nick", String.class);
+        String streamerNick = StreamerArgumentType.getStreamer(context, "streamer_nick");
         TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNick);
 
         if (ruleset == null) {

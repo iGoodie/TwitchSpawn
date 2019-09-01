@@ -1,5 +1,7 @@
 package net.programmer.igoodie.twitchspawn;
 
+import net.minecraft.command.arguments.ArgumentSerializer;
+import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -21,6 +23,8 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
+import net.programmer.igoodie.twitchspawn.command.RulesetNameArgumentType;
+import net.programmer.igoodie.twitchspawn.command.StreamerArgumentType;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
@@ -50,6 +54,11 @@ public class TwitchSpawn {
         try {
             ConfigManager.loadConfigs();
             NetworkManager.initialize();
+
+            ArgumentTypes.register("twitchspawn:streamer", StreamerArgumentType.class,
+                    new ArgumentSerializer<>(StreamerArgumentType::streamerNick));
+            ArgumentTypes.register("twitchspawn:ruleset", RulesetNameArgumentType.class,
+                    new ArgumentSerializer<>(RulesetNameArgumentType::rulesetName));
 
         } catch (TwitchSpawnLoadingErrors e) {
             e.bindFMLWarnings(ModLoadingStage.COMMON_SETUP);

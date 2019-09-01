@@ -8,37 +8,32 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class StreamerNickType implements ArgumentType<String> {
+public class RulesetNameArgumentType implements ArgumentType<String> {
 
-    public static StreamerNickType streamerNick() {
-        return new StreamerNickType(false);
+    public static RulesetNameArgumentType rulesetName() {
+        return new RulesetNameArgumentType();
     }
 
-    public static StreamerNickType streamerNickOrDefault() {
-        return new StreamerNickType(true);
+    public static String getRulesetName(final CommandContext<?> context, final String name) {
+        return context.getArgument(name, String.class);
     }
 
-    /* ---------------------------------------- */
+    /* ------------------------------ */
 
-    private boolean includeDefault;
-
-    private StreamerNickType(boolean includeDefault) {
-        this.includeDefault = includeDefault;
-    }
+    private RulesetNameArgumentType() { }
 
     @Override
     public String parse(StringReader reader) throws CommandSyntaxException {
-        return reader.readUnquotedString(); // Only 1 word is allowed
+        return null;
     }
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         String input = builder.getRemaining();
 
-        if (includeDefault && "default".startsWith(input))
+        if ("default".startsWith(input))
             builder.suggest("default");
 
         for (String streamer : ConfigManager.RULESET_COLLECTION.getStreamers()) {
@@ -49,4 +44,8 @@ public class StreamerNickType implements ArgumentType<String> {
         return builder.buildFuture();
     }
 
+    @Override
+    public String toString() {
+        return "ruleset()";
+    }
 }

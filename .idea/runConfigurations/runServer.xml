@@ -11,7 +11,7 @@
     </envs>
     <option name="MAIN_CLASS_NAME" value="net.minecraftforge.userdev.LaunchTesting" />
     <module name="TwitchSpawn.main" />
-    <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=debug -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP" />
+    <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=info -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <method v="2">
       <option name="Make" enabled="true" />

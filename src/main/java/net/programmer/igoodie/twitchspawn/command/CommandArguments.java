@@ -31,11 +31,11 @@ public class CommandArguments {
     }
 
     public static RequiredArgumentBuilder<CommandSource, String> streamer(String name) {
-        return Commands.argument(name, StreamerNickType.streamerNick());
+        return Commands.argument(name, StreamerArgumentType.streamerNick());
     }
 
-    public static RequiredArgumentBuilder<CommandSource, String> rulesetStreamer(String name) {
-        return Commands.argument(name, StreamerNickType.streamerNickOrDefault());
+    public static RequiredArgumentBuilder<CommandSource, String> rulesetName(String name) {
+        return Commands.argument(name, RulesetNameArgumentType.rulesetName());
     }
 
     public static RequiredArgumentBuilder<CommandSource, CompoundNBT> nbtCompound(String name) {
