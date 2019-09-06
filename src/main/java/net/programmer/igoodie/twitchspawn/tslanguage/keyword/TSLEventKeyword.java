@@ -45,6 +45,7 @@ public enum TSLEventKeyword {
     ),
     YOUTUBE_SPONSOR(
             "Youtube Sponsor",
+            new TSLEventPair("subscription", "youtube"),
             new TSLEventPair("sponsor", "youtube")
     ),
     YOUTUBE_SUPERCHAT(

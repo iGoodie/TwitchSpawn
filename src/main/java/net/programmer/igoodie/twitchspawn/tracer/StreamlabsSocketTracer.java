@@ -10,6 +10,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.util.JSONUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashSet;
@@ -73,8 +74,9 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
     @Override
     protected void onLiveEvent(Socket socket, CredentialsConfig.Streamer streamer, Object... args) {
         JSONObject event = (JSONObject) args[0];
+        JSONArray messages = extractMessages(event);
 
-        if (!event.has("message") || event.optJSONArray("message") == null) {
+        if (messages == null) {
             TwitchSpawn.LOGGER.info("Received unexpected Streamlabs packet -> {}", event);
             return; // Contains no message (in expected format), stop here
         }
@@ -82,7 +84,6 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
         String eventType = JSONUtils.extractFrom(event, "type", String.class, null);
         String eventFor = JSONUtils.extractFrom(event, "for", String.class, "streamlabs");
         String eventAccount = eventFor.replace("_account", "");
-        JSONArray messages = JSONUtils.extractFrom(event, "message", JSONArray.class, new JSONArray());
 
         JSONUtils.forEach(messages, message -> {
             TwitchSpawn.LOGGER.info("Received Streamlabs packet {} -> {}",
@@ -106,6 +107,23 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
             // Pass the model to the handler
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);
         });
+    }
+
+    private JSONArray extractMessages(JSONObject event) {
+        try {
+            Object messageField = event.get("message");
+
+            if(messageField instanceof JSONArray)
+                return JSONUtils.extractFrom(event, "message", JSONArray.class, new JSONArray());
+
+            else if(messageField instanceof JSONObject)
+                return new JSONArray().put(messageField);
+
+            return null;
+
+        } catch (JSONException e) {
+            return null;
+        }
     }
 
 }
