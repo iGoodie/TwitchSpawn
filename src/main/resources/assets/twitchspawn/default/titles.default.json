@@ -88,5 +88,23 @@
   ],
   "mixer host": [
     "Incoming mixer host"
+  ],
+  "reflection": [
+    {
+      "text": "${streamer}",
+      "color": "dark_purple"
+    },
+    {
+      "text": " reflected you a ",
+      "color": "white"
+    },
+    {
+      "text": "${event}",
+      "color": "gold"
+    },
+    {
+      "text": "!",
+      "color": "white"
+    }
   ]
 }

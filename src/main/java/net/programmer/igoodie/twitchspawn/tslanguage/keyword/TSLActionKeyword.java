@@ -14,6 +14,7 @@ public enum TSLActionKeyword {
     EITHER(false, EitherAction.class),
     BOTH(false, BothAction.class),
     FOR(false, ForAction.class),
+    REFLECT(false, ReflectAction.class),
 
     OS_RUN(true, OsRunAction.class),
     ;
