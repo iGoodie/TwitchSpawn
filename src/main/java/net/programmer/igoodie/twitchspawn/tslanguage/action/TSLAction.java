@@ -26,6 +26,11 @@ public abstract class TSLAction implements TSLFlowNode {
     private static final int DEFAULT_FADE_OUT_TICKS = 20;
 
     /**
+     * Determines whether action is a reflection or not
+     */
+    protected boolean reflection = false;
+
+    /**
      * Determines whether action should be notified to the player or not
      */
     protected boolean silent = false;
@@ -132,7 +137,9 @@ public abstract class TSLAction implements TSLFlowNode {
     }
 
     protected String titleMessage(EventArguments args) {
-        String title = ConfigManager.TITLES.getTextComponentRaw(args.eventName);
+        String title = reflection
+                ? ConfigManager.TITLES.getTextComponentRaw("reflection")
+                : ConfigManager.TITLES.getTextComponentRaw(args.eventName);
 
         title = ExpressionEvaluator.replaceExpressions(title, expression -> {
             String messageEvaluation = ExpressionEvaluator.fromArgs(expression, args);

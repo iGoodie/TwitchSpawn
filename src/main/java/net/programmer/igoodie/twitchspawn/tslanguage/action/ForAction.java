@@ -44,6 +44,8 @@ public class ForAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
+        action.reflection = this.reflection;
+
         for (int i = 0; i < iterationCount; i++) {
             action.performAction(player, args);
         }

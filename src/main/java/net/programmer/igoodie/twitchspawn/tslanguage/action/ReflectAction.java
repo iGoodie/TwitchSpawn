@@ -32,6 +32,7 @@ public class ReflectAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
+        action.reflection = false;
         action.process(args);
 
         reflectedUsers.forEach(username -> {
@@ -54,15 +55,9 @@ public class ReflectAction extends TSLAction {
     }
 
     private void reflectAction(ServerPlayerEntity player, EventArguments args) {
-        String titleRaw = ConfigManager.TITLES.getTextComponentRaw("reflection");
-        String title = ExpressionEvaluator.replaceExpressions(titleRaw, expression -> {
-            String argsEvaluation = ExpressionEvaluator.fromArgs(expression, args);
+        action.reflection = true;
 
-            if (argsEvaluation != null)
-                return argsEvaluation;
-
-            return "${" + expression + "}";
-        });
+        String title = action.titleMessage(args);
         String subtitle = action.subtitleMessage(args);
 
         action.notifyPlayer(player, title, subtitle);
