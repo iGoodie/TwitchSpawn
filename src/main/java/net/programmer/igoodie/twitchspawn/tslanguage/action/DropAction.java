@@ -3,27 +3,31 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.datafixers.types.templates.Tag;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.command.arguments.ItemParser;
 import net.minecraft.command.impl.PlaySoundCommand;
 import net.minecraft.command.impl.TitleCommand;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.*;
 import net.minecraft.network.play.server.SPlaySoundPacket;
 import net.minecraft.network.play.server.STitlePacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
+import net.minecraftforge.common.util.Constants;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
+import net.programmer.igoodie.twitchspawn.util.NBTUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DropAction extends TSLAction {
 
@@ -59,7 +63,12 @@ public class DropAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        player.dropItem(this.itemStack.copy(), false, false);
+        ItemStack itemStack = this.itemStack.copy();
+        // TODO: Replace item lore
+        if (itemStack.hasDisplayName()) {
+            itemStack.setDisplayName(NBTUtils.ReplaceExpressions(itemStack.getDisplayName(), args));
+        }
+        player.dropItem(itemStack, false, false);
     }
 
     @Override

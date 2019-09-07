@@ -6,11 +6,14 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
+import net.programmer.igoodie.twitchspawn.util.NBTUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SummonAction extends TSLAction {
 
@@ -22,15 +25,15 @@ public class SummonAction extends TSLAction {
         this.message = TSLParser.parseMessage(words);
         List<String> actionWords = actionPart(words);
 
-        if (actionWords.size() != 1 && actionWords.size() != 4 && actionWords.size() != 5)
-            throw new TSLSyntaxError("Invalid length of words (expected 1, 4 or 5): " + actionWords);
+        if (actionWords.size() != 1 && actionWords.size() != 4 && actionWords.size() < 5)
+            throw new TSLSyntaxError("Invalid length of words (expected 1, 4 or >=5): " + actionWords);
 
         // Fetch TSL input
         String entityName = actionWords.get(0);
         String rawCoordX = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(1));
         String rawCoordY = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(2));
         String rawCoordZ = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(3));
-        String nbtRaw = actionWords.size() != 5 ? null : actionWords.get(4);
+        String nbtRaw = actionWords.size() < 5 ? null : String.join(" ", actionWords.subList(4, actionWords.size()));
 
         // Fetch entity type
         EntityType<?> entityType = EntityType.byKey(entityName).orElse(null);
@@ -71,6 +74,12 @@ public class SummonAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
+        if(nbt != null && nbt.contains("CustomName")) {
+            String customName = nbt.get("CustomName").getString();
+            customName = NBTUtils.ReplaceExpressions(customName, args);
+            nbt.remove("CustomName");
+            nbt.putString("CustomName", customName);
+        }
         String command = String.format("/summon %s %s %s %s %s",
                 entityType.getRegistryName(),
                 rawCoordX,
