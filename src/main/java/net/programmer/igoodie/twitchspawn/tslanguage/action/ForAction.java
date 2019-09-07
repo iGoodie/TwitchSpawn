@@ -44,7 +44,7 @@ public class ForAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        action.reflection = this.reflection;
+        action.reflectedUser = this.reflectedUser;
 
         for (int i = 0; i < iterationCount; i++) {
             action.performAction(player, args);
@@ -58,7 +58,7 @@ public class ForAction extends TSLAction {
 
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
-        if(expression.equals("loopCount"))
+        if (expression.equals("loopCount"))
             return String.valueOf(iterationCount);
         return null;
     }

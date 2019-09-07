@@ -32,7 +32,7 @@ public class ReflectAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        action.reflection = false;
+        action.reflectedUser = null;
         action.process(args);
 
         reflectedUsers.forEach(username -> {
@@ -55,7 +55,7 @@ public class ReflectAction extends TSLAction {
     }
 
     private void reflectAction(ServerPlayerEntity player, EventArguments args) {
-        action.reflection = true;
+        action.reflectedUser = player;
 
         String title = action.titleMessage(args);
         String subtitle = action.subtitleMessage(args);

@@ -28,7 +28,7 @@ public abstract class TSLAction implements TSLFlowNode {
     /**
      * Determines whether action is a reflection or not
      */
-    protected boolean reflection = false;
+    protected ServerPlayerEntity reflectedUser;
 
     /**
      * Determines whether action should be notified to the player or not
@@ -40,6 +40,14 @@ public abstract class TSLAction implements TSLFlowNode {
      * then the action is overriding the default subtitle message.
      */
     protected JsonArray message;
+
+    /**
+     *
+     * @return
+     */
+    public boolean isReflection() {
+        return reflectedUser != null;
+    }
 
     /**
      * Splits action part from message part on the display keyword
@@ -115,7 +123,9 @@ public abstract class TSLAction implements TSLFlowNode {
         TwitchSpawn.LOGGER.debug("Reached TSLAction node -> {} with {}",
                 this.getClass().getSimpleName(), args);
 
-        ServerPlayerEntity player = getPlayer(args.streamerNickname);
+        ServerPlayerEntity player = this.isReflection()
+                ? reflectedUser
+                : getPlayer(args.streamerNickname);
 
         if (player == null) {
             TwitchSpawn.LOGGER.info("Player {} is not found. Skipping {} event.",
@@ -137,7 +147,7 @@ public abstract class TSLAction implements TSLFlowNode {
     }
 
     protected String titleMessage(EventArguments args) {
-        String title = reflection
+        String title = this.isReflection()
                 ? ConfigManager.TITLES.getTextComponentRaw("reflection")
                 : ConfigManager.TITLES.getTextComponentRaw(args.eventName);
 

@@ -92,7 +92,7 @@ public class BothAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        this.actions.forEach(action -> action.reflection = this.reflection);
+        this.actions.forEach(action -> action.reflectedUser = this.reflectedUser);
 
         if (instant) { // Perform them all instantly
             this.actions.forEach(action -> action.performAction(player, args));
