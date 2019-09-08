@@ -36,6 +36,11 @@ public class ReflectAction extends TSLAction {
         action.process(args);
 
         reflectedUsers.forEach(username -> {
+            if(username.equalsIgnoreCase(args.streamerNickname)) {
+                TwitchSpawn.LOGGER.warn("Tried to reflect back to the streamer. Skipping reflection for them.");
+                return;
+            }
+
             ServerPlayerEntity reflectedPlayer = getPlayer(username);
 
             if (reflectedPlayer == null) {
