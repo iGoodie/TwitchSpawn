@@ -135,3 +135,5 @@ gradle-app.setting
 **/build/
 
 # End of https://www.gitignore.io/api/java,gradle,intellij
+/.idea/modules/TwitchSpawn.main.iml
+/.idea/modules/TwitchSpawn.test.iml
