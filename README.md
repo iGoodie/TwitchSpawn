@@ -145,6 +145,14 @@ If you're facing any sort of problem, do not hasitate giving our Discord Server 
 
 ![Error Display Preview](preview/error_preview.png)
 
+## Translations
+Special thanks to my buddies _Elanor_ and _Vaelios_ for
+translating TwitchSpawninto German and French!
+
+If you would like to contribute to the translations, consider modifying
+[languages](https://github.com/iGoodie/TwitchSpawn/tree/master/src/main/resources/assets/twitchspawn/lang)
+and creating a PR!
+
 ## Facing an Issue?
 - Join our Discord Server - https://discordapp.com/invite/KNxxdvN
 - Contact iGoodie via Discord: iGoodie#1945
