@@ -147,7 +147,7 @@ If you're facing any sort of problem, do not hasitate giving our Discord Server 
 
 ## Translations
 Special thanks to my buddies _Elanor_ and _Vaelios_ for
-translating TwitchSpawninto German and French!
+translating TwitchSpawn into German and French!
 
 If you would like to contribute to the translations, consider modifying
 [languages](https://github.com/iGoodie/TwitchSpawn/tree/master/src/main/resources/assets/twitchspawn/lang)

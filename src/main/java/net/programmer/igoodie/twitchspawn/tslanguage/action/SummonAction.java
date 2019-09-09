@@ -16,7 +16,7 @@ public class SummonAction extends TSLAction {
 
     private EntityType<?> entityType;
     private String rawCoordX, rawCoordY, rawCoordZ;
-    private CompoundNBT nbt;
+    private String rawNbt;
 
     public SummonAction(List<String> words) throws TSLSyntaxError {
         this.message = TSLParser.parseMessage(words);
@@ -26,29 +26,27 @@ public class SummonAction extends TSLAction {
             throw new TSLSyntaxError("Invalid length of words (expected 1, 4 or 5): " + actionWords);
 
         // Fetch TSL input
-        String entityName = actionWords.get(0);
-        String rawCoordX = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(1));
-        String rawCoordY = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(2));
-        String rawCoordZ = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(3));
-        String nbtRaw = actionWords.size() != 5 ? null : actionWords.get(4);
+        this.rawCoordX = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(1));
+        this.rawCoordY = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(2));
+        this.rawCoordZ = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(3));
+        this.rawNbt = actionWords.size() != 5 ? "{}" : actionWords.get(4);
 
         // Fetch entity type
+        String entityName = actionWords.get(0);
         EntityType<?> entityType = EntityType.byKey(entityName).orElse(null);
 
         // Entity with given key not found
         if (entityType == null)
             throw new TSLSyntaxError("Invalid entity name -> " + entityName);
 
+        this.entityType = entityType;
+
         // Save parsed words
         try {
-            this.nbt = nbtRaw == null ? null : new JsonToNBT(new StringReader(nbtRaw)).readStruct();
-            this.rawCoordX = rawCoordX;
-            this.rawCoordY = rawCoordY;
-            this.rawCoordZ = rawCoordZ;
-            this.entityType = entityType;
+            new JsonToNBT(new StringReader(rawNbt)).readStruct();
 
         } catch (CommandSyntaxException e) {
-            throw new TSLSyntaxError("Malformed NBT json -> " + nbtRaw);
+            throw new TSLSyntaxError("Malformed NBT json -> " + rawNbt);
         }
     }
 
@@ -76,7 +74,7 @@ public class SummonAction extends TSLAction {
                 rawCoordX,
                 rawCoordY,
                 rawCoordZ,
-                (nbt == null ? "{}" : nbt.toString()));
+                replaceExpressions(rawNbt, args));
 
         player.getServer().getCommandManager().handleCommand(player.getCommandSource()
                 .withPermissionLevel(9999).withFeedbackDisabled(), command);
