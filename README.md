@@ -4,13 +4,16 @@
 <p align="center">
   <a href="https://www.twitch.tv/"><img src="https://img.shields.io/badge/api-twitch-b19dd8.svg"></a>
   <a href="https://streamlabs.com"><img src="https://img.shields.io/badge/api-streamlabs-32c3a2.svg"></a>
+  <a href="https://streamelements.com"><img src="https://img.shields.io/badge/api-streamelements-f72c00.svg"></a>
   <br/>
   <a href="https://minecraft.curseforge.com/projects/twitchspawn"><img src="http://cf.way2muchnoise.eu/full_273382_downloads.svg"></a>
   <a href="https://minecraft.curseforge.com/projects/twitchspawn"><img src="http://cf.way2muchnoise.eu/versions/273382.svg"></a>
+  <br/>
+  <a href="https://twitter.com/iGoodiex"><img src="https://img.shields.io/twitter/follow/iGoodiex?style=social"></a>
 </p>
 
-Long waited update is finally here! :tada: 1.14 Adaptation is alive!
-
+Long waited update is finally here! :tada: 1.14 Adaptation is alive! (See the [user manual](https://igoodie.gitbook.io/twitchspawn/)!)
+ 
 ## Brief Summary
 TwitchSpawn is a Minecraft mod designed for Twitch streamers using 3rd party streaming platforms!
 

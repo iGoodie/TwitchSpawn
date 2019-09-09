@@ -1,33 +1,20 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.arguments.ItemParser;
-import net.minecraft.command.impl.PlaySoundCommand;
-import net.minecraft.command.impl.TitleCommand;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.play.server.SPlaySoundPacket;
-import net.minecraft.network.play.server.STitlePacket;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DropAction extends TSLAction {
 
-    private ItemStack itemStack;
+    private String itemRaw;
+    private int itemAmount;
 
     /*
      * Exemplar valid params:
@@ -42,33 +29,55 @@ public class DropAction extends TSLAction {
         if (actionWords.size() != 1 && actionWords.size() != 2)
             throw new TSLSyntaxError("Invalid length of words: " + actionWords);
 
-        try {
-            ItemParser itemParser = new ItemParser(new StringReader(actionWords.get(0)), true).parse();
-            int amount = actionWords.size() != 2 ? 1 : Integer.parseInt(actionWords.get(1));
+        this.itemRaw = actionWords.get(0);
 
-            this.itemStack = new ItemStack(itemParser.getItem(), amount);
-            this.itemStack.setTag(itemParser.getNbt());
+        try {
+            this.itemAmount = actionWords.size() != 2 ? 1 : Integer.parseInt(actionWords.get(1));
+
+        } catch (NumberFormatException e) {
+            throw new TSLSyntaxError("Expected an integer, found instead -> %s", actionWords.get(1));
+        }
+
+        try { // Check if given item word is parse-able
+            new ItemParser(new StringReader(this.itemRaw), true).parse();
 
         } catch (CommandSyntaxException e) {
             throw new TSLSyntaxError(e.getRawMessage().getString());
+        }
+    }
 
-        } catch (Exception e) {
-            throw new TSLSyntaxError("Invalid action words: " + actionWords);
+    private ItemStack createItemStack(EventArguments args) {
+        try {
+            String input = replaceExpressions(itemRaw, args);
+
+            ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
+            ItemStack itemStack =  new ItemStack(itemParser.getItem(), itemAmount);
+            itemStack.setTag(itemParser.getNbt());
+
+            return itemStack;
+
+        } catch (CommandSyntaxException e) {
+            throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
         }
     }
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        player.dropItem(this.itemStack.copy(), false, false);
+        ItemStack itemStack = createItemStack(args);
+        player.dropItem(itemStack, false, false);
     }
 
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
+        ItemStack itemStack = createItemStack(args);
+
         if (expression.equals("itemName"))
             return itemStack.getItem().getDisplayName(itemStack).getString();
 //            return itemStack.getItem().getName().getString(); // getName() is client only...
+
         if (expression.equals("itemCount"))
             return String.valueOf(itemStack.getCount());
+
         return null;
     }
 

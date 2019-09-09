@@ -42,7 +42,6 @@ public abstract class TSLAction implements TSLFlowNode {
     protected JsonArray message;
 
     /**
-     *
      * @return
      */
     public boolean isReflection() {
@@ -151,14 +150,7 @@ public abstract class TSLAction implements TSLFlowNode {
                 ? ConfigManager.TITLES.getTextComponentRaw("reflection")
                 : ConfigManager.TITLES.getTextComponentRaw(args.eventName);
 
-        title = ExpressionEvaluator.replaceExpressions(title, expression -> {
-            String messageEvaluation = ExpressionEvaluator.fromArgs(expression, args);
-
-            if (messageEvaluation != null)
-                return messageEvaluation;
-
-            return "${" + expression + "}";
-        });
+        title = replaceExpressions(title, args);
 
         return title;
     }
@@ -182,6 +174,17 @@ public abstract class TSLAction implements TSLFlowNode {
         });
 
         return subtitle;
+    }
+
+    protected String replaceExpressions(String input, EventArguments args) {
+        return ExpressionEvaluator.replaceExpressions(input, expression -> {
+            String evaluation = ExpressionEvaluator.fromArgs(expression, args);
+
+            if (evaluation != null)
+                return evaluation;
+
+            return "${" + expression + "}";
+        });
     }
 
     protected void notifyPlayer(ServerPlayerEntity player, EventArguments args) {
