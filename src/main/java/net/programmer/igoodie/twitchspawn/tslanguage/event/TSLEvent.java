@@ -1,14 +1,13 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.event;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TSLEvent implements TSLFlowNode {
 

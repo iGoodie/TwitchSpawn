@@ -1,7 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tracer;
 
 import net.minecraft.command.CommandSource;
-import net.minecraft.network.play.server.SPlaySoundPacket;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;

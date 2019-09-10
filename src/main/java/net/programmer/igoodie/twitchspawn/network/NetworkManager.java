@@ -1,16 +1,11 @@
 package net.programmer.igoodie.twitchspawn.network;
 
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.network.packet.OsRunPacket;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
-
-import java.lang.reflect.Method;
-import java.util.function.Supplier;
 
 public class NetworkManager {
 

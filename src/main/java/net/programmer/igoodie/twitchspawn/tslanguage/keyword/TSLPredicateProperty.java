@@ -1,6 +1,5 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.keyword;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 
 import java.lang.reflect.Field;

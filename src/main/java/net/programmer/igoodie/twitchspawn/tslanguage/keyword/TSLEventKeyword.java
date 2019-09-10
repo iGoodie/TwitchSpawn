@@ -3,7 +3,6 @@ package net.programmer.igoodie.twitchspawn.tslanguage.keyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 

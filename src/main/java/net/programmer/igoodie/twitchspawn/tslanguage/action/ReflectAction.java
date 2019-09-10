@@ -7,7 +7,6 @@ import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
-import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
 
 import java.util.Arrays;
 import java.util.Collections;

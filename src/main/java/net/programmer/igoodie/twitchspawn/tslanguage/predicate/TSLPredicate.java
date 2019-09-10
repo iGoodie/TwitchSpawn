@@ -6,11 +6,6 @@ import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLPredicateProperty;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
-
 public class TSLPredicate implements TSLFlowNode {
 
     public TSLComparator comparator;

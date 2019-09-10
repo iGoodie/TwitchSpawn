@@ -1,10 +1,10 @@
 package net.programmer.igoodie.twitchspawn.tslanguage;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
+import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
 
 import java.util.HashMap;
 import java.util.List;

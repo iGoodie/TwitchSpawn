@@ -2,8 +2,8 @@ package net.programmer.igoodie.twitchspawn.configuration;
 
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.tslanguage.TSLRulesetCollection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
+import net.programmer.igoodie.twitchspawn.tslanguage.TSLRulesetCollection;
 
 import java.io.File;
 

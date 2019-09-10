@@ -13,12 +13,7 @@ public abstract class ItemSelectiveAction extends TSLAction {
     public enum InventoryType {
         MAIN_INVENTORY(36), ARMOR_INVENTORY(4), OFFHAND_INVENTORY(1);
 
-        public static InventoryType randomOne() {
-            InventoryType[] values = values();
-            return values[(int) (Math.random() * values.length)];
-        }
-
-        public int capacity = Integer.MAX_VALUE;
+        public int capacity;
 
         InventoryType(int capacity) { this.capacity = capacity; }
     }

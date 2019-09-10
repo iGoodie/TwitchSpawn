@@ -1,6 +1,5 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import com.google.common.base.Defaults;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
@@ -12,7 +11,6 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

@@ -2,11 +2,8 @@ package net.programmer.igoodie.twitchspawn.network.packet;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.OsRunAction;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class OsRunPacket {

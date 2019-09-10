@@ -2,13 +2,9 @@ package net.programmer.igoodie.twitchspawn.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.Sound;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.command.impl.PlaySoundCommand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.TickEvent;
@@ -16,7 +12,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
-import org.lwjgl.opengl.GL11;
 
 public class StatusIndicatorOverlay {
 
