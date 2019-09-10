@@ -46,12 +46,18 @@ public class DropAction extends TSLAction {
         }
     }
 
+    @Override
+    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+        ItemStack itemStack = createItemStack(args);
+        player.dropItem(itemStack, false, false);
+    }
+
     private ItemStack createItemStack(EventArguments args) {
         try {
             String input = replaceExpressions(itemRaw, args);
 
             ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
-            ItemStack itemStack =  new ItemStack(itemParser.getItem(), itemAmount);
+            ItemStack itemStack = new ItemStack(itemParser.getItem(), itemAmount);
             itemStack.setTag(itemParser.getNbt());
 
             return itemStack;
@@ -59,12 +65,6 @@ public class DropAction extends TSLAction {
         } catch (CommandSyntaxException e) {
             throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
         }
-    }
-
-    @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        ItemStack itemStack = createItemStack(args);
-        player.dropItem(itemStack, false, false);
     }
 
     @Override

@@ -37,8 +37,8 @@ public class ClearAction extends ItemSelectiveAction {
 
         } else if (selectionType == SelectionType.RANDOM) {
             InventorySlot randomSlot = inventoryType == null
-                    ? randomInventorySlot(player)
-                    : randomInventorySlot(getInventory(player, inventoryType));
+                    ? randomInventorySlot(player, false)
+                    : randomInventorySlot(getInventory(player, inventoryType), false);
             if (randomSlot != null) {
                 randomSlot.pullOut();
             }

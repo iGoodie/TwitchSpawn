@@ -93,7 +93,7 @@ public class ShuffleAction extends ItemSelectiveAction {
         player.getServer().getCommandManager().handleCommand(commandSource,
                 "/playsound minecraft:block.conduit.activate master @s");
         player.getServer().getCommandManager().handleCommand(commandSource,
-                "/particle minecraft:bubble_pop ~ ~ ~ 2 2 2 0.0001 400");
+                "/particle minecraft:end_rod ~ ~ ~ 2 2 2 0.0001 400");
     }
 
     private void shuffle(NonNullList<ItemStack> inventory, int firstIndex, int lastIndex) {

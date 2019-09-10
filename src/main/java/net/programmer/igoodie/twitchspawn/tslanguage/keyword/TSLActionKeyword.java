@@ -10,6 +10,7 @@ public enum TSLActionKeyword {
     CLEAR(true, ClearAction.class),
     EXECUTE(true, ExecuteAction.class),
     SHUFFLE(true, ShuffleAction.class),
+    CHANGE(true, ChangeAction.class),
     NOTHING(true, NothingAction.class),
 
     EITHER(false, EitherAction.class),

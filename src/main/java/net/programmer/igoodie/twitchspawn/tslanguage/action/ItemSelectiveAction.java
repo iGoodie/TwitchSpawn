@@ -158,42 +158,42 @@ public abstract class ItemSelectiveAction extends TSLAction {
         }
     }
 
-    protected InventorySlot randomInventorySlot(ServerPlayerEntity player) {
-        List<InventorySlot> nonEmptySlots = new LinkedList<>();
+    protected InventorySlot randomInventorySlot(ServerPlayerEntity player, boolean includeEmptySlots) {
+        List<InventorySlot> possibleSlots = new LinkedList<>();
 
-        InventorySlot fromMainInventory = randomInventorySlot(player.inventory.mainInventory);
-        InventorySlot fromArmors = randomInventorySlot(player.inventory.armorInventory);
-        InventorySlot fromOffHand = randomInventorySlot(player.inventory.offHandInventory);
+        InventorySlot fromMainInventory = randomInventorySlot(player.inventory.mainInventory, includeEmptySlots);
+        InventorySlot fromArmors = randomInventorySlot(player.inventory.armorInventory, includeEmptySlots);
+        InventorySlot fromOffHand = randomInventorySlot(player.inventory.offHandInventory, includeEmptySlots);
 
         if (fromMainInventory != null)
-            nonEmptySlots.add(fromMainInventory);
+            possibleSlots.add(fromMainInventory);
         if (fromArmors != null)
-            nonEmptySlots.add(fromArmors);
+            possibleSlots.add(fromArmors);
         if (fromOffHand != null)
-            nonEmptySlots.add(fromOffHand);
+            possibleSlots.add(fromOffHand);
 
-        if (nonEmptySlots.size() == 0)
+        if (possibleSlots.size() == 0)
             return null;
 
-        int randomIndex = (int) (Math.random() * nonEmptySlots.size());
-        return nonEmptySlots.get(randomIndex);
+        int randomIndex = (int) (Math.random() * possibleSlots.size());
+        return possibleSlots.get(randomIndex);
     }
 
-    protected InventorySlot randomInventorySlot(NonNullList<ItemStack> inventory) {
-        List<InventorySlot> nonEmptySlots = new LinkedList<>();
+    protected InventorySlot randomInventorySlot(NonNullList<ItemStack> inventory, boolean includeEmptySlots) {
+        List<InventorySlot> possibleSlots = new LinkedList<>();
 
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack itemStack = inventory.get(i);
-            if (!itemStack.equals(ItemStack.EMPTY)) {
-                nonEmptySlots.add(new InventorySlot(inventory, i));
+            if (includeEmptySlots || !itemStack.equals(ItemStack.EMPTY)) {
+                possibleSlots.add(new InventorySlot(inventory, i));
             }
         }
 
-        if (nonEmptySlots.size() == 0)
+        if (possibleSlots.size() == 0)
             return null;
 
-        int randomIndex = (int) (Math.random() * nonEmptySlots.size());
-        return nonEmptySlots.get(randomIndex);
+        int randomIndex = (int) (Math.random() * possibleSlots.size());
+        return possibleSlots.get(randomIndex);
     }
 
 }
