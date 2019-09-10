@@ -26,7 +26,7 @@ public class RulesetNameArgumentType implements ArgumentType<String> {
 
     @Override
     public String parse(StringReader reader) throws CommandSyntaxException {
-        return null;
+        return reader.readUnquotedString(); // Only 1 word is allowed
     }
 
     @Override

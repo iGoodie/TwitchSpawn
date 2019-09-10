@@ -2,9 +2,12 @@ package net.programmer.igoodie.twitchspawn.tslanguage.parser;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class TSLTokenizer {
 
+    public static final String MULTI_LINE_COMMENT_BEGIN = "#*";
+    public static final String MULTI_LINE_COMMENT_END = "*#";
     public static final char COMMENT = '#';
     public static final char SPACE = ' ';
     public static final char GROUPING = '%';
@@ -65,7 +68,18 @@ public class TSLTokenizer {
 
     public List<String> intoRules() throws TSLSyntaxError {
         this.rules = new LinkedList<>();
-        String[] lines = script.split("\\R");
+        String[] lines = script
+                .replaceAll("(?s)" + quoteRegex(MULTI_LINE_COMMENT_BEGIN) + ".*?" + quoteRegex(MULTI_LINE_COMMENT_END), "") // Discard multi-line comments
+                .split("\\R"); // Split newlines
+
+        // Check for unexpected beginning or ending of a multi-line comment
+        for (String line : lines) {
+            if (line.contains(MULTI_LINE_COMMENT_BEGIN))
+                throw new TSLSyntaxError("Unclosed multiline comment -> %s", line);
+            if (line.contains(MULTI_LINE_COMMENT_END))
+                throw new TSLSyntaxError("Unexpected comment closing -> %s", line);
+        }
+
         StringBuilder rule = new StringBuilder();
 
         // Traverse every line
@@ -186,6 +200,10 @@ public class TSLTokenizer {
 
     private String quoteRegex(char character) {
         return "\\" + character;
+    }
+
+    private String quoteRegex(String string) {
+        return Pattern.quote(string);
     }
 
     private String trimComments(String line) {

@@ -41,9 +41,9 @@ public class TwitchSpawnCommand {
         root.then(Commands.literal("reloadcfg").executes(TwitchSpawnCommand::reloadModule));
 
         root.then(Commands.literal("rules")
-                .executes(TwitchSpawnCommand::rulesModule)
-                .then(CommandArguments.rulesetName("streamer_nick")
-                        .executes(TwitchSpawnCommand::rulesOfPlayerModule))
+                .executes(context -> rulesModule(context, null))
+                .then(CommandArguments.rulesetName("ruleset_name")
+                        .executes(context -> rulesModule(context, RulesetNameArgumentType.getRulesetName(context, "ruleset_name"))))
         );
 
         root.then(Commands.literal("simulate")
@@ -153,28 +153,27 @@ public class TwitchSpawnCommand {
 
     /* ------------------------------------------------------------ */
 
-    public static int rulesModule(CommandContext<CommandSource> context) {
-        context.getSource().sendFeedback(new TranslationTextComponent(
-                "commands.twitchspawn.rules.list",
-                ConfigManager.RULESET_COLLECTION.getStreamers()), true);
-        return 1;
-    }
+    public static int rulesModule(CommandContext<CommandSource> context, String rulesetName) {
+        if (rulesetName == null) {
+            context.getSource().sendFeedback(new TranslationTextComponent(
+                    "commands.twitchspawn.rules.list",
+                    ConfigManager.RULESET_COLLECTION.getStreamers()), true);
+            return 1;
+        }
 
-    public static int rulesOfPlayerModule(CommandContext<CommandSource> context) {
-        String streamerNick = StreamerArgumentType.getStreamer(context, "streamer_nick");
-        TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNick);
+        TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(rulesetName);
 
         if (ruleset == null) {
             context.getSource().sendFeedback(new TranslationTextComponent(
                     "commands.twitchspawn.rules.one.fail",
-                    streamerNick), true);
+                    rulesetName), true);
             return 0;
         }
 
-        String translationKey = streamerNick.equalsIgnoreCase("default") ?
+        String translationKey = rulesetName.equalsIgnoreCase("default") ?
                 "commands.twitchspawn.rules.default" : "commands.twitchspawn.rules.one";
         context.getSource().sendFeedback(new TranslationTextComponent(translationKey,
-                streamerNick, ruleset.toString()), true);
+                rulesetName, ruleset.toString()), true);
         return 1;
     }
 
