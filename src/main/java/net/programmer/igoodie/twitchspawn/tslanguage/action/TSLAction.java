@@ -119,9 +119,6 @@ public abstract class TSLAction implements TSLFlowNode {
      */
     @Override
     public boolean process(EventArguments args) {
-        TwitchSpawn.LOGGER.debug("Reached TSLAction node -> {} with {}",
-                this.getClass().getSimpleName(), args);
-
         ServerPlayerEntity player = this.isReflection()
                 ? reflectedUser
                 : getPlayer(args.streamerNickname);
@@ -141,7 +138,7 @@ public abstract class TSLAction implements TSLFlowNode {
         performAction(player, args);
 
         TwitchSpawn.LOGGER.info("{} action performed for {}",
-                this.getClass().getSimpleName(), args.streamerNickname);
+                TSLActionKeyword.ofClass(this.getClass()), args.streamerNickname);
         return true;
     }
 

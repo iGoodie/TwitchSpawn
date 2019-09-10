@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public class NetworkManager {
 
-    private static final String PROTOCOL_VERSION = "0.0.2";
+    private static final String PROTOCOL_VERSION = "0.0.3";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(TwitchSpawn.MOD_ID, "network"))

@@ -24,13 +24,7 @@ public class OsRunPacket {
     }
 
     public static void handle(final OsRunPacket packet, Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> {
-            OsRunAction.ProcessResult result = OsRunAction.runScript(packet.shell, packet.script);
-            if (result.exception != null)
-                TwitchSpawn.LOGGER.info("OS_RUN failed to run. ({})", result.exception.getMessage());
-            else
-                TwitchSpawn.LOGGER.info("OS_RUN done with exit code {}:\n{}", result.exitCode, result.output);
-        });
+        context.get().enqueueWork(() -> OsRunAction.handleLocalScript(packet.shell, packet.script));
         context.get().setPacketHandled(true);
     }
 
