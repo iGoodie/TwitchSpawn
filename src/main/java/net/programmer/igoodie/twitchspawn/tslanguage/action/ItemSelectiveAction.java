@@ -7,7 +7,6 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class ItemSelectiveAction extends TSLAction {
 
@@ -73,7 +72,7 @@ public abstract class ItemSelectiveAction extends TSLAction {
             filling.add(word);
         }
 
-        String inventoryName = rightHand.stream().collect(Collectors.joining(" "));
+        String inventoryName = String.join(" ", rightHand);
 
         // Parse inventory name
         if (inventoryName.equalsIgnoreCase("inventory"))
@@ -86,7 +85,7 @@ public abstract class ItemSelectiveAction extends TSLAction {
         // Parse index - with two words (e.g "slot 2")
         if (leftHand.size() == 2) {
             if (leftHand.get(0).equalsIgnoreCase("slot")) {
-                parseSlot(leftHand);
+                parseInventoryIndex(leftHand);
 
             } else {
                 throw new TSLSyntaxError("Unknown inventory selector -> %s", leftHand);
@@ -109,7 +108,7 @@ public abstract class ItemSelectiveAction extends TSLAction {
         }
     }
 
-    protected void parseSlot(List<String> leftHand) throws TSLSyntaxError {
+    protected void parseInventoryIndex(List<String> leftHand) throws TSLSyntaxError {
         try {
             inventoryIndex = Integer.parseInt(leftHand.get(1));
         } catch (Exception e) {

@@ -56,7 +56,7 @@ public class ClearAction extends ItemSelectiveAction {
         CommandSource commandSource = player.getCommandSource()
                 .withPermissionLevel(9999).withFeedbackDisabled();
         player.getServer().getCommandManager().handleCommand(commandSource,
-                "/playsound minecraft:entity.item.break master @p");
+                "/playsound minecraft:entity.item.break master @s");
         player.getServer().getCommandManager().handleCommand(commandSource,
                 "/particle minecraft:smoke ~ ~ ~ 2 2 2 0.1 400");
     }
