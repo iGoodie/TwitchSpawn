@@ -23,6 +23,10 @@ public class ReflectAction extends TSLAction {
         if (words.size() < 2)
             throw new TSLSyntaxError("Invalid length of words: " + words);
 
+        // "REFLECT %% REFLECT %% ..." is not allowed
+        if(words.get(1).equalsIgnoreCase(TSLActionKeyword.ofClass(getClass())))
+            throw new TSLSyntaxError("Cannot have a cyclic REFLECT rule.");
+
         this.reflectedUsers = Arrays.asList(words.get(0).split(",\\s*"));
         this.action = TSLParser.parseAction(words.get(1), words.size() > 2
                 ? words.subList(2, words.size())
