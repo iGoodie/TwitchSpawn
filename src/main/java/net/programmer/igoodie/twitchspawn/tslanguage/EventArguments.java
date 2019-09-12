@@ -74,7 +74,7 @@ public class EventArguments {
 
                 if (value != null && !value.equals(defaultValue)) {
                     sb.append(delimiter);
-                    sb.append(field.getName() + "=" + value);
+                    sb.append(field.getName()).append("=").append(value);
                     delimiter = ", ";
                 }
             }

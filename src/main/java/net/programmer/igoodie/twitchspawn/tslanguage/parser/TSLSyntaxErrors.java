@@ -14,7 +14,7 @@ public class TSLSyntaxErrors extends Exception {
     List<TSLSyntaxError> errors;
 
     public TSLSyntaxErrors(List<TSLSyntaxError> errors) {
-        super(errors.stream().map(err -> err.getMessage()).collect(Collectors.joining("\n")));
+        super(errors.stream().map(TSLSyntaxError::getMessage).collect(Collectors.joining("\n")));
         this.errors = errors;
     }
 

@@ -56,10 +56,7 @@ public class TSLRuleset {
             try {
                 List<String> words = TSLTokenizer.intoWords(rule);
                 String actionKeyword = words.get(0).toUpperCase();
-                Integer currentCount = occurrences.get(actionKeyword);
-
-                if (currentCount == null)
-                    currentCount = 0;
+                Integer currentCount = occurrences.getOrDefault(actionKeyword, 0);
 
                 occurrences.put(actionKeyword, currentCount + 1);
 

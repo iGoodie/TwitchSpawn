@@ -2,7 +2,6 @@ package net.programmer.igoodie.twitchspawn;
 
 import net.minecraft.command.arguments.ArgumentSerializer;
 import net.minecraft.command.arguments.ArgumentTypes;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -101,7 +100,7 @@ public class TwitchSpawn {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        PlayerEntity entity = event.getPlayer();
+        ServerPlayerEntity entity = (ServerPlayerEntity) event.getPlayer();
 
         String translationKey = TRACE_MANAGER.isRunning() ?
                 "commands.twitchspawn.status.on" : "commands.twitchspawn.status.off";
@@ -109,7 +108,7 @@ public class TwitchSpawn {
         entity.sendMessage(new TranslationTextComponent(translationKey));
 
         NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(TRACE_MANAGER.isRunning()),
-                ((ServerPlayerEntity) entity).connection.netManager,
+                entity.connection.netManager,
                 NetworkDirection.PLAY_TO_CLIENT);
     }
 

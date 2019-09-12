@@ -2,10 +2,7 @@ package net.programmer.igoodie.twitchspawn;
 
 import com.electronwill.nightconfig.core.io.ParsingException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoader;
-import net.minecraftforge.fml.ModLoadingStage;
-import net.minecraftforge.fml.ModLoadingWarning;
+import net.minecraftforge.fml.*;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
@@ -33,12 +30,13 @@ public class TwitchSpawnLoadingErrors extends Exception {
     }
 
     public void bindFMLWarnings(ModLoadingStage stage) {
-        IModInfo modInfo = ModList.get()
-                .getModContainerById(TwitchSpawn.MOD_ID)
-                .get().getModInfo();
+        ModContainer modContainer = ModList.get()
+                .getModContainerById(TwitchSpawn.MOD_ID).get();
+
+        IModInfo modInfo = modContainer.getModInfo();
 
         for (Exception exception : exceptions) {
-            String i18nMessage = "";
+            String i18nMessage;
 
             if (exception instanceof TSLSyntaxError)
                 i18nMessage = "modloader.twitchspawn.error.tsl";
@@ -49,9 +47,13 @@ public class TwitchSpawnLoadingErrors extends Exception {
             else
                 i18nMessage = "modloader.twitchspawn.error.unknown";
 
-            ModLoader.get().addWarning(new ModLoadingWarning(
-                    modInfo, stage, i18nMessage, exception.getMessage(), exception.getClass().getSimpleName()
-            ));
+            ModLoadingWarning warning = new ModLoadingWarning(
+                    modInfo, stage, i18nMessage,
+                    exception.getMessage(),
+                    exception.getClass().getSimpleName()
+            );
+
+            ModLoader.get().addWarning(warning);
 
             TwitchSpawn.LOGGER.error(exception.getMessage());
         }
@@ -68,4 +70,5 @@ public class TwitchSpawnLoadingErrors extends Exception {
         }
         return sb.toString();
     }
+
 }
