@@ -10,6 +10,7 @@
   <a href="https://minecraft.curseforge.com/projects/twitchspawn"><img src="http://cf.way2muchnoise.eu/versions/273382.svg"></a>
   <br/>
   <a href="https://twitter.com/iGoodiex"><img src="https://img.shields.io/twitter/follow/iGoodiex?style=social"></a>
+  <a href="https://www.patreon.com/iGoodie"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.herokuapp.com%2Figoodie"></a>
 </p>
 
 Long waited update is finally here! :tada: 1.14 Adaptation is alive! (See the [user manual](https://igoodie.gitbook.io/twitchspawn/)!)
