@@ -33,12 +33,16 @@ public class ExecuteAction extends TSLAction {
                 .withPermissionLevel(9999) // OVER 9000!
                 .withFeedbackDisabled();
 
-        commands.forEach(command -> {
-            int result = player.getServer()
-                    .getCommandManager()
-                    .handleCommand(source, replaceExpressions(command, args));
-            TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, command);
-        });
+
+        for (String command : commands) {
+            TwitchSpawn.SERVER.execute(() -> {
+                int result = TwitchSpawn.SERVER
+                        .getCommandManager()
+                        .handleCommand(source, replaceExpressions(command, args));
+
+                TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, replaceExpressions(command, args));
+            });
+        }
     }
 
 }

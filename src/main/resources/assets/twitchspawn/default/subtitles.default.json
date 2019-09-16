@@ -67,6 +67,26 @@
       "color": "white"
     }
   ],
+  "SHUFFLE": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " shuffled stuff around!",
+      "color": "white"
+    }
+  ],
+  "CHANGE": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " changed some inventory stuff!",
+      "color": "white"
+    }
+  ],
   "OS_RUN": [
     {
       "text": "${actor}",
