@@ -59,7 +59,7 @@ public class TraceManager {
         if (TwitchSpawn.SERVER != null) {
             TwitchSpawn.SERVER.getPlayerList().sendMessage(
                     new TextComponentTranslation("commands.twitchspawn.stop.success",
-                            sender == null ? "Server" : sender.getName(), reason), true);
+                            sender == null ? "Server" : sender.getName(), reason));
             TwitchSpawn.SERVER.getPlayerList().getPlayers().forEach(player -> {
                 NetworkManager.CHANNEL.sendTo(
                         new StatusChangedPacket.Message(true),

@@ -1,6 +1,7 @@
 package net.programmer.igoodie.twitchspawn.client.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -77,12 +78,12 @@ public class StatusIndicatorOverlay {
         }
 
         GlStateManager.scale(1f, 1f, 1f);
-//        minecraft.ingameGUI.blit(x, y, ux, uy, w, h); // TODO Blit
+        minecraft.ingameGUI.drawTexturedModalRect(x, y, ux, uy, w, h);
 
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
-//        minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION); // TODO reset bound texture
-
+        minecraft.getTextureManager().bindTexture(Gui.ICONS);
+        
         drew = true;
     }
 

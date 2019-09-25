@@ -1,10 +1,14 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.google.gson.JsonArray;
+import net.minecraft.command.CommandPlaySound;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
@@ -188,11 +192,13 @@ public abstract class TSLAction implements TSLFlowNode {
 
     protected void notifyPlayer(EntityPlayerMP player, String title, String subtitle) {
         // Form and send sound packet
+        Vec3d playerPosition = player.getPositionVector();
         ResourceLocation soundLocation = new ResourceLocation("minecraft:entity.player.levelup");
-        SoundCategory category = SoundCategory.MASTER;
-//        SPacketSoundEffect packetSound = new SPacketSoundEffect(soundLocation, category, player.getPosition(), 1.0f, 0.0f);
-//        player.connection.sendPacket(packetSound);
-        // TODO play sound
+        SoundCategory soundCategory = SoundCategory.MASTER;
+        SoundEvent soundEvent = new SoundEvent(soundLocation);
+        SPacketSoundEffect soundPacket = new SPacketSoundEffect(soundEvent, soundCategory,
+                playerPosition.x, playerPosition.y, playerPosition.z, 1.0f, 0.0f);
+        player.connection.sendPacket(soundPacket);
 
         // Form and send title packet
         ITextComponent text = ITextComponent.Serializer.fromJsonLenient(title);

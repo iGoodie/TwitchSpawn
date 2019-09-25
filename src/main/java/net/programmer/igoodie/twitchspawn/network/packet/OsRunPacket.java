@@ -15,6 +15,8 @@ public class OsRunPacket implements IMessageHandler<OsRunPacket.Message, IMessag
         private OsRunAction.Shell shell;
         private String script;
 
+        public Message() {}
+
         public Message(OsRunAction.Shell shell, String script) {
             this.shell = shell;
             this.script = script;

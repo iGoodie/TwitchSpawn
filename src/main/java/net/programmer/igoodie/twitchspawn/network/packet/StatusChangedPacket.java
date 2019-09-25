@@ -12,6 +12,8 @@ public class StatusChangedPacket implements IMessageHandler<StatusChangedPacket.
 
         private boolean status;
 
+        public Message() {}
+
         public Message(boolean status) {
             this.status = status;
         }
