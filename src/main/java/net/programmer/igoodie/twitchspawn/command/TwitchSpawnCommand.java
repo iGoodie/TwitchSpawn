@@ -7,10 +7,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.command.module.CommandModule;
-import net.programmer.igoodie.twitchspawn.command.module.ModuleReloadcfg;
-import net.programmer.igoodie.twitchspawn.command.module.ModuleStart;
-import net.programmer.igoodie.twitchspawn.command.module.ModuleStop;
+import net.programmer.igoodie.twitchspawn.command.module.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,6 +23,7 @@ public class TwitchSpawnCommand extends CommandBase {
         registerModule(new ModuleStart());
         registerModule(new ModuleStop());
         registerModule(new ModuleReloadcfg());
+        registerModule(new ModuleStatus());
     }
 
     private void registerModule(CommandModule module) {
