@@ -62,7 +62,7 @@ public class TraceManager {
                             sender == null ? "Server" : sender.getName(), reason));
             TwitchSpawn.SERVER.getPlayerList().getPlayers().forEach(player -> {
                 NetworkManager.CHANNEL.sendTo(
-                        new StatusChangedPacket.Message(true),
+                        new StatusChangedPacket.Message(false),
                         player
                 );
             });

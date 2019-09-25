@@ -10,6 +10,7 @@ import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.command.module.CommandModule;
 import net.programmer.igoodie.twitchspawn.command.module.ModuleReloadcfg;
 import net.programmer.igoodie.twitchspawn.command.module.ModuleStart;
+import net.programmer.igoodie.twitchspawn.command.module.ModuleStop;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,8 +23,9 @@ public class TwitchSpawnCommand extends CommandBase {
     public TwitchSpawnCommand() {
         this.modules = new HashMap<>();
 
-        registerModule(new ModuleReloadcfg());
         registerModule(new ModuleStart());
+        registerModule(new ModuleStop());
+        registerModule(new ModuleReloadcfg());
     }
 
     private void registerModule(CommandModule module) {
