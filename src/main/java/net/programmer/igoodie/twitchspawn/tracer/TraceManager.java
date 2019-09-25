@@ -1,8 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tracer;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
@@ -38,15 +37,16 @@ public class TraceManager {
         running = true;
 
         TwitchSpawn.SERVER.getPlayerList().sendMessage(
-                new TranslationTextComponent("commands.twitchspawn.start.success"), true);
+                new TextComponentTranslation("commands.twitchspawn.start.success"), true);
         TwitchSpawn.SERVER.getPlayerList().getPlayers().forEach(player -> {
-            NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(true),
-                    player.connection.netManager,
-                    NetworkDirection.PLAY_TO_CLIENT);
+            NetworkManager.CHANNEL.sendTo(
+                    new StatusChangedPacket.Message(true),
+                    player
+            );
         });
     }
 
-    public void stop(CommandSource source, String reason) {
+    public void stop(ICommandSender sender, String reason) {
         if (!isRunning()) throw new IllegalStateException("Tracer is already stopped");
 
         TwitchSpawn.LOGGER.info("Stopping all the tracers...");
@@ -58,12 +58,13 @@ public class TraceManager {
 
         if (TwitchSpawn.SERVER != null) {
             TwitchSpawn.SERVER.getPlayerList().sendMessage(
-                    new TranslationTextComponent("commands.twitchspawn.stop.success",
-                            source == null ? "Server" : source.getName(), reason), true);
+                    new TextComponentTranslation("commands.twitchspawn.stop.success",
+                            sender == null ? "Server" : sender.getName(), reason), true);
             TwitchSpawn.SERVER.getPlayerList().getPlayers().forEach(player -> {
-                NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(false),
-                        player.connection.netManager,
-                        NetworkDirection.PLAY_TO_CLIENT);
+                NetworkManager.CHANNEL.sendTo(
+                        new StatusChangedPacket.Message(true),
+                        player
+                );
             });
         }
     }

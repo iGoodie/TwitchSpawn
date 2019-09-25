@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
@@ -9,6 +9,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.FutureTask;
 
 public class ExecuteAction extends TSLAction {
 
@@ -28,20 +29,20 @@ public class ExecuteAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        CommandSource source = player.getCommandSource()
-                .withPermissionLevel(9999) // OVER 9000!
-                .withFeedbackDisabled();
+    protected void performAction(EntityPlayerMP player, EventArguments args) {
+        ICommandSender source = player.getCommandSenderEntity();
+//                .withPermissionLevel(9999) // OVER 9000!
+//                .withFeedbackDisabled();
 
 
         for (String command : commands) {
-            TwitchSpawn.SERVER.execute(() -> {
+            TwitchSpawn.SERVER.futureTaskQueue.add(new FutureTask<>(() -> {
                 int result = TwitchSpawn.SERVER
                         .getCommandManager()
-                        .handleCommand(source, replaceExpressions(command, args));
+                        .executeCommand(source, replaceExpressions(command, args));
 
                 TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, replaceExpressions(command, args));
-            });
+            }, "Test response")); // TODO
         }
     }
 

@@ -1,6 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -18,6 +18,6 @@ public class NothingAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {}
+    protected void performAction(EntityPlayerMP player, EventArguments args) {}
 
 }

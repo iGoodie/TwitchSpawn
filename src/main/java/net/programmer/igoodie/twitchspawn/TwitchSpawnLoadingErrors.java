@@ -2,15 +2,20 @@ package net.programmer.igoodie.twitchspawn;
 
 import com.electronwill.nightconfig.core.io.ParsingException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraftforge.fml.*;
-import net.minecraftforge.forgespi.language.IModInfo;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiErrorScreen;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException;
+import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class TwitchSpawnLoadingErrors extends Exception {
+public class TwitchSpawnLoadingErrors extends RuntimeException {
 
     List<Exception> exceptions;
 
@@ -29,34 +34,42 @@ public class TwitchSpawnLoadingErrors extends Exception {
         return exceptions.size() == 0;
     }
 
-    public void bindFMLWarnings(ModLoadingStage stage) {
-        ModContainer modContainer = ModList.get()
-                .getModContainerById(TwitchSpawn.MOD_ID).get();
+    public void display() {
+        if (FMLLaunchHandler.side() == Side.CLIENT)
+            displayForClient(); // Decoupled to eliminate Class loading errors on Server side
 
-        IModInfo modInfo = modContainer.getModInfo();
+        if (FMLLaunchHandler.side() == Side.SERVER) {
+            String title = new TextComponentTranslation("modloader.twitchspawn.error.title").getFormattedText();
 
-        for (Exception exception : exceptions) {
-            String i18nMessage;
+            TwitchSpawn.LOGGER.error(title);
 
-            if (exception instanceof TSLSyntaxError)
-                i18nMessage = "modloader.twitchspawn.error.tsl";
-            else if (exception instanceof ParsingException)
-                i18nMessage = "modloader.twitchspawn.error.toml";
-            else if (exception instanceof JsonSyntaxException)
-                i18nMessage = "modloader.twitchspawn.error.json";
-            else
-                i18nMessage = "modloader.twitchspawn.error.unknown";
+            for (Exception exception : exceptions) {
+                String i18nMessage;
 
-            ModLoadingWarning warning = new ModLoadingWarning(
-                    modInfo, stage, i18nMessage,
-                    exception.getMessage(),
-                    exception.getClass().getSimpleName()
-            );
+                if (exception instanceof TSLSyntaxError)
+                    i18nMessage = "modloader.twitchspawn.error.tsl";
+                else if (exception instanceof ParsingException)
+                    i18nMessage = "modloader.twitchspawn.error.toml";
+                else if (exception instanceof JsonSyntaxException)
+                    i18nMessage = "modloader.twitchspawn.error.json";
+                else
+                    i18nMessage = "modloader.twitchspawn.error.unknown";
 
-            ModLoader.get().addWarning(warning);
+                String g0 = exception.getMessage();
+                String g1 = exception.getClass().getSimpleName();
+                String message = new TextComponentTranslation(i18nMessage, null, g0, g1).getFormattedText();
+                message = message.replaceFirst("\r?\n", " - ");
 
-            TwitchSpawn.LOGGER.error(exception.getMessage());
+                TwitchSpawn.LOGGER.error(message);
+            }
+
+            throw new RuntimeException("Error on loading TwitchSpawn");
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void displayForClient() {
+        throw new TwitchSpawnErrorDisplay(this);
     }
 
     @Override

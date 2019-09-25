@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/run/TwitchSpawn.run.iml" filepath="$PROJECT_DIR$/run/TwitchSpawn.run.iml" />
+      <module fileurl="file://$PROJECT_DIR$/run/TwitchSpawn-1.12.x-TSL.run.iml" filepath="$PROJECT_DIR$/run/TwitchSpawn-1.12.x-TSL.run.iml" />
     </modules>
   </component>
 </project>

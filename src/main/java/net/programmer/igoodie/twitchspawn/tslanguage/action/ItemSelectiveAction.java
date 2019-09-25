@@ -1,6 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -38,7 +38,7 @@ public abstract class ItemSelectiveAction extends TSLAction {
     protected SelectionType selectionType = SelectionType.WITH_INDEX;
     protected int inventoryIndex = -1;
 
-    protected NonNullList<ItemStack> getInventory(ServerPlayerEntity player, InventoryType inventoryType) {
+    protected NonNullList<ItemStack> getInventory(EntityPlayerMP player, InventoryType inventoryType) {
         switch (inventoryType) {
             case MAIN_INVENTORY:
                 return player.inventory.mainInventory;
@@ -158,7 +158,7 @@ public abstract class ItemSelectiveAction extends TSLAction {
         }
     }
 
-    protected InventorySlot randomInventorySlot(ServerPlayerEntity player, boolean includeEmptySlots) {
+    protected InventorySlot randomInventorySlot(EntityPlayerMP player, boolean includeEmptySlots) {
         List<InventorySlot> possibleSlots = new LinkedList<>();
 
         InventorySlot fromMainInventory = randomInventorySlot(player.inventory.mainInventory, includeEmptySlots);

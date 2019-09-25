@@ -1,9 +1,8 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.google.gson.JsonArray;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.play.server.SPlaySoundPacket;
-import net.minecraft.network.play.server.STitlePacket;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.ITextComponent;
@@ -27,7 +26,7 @@ public abstract class TSLAction implements TSLFlowNode {
     /**
      * Determines whether action is a reflection or not
      */
-    protected ServerPlayerEntity reflectedUser;
+    protected EntityPlayerMP reflectedUser;
 
     /**
      * Determines whether action should be notified to the player or not
@@ -82,7 +81,7 @@ public abstract class TSLAction implements TSLFlowNode {
      * @param player Target player of the action
      * @param args   Arguments of the event
      */
-    protected abstract void performAction(ServerPlayerEntity player, EventArguments args);
+    protected abstract void performAction(EntityPlayerMP player, EventArguments args);
 
     /**
      * Evaluates a value for given expression
@@ -118,7 +117,7 @@ public abstract class TSLAction implements TSLFlowNode {
      */
     @Override
     public boolean process(EventArguments args) {
-        ServerPlayerEntity player = this.isReflection()
+        EntityPlayerMP player = this.isReflection()
                 ? reflectedUser
                 : getPlayer(args.streamerNickname);
 
@@ -183,26 +182,27 @@ public abstract class TSLAction implements TSLFlowNode {
         });
     }
 
-    protected void notifyPlayer(ServerPlayerEntity player, EventArguments args) {
+    protected void notifyPlayer(EntityPlayerMP player, EventArguments args) {
         notifyPlayer(player, titleMessage(args), subtitleMessage(args));
     }
 
-    protected void notifyPlayer(ServerPlayerEntity player, String title, String subtitle) {
+    protected void notifyPlayer(EntityPlayerMP player, String title, String subtitle) {
         // Form and send sound packet
         ResourceLocation soundLocation = new ResourceLocation("minecraft:entity.player.levelup");
         SoundCategory category = SoundCategory.MASTER;
-        SPlaySoundPacket packetSound = new SPlaySoundPacket(soundLocation, category, player.getPositionVec(), 1.0f, 0.0f);
-        player.connection.sendPacket(packetSound);
+//        SPacketSoundEffect packetSound = new SPacketSoundEffect(soundLocation, category, player.getPosition(), 1.0f, 0.0f);
+//        player.connection.sendPacket(packetSound);
+        // TODO play sound
 
         // Form and send title packet
         ITextComponent text = ITextComponent.Serializer.fromJsonLenient(title);
-        STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text,
+        SPacketTitle packet = new SPacketTitle(SPacketTitle.Type.TITLE, text,
                 DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
         player.connection.sendPacket(packet);
 
         // Form and send subtitle packet
         ITextComponent subtext = ITextComponent.Serializer.fromJsonLenient(subtitle);
-        STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
+        SPacketTitle subtitlePacket = new SPacketTitle(SPacketTitle.Type.SUBTITLE, subtext,
                 DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
         player.connection.sendPacket(subtitlePacket);
     }
@@ -214,7 +214,7 @@ public abstract class TSLAction implements TSLFlowNode {
      * @return Player entity with given nickname
      * @throws IllegalStateException if executed on a non-running server
      */
-    protected ServerPlayerEntity getPlayer(String username) {
+    protected EntityPlayerMP getPlayer(String username) {
         if (TwitchSpawn.SERVER == null)
             throw new IllegalStateException("TSLAction tried to fetch player from a not-running server.");
 

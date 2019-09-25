@@ -1,6 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
@@ -34,7 +34,7 @@ public class ReflectAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+    protected void performAction(EntityPlayerMP player, EventArguments args) {
         action.reflectedUser = null;
         action.process(args);
 
@@ -44,7 +44,7 @@ public class ReflectAction extends TSLAction {
                 return;
             }
 
-            ServerPlayerEntity reflectedPlayer = getPlayer(username);
+            EntityPlayerMP reflectedPlayer = getPlayer(username);
 
             if (reflectedPlayer == null) {
                 TwitchSpawn.LOGGER.info("{} was not online on the server. Skipping reflection for them", username);
@@ -62,7 +62,7 @@ public class ReflectAction extends TSLAction {
         });
     }
 
-    private void reflectAction(ServerPlayerEntity player, EventArguments args) {
+    private void reflectAction(EntityPlayerMP player, EventArguments args) {
         action.reflectedUser = player;
 
         String title = action.titleMessage(args);

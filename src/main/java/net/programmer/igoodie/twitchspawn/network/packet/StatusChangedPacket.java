@@ -1,34 +1,38 @@
 package net.programmer.igoodie.twitchspawn.network.packet;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 
-import java.util.function.Supplier;
+public class StatusChangedPacket implements IMessageHandler<StatusChangedPacket.Message, IMessage> {
 
-public class StatusChangedPacket {
+    public static class Message implements IMessage {
 
-    public static void encode(StatusChangedPacket packet, PacketBuffer buffer) {
-        buffer.writeBoolean(packet.status);
+        private boolean status;
+
+        public Message(boolean status) {
+            this.status = status;
+        }
+
+        @Override
+        public void toBytes(ByteBuf buffer) {
+            buffer.writeBoolean(this.status);
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buffer) {
+            this.status = buffer.readBoolean();
+        }
+
     }
 
-    public static StatusChangedPacket decode(PacketBuffer buffer) {
-        return new StatusChangedPacket(buffer.readBoolean());
-    }
+    @Override
+    public IMessage onMessage(Message message, MessageContext context) {
+        StatusIndicatorOverlay.setRunning(message.status);
 
-    public static void handle(final StatusChangedPacket packet, Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> {
-            StatusIndicatorOverlay.setRunning(packet.status);
-        });
-        context.get().setPacketHandled(true);
-    }
-
-    /* ---------------------------- */
-
-    private boolean status;
-
-    public StatusChangedPacket(boolean status) {
-        this.status = status;
+        return null; // No response
     }
 
 }

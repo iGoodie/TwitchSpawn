@@ -1,6 +1,5 @@
 package net.programmer.igoodie.twitchspawn.configuration;
 
-import net.minecraftforge.fml.loading.FMLPaths;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLRulesetCollection;
@@ -9,7 +8,7 @@ import java.io.File;
 
 public class ConfigManager {
 
-    public static final String CONFIG_DIR_PATH = FMLPaths.CONFIGDIR.get().toString() + File.separator + "TwitchSpawn";
+    public static String CONFIG_DIR_PATH;
 
     public static CredentialsConfig CREDENTIALS;
     public static TSLRulesetCollection RULESET_COLLECTION;
@@ -17,9 +16,11 @@ public class ConfigManager {
     public static SubtitlesConfig SUBTITLES;
     public static PreferencesConfig PREFERENCES;
 
-    public static void loadConfigs() throws TwitchSpawnLoadingErrors {
+    public static void loadConfigs(File configsDir) throws TwitchSpawnLoadingErrors {
         TwitchSpawn.LOGGER.info("Loading configs...");
         TwitchSpawnLoadingErrors errors = new TwitchSpawnLoadingErrors();
+
+        CONFIG_DIR_PATH = configsDir.getPath() + File.separator + "TwitchSpawn";
 
         File configDirectory = new File(CONFIG_DIR_PATH);
 

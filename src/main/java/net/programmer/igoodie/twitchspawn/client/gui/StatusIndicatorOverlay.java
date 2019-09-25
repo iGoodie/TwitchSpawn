@@ -1,18 +1,20 @@
 package net.programmer.igoodie.twitchspawn.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 
+@SideOnly(Side.CLIENT)
 public class StatusIndicatorOverlay {
 
     private static final ResourceLocation indicatorIcons =
@@ -26,7 +28,7 @@ public class StatusIndicatorOverlay {
 
         String soundName = running ? "pop_in" : "pop_out";
 
-        Minecraft.getInstance().player
+        Minecraft.getMinecraft().player
                 .playSound(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, soundName)), 1f, 1f);
     }
 
@@ -46,7 +48,7 @@ public class StatusIndicatorOverlay {
         if (ConfigManager.PREFERENCES.indicatorDisplay == PreferencesConfig.IndicatorDisplay.DISABLED)
             return; // The display is disabled, stop here
 
-        Minecraft minecraft = Minecraft.getInstance();
+        Minecraft minecraft = Minecraft.getMinecraft();
 
         if (event.getType() != ElementType.HOTBAR)
             return; // Render only on HOTBAR
@@ -74,12 +76,12 @@ public class StatusIndicatorOverlay {
             h = 12;
         }
 
-        GlStateManager.scalef(1f, 1f, 1f);
-        minecraft.ingameGUI.blit(x, y, ux, uy, w, h);
+        GlStateManager.scale(1f, 1f, 1f);
+//        minecraft.ingameGUI.blit(x, y, ux, uy, w, h); // TODO Blit
 
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
-        minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+//        minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION); // TODO reset bound texture
 
         drew = true;
     }

@@ -1,15 +1,13 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.arguments.ItemParser;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
+import net.programmer.igoodie.twitchspawn.util.ItemParser;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -80,16 +78,13 @@ public class ChangeAction extends ItemSelectiveAction {
             throw new TSLSyntaxError("Expected an integer, found instead -> %s", itemPart.get(1));
         }
 
-        try { // Check if given item word is parse-able
-            new ItemParser(new StringReader(this.itemRaw), true).parse();
-
-        } catch (CommandSyntaxException e) {
-            throw new TSLSyntaxError(e.getRawMessage().getString());
-        }
+        // Check if given item word is parse-able
+        if (!new ItemParser(this.itemRaw).isValid())
+            throw new TSLSyntaxError(""); // TODO
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+    protected void performAction(EntityPlayerMP player, EventArguments args) {
         ItemStack itemStack = createItemStack(args);
 
         if (selectionType == SelectionType.WITH_INDEX) {
@@ -123,11 +118,11 @@ public class ChangeAction extends ItemSelectiveAction {
             }
         }
 
-        CommandSource commandSource = player.getCommandSource()
-                .withPermissionLevel(9999).withFeedbackDisabled();
-        player.getServer().getCommandManager().handleCommand(commandSource,
+        ICommandSender commandSource = player.getCommandSenderEntity();
+//                .withPermissionLevel(9999).withFeedbackDisabled();
+        player.getServer().getCommandManager().executeCommand(commandSource,
                 "/playsound minecraft:item.armor.equip_leather master @s");
-        player.getServer().getCommandManager().handleCommand(commandSource,
+        player.getServer().getCommandManager().executeCommand(commandSource,
                 "/particle minecraft:entity_effect ~ ~ ~ 2 2 2 0.1 400");
     }
 
@@ -138,18 +133,20 @@ public class ChangeAction extends ItemSelectiveAction {
     }
 
     private ItemStack createItemStack(EventArguments args) {
-        try {
-            String input = replaceExpressions(itemRaw, args);
-
-            ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
-            ItemStack itemStack = new ItemStack(itemParser.getItem(), itemAmount);
-            itemStack.setTag(itemParser.getNbt());
-
-            return itemStack;
-
-        } catch (CommandSyntaxException e) {
-            throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
-        }
+        String input = replaceExpressions(itemRaw, args);
+        return new ItemParser(input).generateItemStack(itemAmount);
+//        try {
+//            String input = replaceExpressions(itemRaw, args);
+//
+//            ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
+//            ItemStack itemStack = new ItemStack(itemParser.getItem(), itemAmount);
+//            itemStack.setTag(itemParser.getNbt());
+//
+//            return itemStack;
+//
+//        } catch (CommandSyntaxException e) {
+//            throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
+//        }
     }
 
 }
