@@ -5,7 +5,7 @@ modloader.twitchspawn.error.toml=§4TOML Error: §4%2$s
 modloader.twitchspawn.error.unknown=§4Unknown Error: §4%2$s (%3$s)
 
 commands.twitchspawn.reloadcfg.success=§3>> Successfully reloaded all the configs
-commands.twitchspawn.reloadcfg.invalid_syntax=§4>> Failed to reload. Syntax errors:\n%1$s
+commands.twitchspawn.reloadcfg.invalid_syntax=§4>> Failed to reload. Syntax errors: %1$s
 commands.twitchspawn.reloadcfg.already_started=§4>> TwitchSpawn should be stopped in order to be able to reload configs.
 commands.twitchspawn.reloadcfg.no_perm=§4>> You do not have permission to reload TwitchSpawn configs.
 

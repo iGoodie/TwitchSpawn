@@ -8,7 +8,8 @@ import java.io.File;
 
 public class ConfigManager {
 
-    public static String CONFIG_DIR_PATH;
+    public static String CONFIGS_DIR_PATH;
+    public static String TWITCH_SPAWN_CONFIG_DIR_PATH;
 
     public static CredentialsConfig CREDENTIALS;
     public static TSLRulesetCollection RULESET_COLLECTION;
@@ -16,13 +17,21 @@ public class ConfigManager {
     public static SubtitlesConfig SUBTITLES;
     public static PreferencesConfig PREFERENCES;
 
+    public static void loadConfigs() throws TwitchSpawnLoadingErrors {
+        if(TWITCH_SPAWN_CONFIG_DIR_PATH == null)
+            throw new IllegalArgumentException();
+
+        loadConfigs(new File(CONFIGS_DIR_PATH));
+    }
+
     public static void loadConfigs(File configsDir) throws TwitchSpawnLoadingErrors {
         TwitchSpawn.LOGGER.info("Loading configs...");
         TwitchSpawnLoadingErrors errors = new TwitchSpawnLoadingErrors();
 
-        CONFIG_DIR_PATH = configsDir.getPath() + File.separator + "TwitchSpawn";
+        CONFIGS_DIR_PATH = configsDir.getPath();
+        TWITCH_SPAWN_CONFIG_DIR_PATH = configsDir.getPath() + File.separator + "TwitchSpawn";
 
-        File configDirectory = new File(CONFIG_DIR_PATH);
+        File configDirectory = new File(TWITCH_SPAWN_CONFIG_DIR_PATH);
 
         if (!configDirectory.exists())
             configDirectory.mkdirs();
@@ -30,7 +39,7 @@ public class ConfigManager {
         accumulateExceptions(errors,
                 () -> CREDENTIALS = CredentialsConfig.create(getPath("credentials.toml")));
         accumulateExceptions(errors,
-                () -> RULESET_COLLECTION = RulesConfig.createRules(CONFIG_DIR_PATH));
+                () -> RULESET_COLLECTION = RulesConfig.createRules(TWITCH_SPAWN_CONFIG_DIR_PATH));
         accumulateExceptions(errors,
                 () -> TITLES = TitlesConfig.create(new File(getPath("messages.title.json"))));
         accumulateExceptions(errors,
@@ -45,7 +54,7 @@ public class ConfigManager {
     }
 
     public static String getPath(String relativePath) {
-        return CONFIG_DIR_PATH + File.separator + relativePath;
+        return TWITCH_SPAWN_CONFIG_DIR_PATH + File.separator + relativePath;
     }
 
     private static void accumulateExceptions(TwitchSpawnLoadingErrors container, ExceptionAccumulator task) {
