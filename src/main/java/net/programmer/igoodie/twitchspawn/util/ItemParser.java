@@ -63,4 +63,5 @@ public class ItemParser {
     public String toString() {
         return String.format("{id:%s, nbt:%s}", itemId, itemNbt);
     }
+
 }

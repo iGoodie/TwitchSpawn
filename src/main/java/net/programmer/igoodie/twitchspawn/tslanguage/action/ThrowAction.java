@@ -68,12 +68,12 @@ public class ThrowAction extends ItemSelectiveAction {
             }
         }
 
-        ICommandSender commandSource = player.getCommandSenderEntity();
-//                .withPermissionLevel(9999).withFeedbackDisabled();
-        player.getServer().getCommandManager().executeCommand(commandSource,
-                "/playsound minecraft:entity.ender_pearl.throw master @s");
-        player.getServer().getCommandManager().executeCommand(commandSource,
-                "/particle minecraft:witch ~ ~ ~ 2 2 2 0.1 400");
+        ICommandSender commandSender = getCommandSender(player, true, true);
+
+        player.getServer().getCommandManager().executeCommand(commandSender,
+                "/playsound minecraft:entity.enderpearl.throw master @s");
+        player.getServer().getCommandManager().executeCommand(commandSender,
+                "/particle witchMagic ~ ~ ~ 2 2 2 0.1 400");
     }
 
 }

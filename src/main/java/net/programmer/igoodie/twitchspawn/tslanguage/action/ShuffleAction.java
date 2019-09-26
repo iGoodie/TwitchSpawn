@@ -88,12 +88,12 @@ public class ShuffleAction extends ItemSelectiveAction {
     protected void performAction(EntityPlayerMP player, EventArguments args) {
         shuffle(getInventory(player, inventoryType), this.firstIndex, this.lastIndex);
 
-        ICommandSender commandSource = player.getCommandSenderEntity();
-//                .withPermissionLevel(9999).withFeedbackDisabled();
-        player.getServer().getCommandManager().executeCommand(commandSource,
-                "/playsound minecraft:block.conduit.activate master @s");
-        player.getServer().getCommandManager().executeCommand(commandSource,
-                "/particle minecraft:end_rod ~ ~ ~ 2 2 2 0.0001 400");
+        ICommandSender commandSender = getCommandSender(player, true, true);
+
+        player.getServer().getCommandManager().executeCommand(commandSender,
+                "/playsound minecraft:block.brewing_stand.brew master @s");
+        player.getServer().getCommandManager().executeCommand(commandSender,
+                "/particle endRod ~ ~ ~ 2 2 2 0.1 800");
     }
 
     private void shuffle(NonNullList<ItemStack> inventory, int firstIndex, int lastIndex) {

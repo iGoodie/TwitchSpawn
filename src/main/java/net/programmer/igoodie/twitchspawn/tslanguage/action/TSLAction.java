@@ -2,14 +2,20 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.google.gson.JsonArray;
 import net.minecraft.command.CommandPlaySound;
+import net.minecraft.command.CommandResultStats;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.network.play.server.SPacketTitle;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
@@ -225,6 +231,76 @@ public abstract class TSLAction implements TSLFlowNode {
             throw new IllegalStateException("TSLAction tried to fetch player from a not-running server.");
 
         return TwitchSpawn.SERVER.getPlayerList().getPlayerByUsername(username);
+    }
+
+    /**
+     * Fetches a command sender from a player by slightly changing it on demand.
+     *
+     * @param player           Multiplayer player entity
+     * @param permissionBypass Either bypasses command permissions or not
+     * @param feedbackDisabled Either feedback is disabled or not
+     * @return
+     */
+    protected ICommandSender getCommandSender(EntityPlayerMP player, boolean permissionBypass, boolean feedbackDisabled) {
+        ICommandSender sourceCommandSender = player.getCommandSenderEntity();
+
+        return new ICommandSender() {
+            @Override
+            public String getName() {
+                return sourceCommandSender.getName();
+            }
+
+            @Override
+            public ITextComponent getDisplayName() {
+                return sourceCommandSender.getDisplayName();
+            }
+
+            @Override
+            public void sendMessage(ITextComponent component) {
+                if (!feedbackDisabled)
+                    sourceCommandSender.sendMessage(component);
+            }
+
+            @Override
+            public boolean canUseCommand(int permLevel, String commandName) {
+                return permissionBypass || sourceCommandSender.canUseCommand(permLevel, commandName);
+            }
+
+            @Override
+            public BlockPos getPosition() {
+                return sourceCommandSender.getPosition();
+            }
+
+            @Override
+            public Vec3d getPositionVector() {
+                return sourceCommandSender.getPositionVector();
+            }
+
+            @Override
+            public World getEntityWorld() {
+                return sourceCommandSender.getEntityWorld();
+            }
+
+            @Override
+            public Entity getCommandSenderEntity() {
+                return sourceCommandSender.getCommandSenderEntity();
+            }
+
+            @Override
+            public boolean sendCommandFeedback() {
+                return !feedbackDisabled;
+            }
+
+            @Override
+            public void setCommandStat(CommandResultStats.Type type, int amount) {
+                sourceCommandSender.setCommandStat(type, amount);
+            }
+
+            @Override
+            public MinecraftServer getServer() {
+                return sourceCommandSender.getServer();
+            }
+        };
     }
 
 }

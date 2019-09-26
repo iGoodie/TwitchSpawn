@@ -80,7 +80,7 @@ public class ChangeAction extends ItemSelectiveAction {
 
         // Check if given item word is parse-able
         if (!new ItemParser(this.itemRaw).isValid())
-            throw new TSLSyntaxError(""); // TODO
+            throw new TSLSyntaxError("Invalid item text");
     }
 
     @Override
@@ -118,12 +118,12 @@ public class ChangeAction extends ItemSelectiveAction {
             }
         }
 
-        ICommandSender commandSource = player.getCommandSenderEntity();
-//                .withPermissionLevel(9999).withFeedbackDisabled();
-        player.getServer().getCommandManager().executeCommand(commandSource,
+        ICommandSender commandSender = getCommandSender(player, true, true);
+
+        player.getServer().getCommandManager().executeCommand(commandSender,
                 "/playsound minecraft:item.armor.equip_leather master @s");
-        player.getServer().getCommandManager().executeCommand(commandSource,
-                "/particle minecraft:entity_effect ~ ~ ~ 2 2 2 0.1 400");
+        player.getServer().getCommandManager().executeCommand(commandSender,
+                "/particle enchantmenttable ~ ~ ~ 2 2 2 0.1 400");
     }
 
     private void setAll(NonNullList<ItemStack> inventory, ItemStack itemStack) {
@@ -135,18 +135,6 @@ public class ChangeAction extends ItemSelectiveAction {
     private ItemStack createItemStack(EventArguments args) {
         String input = replaceExpressions(itemRaw, args);
         return new ItemParser(input).generateItemStack(itemAmount);
-//        try {
-//            String input = replaceExpressions(itemRaw, args);
-//
-//            ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
-//            ItemStack itemStack = new ItemStack(itemParser.getItem(), itemAmount);
-//            itemStack.setTag(itemParser.getNbt());
-//
-//            return itemStack;
-//
-//        } catch (CommandSyntaxException e) {
-//            throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
-//        }
     }
 
 }

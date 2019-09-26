@@ -38,7 +38,7 @@ public class DropAction extends TSLAction {
 
         // Check if given item word is parse-able
         if (!new ItemParser(this.itemRaw).isValid())
-            throw new TSLSyntaxError("Invalid item text"); // TODO
+            throw new TSLSyntaxError("Invalid item text");
     }
 
     @Override
@@ -50,18 +50,6 @@ public class DropAction extends TSLAction {
     private ItemStack createItemStack(EventArguments args) {
         String input = replaceExpressions(itemRaw, args);
         return new ItemParser(input).generateItemStack(itemAmount);
-//        try {
-//            String input = replaceExpressions(itemRaw, args);
-//
-//            ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
-//            ItemStack itemStack = new ItemStack(itemParser.getItem(), itemAmount);
-//            itemStack.setTag(itemParser.getNbt());
-//
-//            return itemStack;
-//
-//        } catch (CommandSyntaxException e) {
-//            throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
-//        }
     }
 
     @Override

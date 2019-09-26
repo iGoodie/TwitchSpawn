@@ -51,7 +51,7 @@ public class TwitchSpawnCommand extends CommandBase {
 
     @Override
     public boolean checkPermission(MinecraftServer server, @Nonnull ICommandSender sender) {
-        return super.checkPermission(server, sender);
+        return true;
     }
 
     /* -------------------------------------------- */

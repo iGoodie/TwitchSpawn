@@ -30,19 +30,16 @@ public class ExecuteAction extends TSLAction {
 
     @Override
     protected void performAction(EntityPlayerMP player, EventArguments args) {
-        ICommandSender source = player.getCommandSenderEntity();
-//                .withPermissionLevel(9999) // OVER 9000!
-//                .withFeedbackDisabled();
-
+        ICommandSender commandSender = getCommandSender(player, true, true);
 
         for (String command : commands) {
-            TwitchSpawn.SERVER.futureTaskQueue.add(new FutureTask<>(() -> {
+            TwitchSpawn.SERVER.addScheduledTask(() -> {
                 int result = TwitchSpawn.SERVER
                         .getCommandManager()
-                        .executeCommand(source, replaceExpressions(command, args));
+                        .executeCommand(commandSender, replaceExpressions(command, args));
 
                 TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, replaceExpressions(command, args));
-            }, "Test response")); // TODO
+            });
         }
     }
 
