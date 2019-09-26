@@ -24,6 +24,7 @@ public class TwitchSpawnCommand extends CommandBase {
         registerModule(new ModuleStop());
         registerModule(new ModuleReloadcfg());
         registerModule(new ModuleStatus());
+        registerModule(new ModuleRules());
     }
 
     private void registerModule(CommandModule module) {
