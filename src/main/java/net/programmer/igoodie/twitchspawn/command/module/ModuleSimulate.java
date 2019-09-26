@@ -32,7 +32,7 @@ public class ModuleSimulate extends CommandModule {
     @Nonnull
     @Override
     public List<String> getTabCompletions(String[] moduleArgs) {
-        if (moduleArgs.length == 1)
+        if (moduleArgs.length == 2)
             return listOfCompletionsStartingWith(moduleArgs,
                     ConfigManager.RULESET_COLLECTION.getStreamers());
 
