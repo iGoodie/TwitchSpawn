@@ -40,7 +40,7 @@ public class InRangeComparator extends TSLComparator {
         if (!(leftHand instanceof Number))
             return false;
 
-        double number = (Double) leftHand;
+        double number = ((Number) leftHand).doubleValue();
 
         return min <= number && number <= max;
     }
