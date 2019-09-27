@@ -25,6 +25,7 @@ import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class TwitchSpawnCommand {
@@ -201,13 +202,15 @@ public class TwitchSpawnCommand {
                 return 0;
             }
 
-            TSLEventPair eventPair = TSLEventKeyword.toPairs(eventName).iterator().next();
+            Set<TSLEventPair> eventPairs = TSLEventKeyword.toPairs(eventName);
 
-            if (eventPair == null) {
+            if (eventPairs == null) {
                 context.getSource().sendFeedback(new TranslationTextComponent(
                         "commands.twitchspawn.simulate.invalid_event", eventName), true);
                 return 0;
             }
+
+            TSLEventPair eventPair = eventPairs.iterator().next();
 
             boolean random = nbt.getBoolean("random");
             EventArguments simulatedEvent = new EventArguments(eventPair.getEventType(), eventPair.getEventAccount());
