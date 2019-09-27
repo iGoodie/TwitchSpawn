@@ -14,6 +14,7 @@ import java.util.List;
 
 public class ReflectAction extends TSLAction {
 
+    private boolean reflectEveryone;
     private List<String> reflectedUsers;
     private TSLAction action;
 
@@ -24,10 +25,20 @@ public class ReflectAction extends TSLAction {
             throw new TSLSyntaxError("Invalid length of words: " + words);
 
         // "REFLECT %% REFLECT %% ..." is not allowed
-        if(words.get(1).equalsIgnoreCase(TSLActionKeyword.ofClass(getClass())))
+        if (words.get(1).equalsIgnoreCase(TSLActionKeyword.ofClass(getClass())))
             throw new TSLSyntaxError("Cannot have a cyclic REFLECT rule.");
 
-        this.reflectedUsers = Arrays.asList(words.get(0).split(",\\s*"));
+        String usersRaw = words.get(0);
+
+        if (usersRaw.equals("*")) {
+            this.reflectEveryone = true;
+            this.reflectedUsers = null;
+
+        } else {
+            this.reflectEveryone = false;
+            this.reflectedUsers = Arrays.asList(usersRaw.split(",\\s*"));
+        }
+
         this.action = TSLParser.parseAction(words.get(1), words.size() > 2
                 ? words.subList(2, words.size())
                 : Collections.emptyList());
@@ -38,8 +49,14 @@ public class ReflectAction extends TSLAction {
         action.reflectedUser = null;
         action.process(args);
 
+        // Select where to reflect
+        List<String> reflectedUsers = this.reflectEveryone
+                ? Arrays.asList(player.getServer().getOnlinePlayerNames())
+                : this.reflectedUsers;
+
+        // Reflect to selected users
         reflectedUsers.forEach(username -> {
-            if(username.equalsIgnoreCase(args.streamerNickname)) {
+            if (username.equalsIgnoreCase(args.streamerNickname)) {
                 TwitchSpawn.LOGGER.warn("Tried to reflect back to the streamer. Skipping reflection for them.");
                 return;
             }
