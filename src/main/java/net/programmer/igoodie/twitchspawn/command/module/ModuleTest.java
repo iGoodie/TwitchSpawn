@@ -2,6 +2,7 @@ package net.programmer.igoodie.twitchspawn.command.module;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.util.text.ITextComponent;
@@ -52,6 +53,9 @@ public class ModuleTest extends CommandModule {
     @Override
     public void execute(ICommandSender commandSender, String[] moduleArgs) throws CommandException {
         String streamerNickname = getArgument(moduleArgs, 0);
+
+        if (streamerNickname == null)
+            throw new WrongUsageException(getUsage());
 
         if (!ConfigManager.RULESET_COLLECTION.hasStreamer(streamerNickname)) {
             TwitchSpawn.LOGGER.info("There are no ruleset associated with {}", streamerNickname);

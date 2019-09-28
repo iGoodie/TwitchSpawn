@@ -24,8 +24,12 @@ public abstract class CommandModule {
     public abstract void execute(ICommandSender commandSender, String[] moduleArgs) throws CommandException;
 
     protected String getArgument(String[] moduleArgs, int index) {
+        return getArgument(moduleArgs, index, null);
+    }
+
+    protected String getArgument(String[] moduleArgs, int index, String defaultArgument) {
         return (0 <= index && index < moduleArgs.length)
-                ? moduleArgs[index] : null;
+                ? moduleArgs[index] : defaultArgument;
     }
 
     protected List<String> listOfCompletionsStartingWith(String[] moduleArgs, Object... possibleCompletions) {

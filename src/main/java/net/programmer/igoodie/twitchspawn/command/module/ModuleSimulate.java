@@ -48,6 +48,9 @@ public class ModuleSimulate extends CommandModule {
         String rawNbt = getArgument(moduleArgs, 0);
         String streamerNickname = getArgument(moduleArgs, 1);
 
+        if (rawNbt == null)
+            throw new WrongUsageException(getUsage());
+
         if (!ConfigManager.CREDENTIALS.hasPermission(senderNickname)) {
             commandSender.sendMessage(new TextComponentTranslation("commands.twitchspawn.simulate.no_perm"));
             TwitchSpawn.LOGGER.info("{} tried to simulate an event, but no permission", senderNickname);
@@ -96,7 +99,6 @@ public class ModuleSimulate extends CommandModule {
             commandSender.sendMessage(new TextComponentTranslation("commands.twitchspawn.simulate.success", nbt));
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new WrongUsageException(getUsage());
         }
     }
