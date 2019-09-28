@@ -154,6 +154,20 @@ If you would like to contribute to the translations, consider modifying
 [languages](https://github.com/iGoodie/TwitchSpawn/tree/master/src/main/resources/assets/twitchspawn/lang)
 and creating a PR!
 
+## Special Thanks
+Special thanks to each one of those beautiful people:
+* [ToastNomNomNom](https://www.twitch.tv/toastnomnomnom) - For reaching me, motivating me for a whole new paradigm and helping me do the alpha testings!
+* [Köfteistköfte](https://www.youtube.com/user/kofteistkofte) - For his amazing OS_RUN action idea and testings!
+* [AdmiralLemon](https://www.twitch.tv/theadmirallemon) - For his bug reports and helps on debugging!
+* [Darkphan](https://www.twitch.tv/darkphan) - For his precious Github issues and suggestions!
+* [iskall85](https://www.twitch.tv/iskall85) - For reaching me and motivating me for a 1.12.x refactor/port!
+* [TheGreatGildersneeze](https://www.twitch.tv/thegreatgildersneeze) - For his amazing TwitchSpawn server and correction on a misleading documentation page!
+* [JimilT92](https://github.com/JimiIT92) - For his amazing insight on placeholder expressions and detailed issues!
+* [BisUmTo](https://www.twitch.tv/bisumto) - For his priceless bug-reports and endless effort on debugging them!
+* [Diaval](https://github.com/thediaval) - For his epic memes and pair programming sessions!
+* My Guildies: Elanor & Vaelios - For preparing German and French translations!
+* And every single person in our [Discord Server](https://discord.gg/KNxxdvN) for keeping us motivated on this project!
+
 ## Facing an Issue?
 - Join our Discord Server - https://discordapp.com/invite/KNxxdvN
 - Contact iGoodie via Discord: iGoodie#1945
