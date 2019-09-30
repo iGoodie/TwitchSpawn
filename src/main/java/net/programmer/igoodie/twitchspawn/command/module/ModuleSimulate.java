@@ -13,6 +13,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +33,12 @@ public class ModuleSimulate extends CommandModule {
     @Nonnull
     @Override
     public List<String> getTabCompletions(String[] moduleArgs) {
-        if (moduleArgs.length == 2)
+        if (moduleArgs.length == 1)
+            return Collections.singletonList("{");
+
+        String lastArgument = moduleArgs[moduleArgs.length - 1];
+
+        if (!lastArgument.contains("{") && !lastArgument.contains("}"))
             return listOfCompletionsStartingWith(moduleArgs,
                     ConfigManager.RULESET_COLLECTION.getStreamers());
 
@@ -41,12 +47,9 @@ public class ModuleSimulate extends CommandModule {
 
     @Override
     public void execute(ICommandSender commandSender, String[] moduleArgs) throws CommandException {
-        if (moduleArgs.length > 2)
-            throw new WrongUsageException(getUsage());
-
         String senderNickname = commandSender.getName();
-        String rawNbt = getArgument(moduleArgs, 0);
-        String streamerNickname = getArgument(moduleArgs, 1);
+        String rawNbt = getFirstNBT(moduleArgs);
+        String streamerNickname = getStreamerUsername(moduleArgs);
 
         if (rawNbt == null)
             throw new WrongUsageException(getUsage());
@@ -101,6 +104,29 @@ public class ModuleSimulate extends CommandModule {
         } catch (Exception e) {
             throw new WrongUsageException(getUsage());
         }
+    }
+
+    private String getFirstNBT(String[] moduleArgs) {
+        String nbtRaw = "";
+
+        for (String argument : moduleArgs) {
+            if (argument.contains("{") || argument.contains("}"))
+                nbtRaw += argument + " ";
+        }
+
+        return nbtRaw.isEmpty() ? null : nbtRaw;
+    }
+
+    private String getStreamerUsername(String[] moduleArgs) {
+        if (moduleArgs.length == 0)
+            return null;
+
+        String lastArgument = moduleArgs[moduleArgs.length - 1];
+
+        if (lastArgument.contains("{") || lastArgument.contains("}"))
+            return null;
+
+        return lastArgument;
     }
 
 }
