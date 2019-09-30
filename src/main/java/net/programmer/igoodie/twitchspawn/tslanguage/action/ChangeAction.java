@@ -16,6 +16,7 @@ public class ChangeAction extends ItemSelectiveAction {
 
     private String itemRaw;
     private int itemAmount;
+    private int itemDamage;
 
     /*
      * Exemplar valid TSL:
@@ -66,17 +67,12 @@ public class ChangeAction extends ItemSelectiveAction {
     }
 
     private void parseItem(List<String> itemPart) throws TSLSyntaxError {
-        if (itemPart.size() != 1 && itemPart.size() != 2)
-            throw new TSLSyntaxError("Invalid length of item words: " + itemPart);
+        if (itemPart.size() != 1 && itemPart.size() != 2 && itemPart.size() != 3)
+            throw new TSLSyntaxError("Invalid length of words: " + itemPart);
 
         this.itemRaw = itemPart.get(0);
-
-        try {
-            this.itemAmount = itemPart.size() != 2 ? 1 : Integer.parseInt(itemPart.get(1));
-
-        } catch (NumberFormatException e) {
-            throw new TSLSyntaxError("Expected an integer, found instead -> %s", itemPart.get(1));
-        }
+        this.itemAmount = itemPart.size() >= 2 ? parseInt(itemPart.get(1)) : 1;
+        this.itemDamage = itemPart.size() >= 3 ? parseInt(itemPart.get(2)) : 0;
 
         // Check if given item word is parse-able
         if (!new ItemParser(this.itemRaw).isValid())

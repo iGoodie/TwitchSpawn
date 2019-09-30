@@ -18,31 +18,25 @@ public class DropAction extends TSLAction {
     /*
      * Params:
      * 0  - item: minecraft:diamond_block{someNBT:"Data"}
-     * 1  - amount: 1
+     * 1? - amount: 1
      * 2? - damage: 0
      *
-     * Possible param count: [2,3]
+     * Possible param count: {1, 2,3}
      */
     public DropAction(List<String> words) throws TSLSyntaxError {
         this.message = TSLParser.parseMessage(words);
         List<String> actionWords = actionPart(words);
 
-        if (actionWords.size() != 2 && actionWords.size() != 3)
+        if (actionWords.size() != 1 && actionWords.size() != 2 && actionWords.size() != 3)
             throw new TSLSyntaxError("Invalid length of words: " + actionWords);
 
         this.itemRaw = actionWords.get(0);
-        this.itemAmount = parseInt(actionWords.get(1));
+        this.itemAmount = actionWords.size() >= 2 ? parseInt(actionWords.get(1)) : 1;
         this.itemDamage = actionWords.size() >= 3 ? parseInt(actionWords.get(2)) : 0;
 
         // Check if given item word is parse-able
         if (!new ItemParser(this.itemRaw).isValid())
             throw new TSLSyntaxError("Invalid item text");
-    }
-
-    private int parseInt(String string) throws TSLSyntaxError {
-        try { return Integer.parseInt(string); } catch (NumberFormatException e) {
-            throw new TSLSyntaxError("Expected an integer, found instead -> %s", string);
-        }
     }
 
     @Override

@@ -22,6 +22,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLRuleTokenizer;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
 
 import java.util.LinkedList;
@@ -301,6 +302,14 @@ public abstract class TSLAction implements TSLFlowNode {
                 return sourceCommandSender.getServer();
             }
         };
+    }
+
+    /* ------------------------------------------------ */
+
+    protected int parseInt(String string) throws TSLSyntaxError {
+        try { return Integer.parseInt(string); } catch (NumberFormatException e) {
+            throw new TSLSyntaxError("Expected an integer, found instead -> %s", string);
+        }
     }
 
 }
