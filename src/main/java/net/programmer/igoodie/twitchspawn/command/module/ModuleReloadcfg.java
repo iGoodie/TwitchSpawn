@@ -20,8 +20,11 @@ public class ModuleReloadcfg extends CommandModule {
     public void execute(ICommandSender commandSender, String[] moduleArgs) throws CommandException {
         String senderNickname = commandSender.getName();
 
-        boolean isOp = Stream.of(TwitchSpawn.SERVER.getPlayerList().getOppedPlayerNames())
+        boolean isOp = TwitchSpawn.SERVER.isSinglePlayer()
+                || Stream.of(TwitchSpawn.SERVER.getPlayerList().getOppedPlayerNames())
                 .anyMatch(oppedPlayerName -> oppedPlayerName.equalsIgnoreCase(senderNickname));
+
+        System.out.printf("isOp: %s\n", isOp);
 
         // If is not OP or has no permission
         if (!isOp && !ConfigManager.CREDENTIALS.hasPermission(senderNickname)) {
