@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
+import net.programmer.igoodie.twitchspawn.command.ItemDataCommand;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
@@ -75,6 +76,7 @@ public class TwitchSpawn {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new TwitchSpawnCommand());
+        event.registerServerCommand(new ItemDataCommand());
         LOGGER.info("onServerStarting()");
     }
 

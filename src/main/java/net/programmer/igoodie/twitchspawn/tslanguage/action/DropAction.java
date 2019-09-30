@@ -13,32 +13,36 @@ public class DropAction extends TSLAction {
 
     private String itemRaw;
     private int itemAmount;
+    private int itemDamage;
 
     /*
-     * Exemplar valid params:
-     * minecraft:diamond_block 123
-     * stone_block 321
-     * diamond_sword{Enchantments:[{id:smite,lvl:2},{id:sweeping,lvl:2},{id:unbreaking,lvl:3}]}
+     * Params:
+     * 0  - item: minecraft:diamond_block{someNBT:"Data"}
+     * 1  - amount: 1
+     * 2? - damage: 0
+     *
+     * Possible param count: [2,3]
      */
     public DropAction(List<String> words) throws TSLSyntaxError {
         this.message = TSLParser.parseMessage(words);
         List<String> actionWords = actionPart(words);
 
-        if (actionWords.size() != 1 && actionWords.size() != 2)
+        if (actionWords.size() != 2 && actionWords.size() != 3)
             throw new TSLSyntaxError("Invalid length of words: " + actionWords);
 
         this.itemRaw = actionWords.get(0);
-
-        try {
-            this.itemAmount = actionWords.size() != 2 ? 1 : Integer.parseInt(actionWords.get(1));
-
-        } catch (NumberFormatException e) {
-            throw new TSLSyntaxError("Expected an integer, found instead -> %s", actionWords.get(1));
-        }
+        this.itemAmount = parseInt(actionWords.get(1));
+        this.itemDamage = actionWords.size() >= 3 ? parseInt(actionWords.get(2)) : 0;
 
         // Check if given item word is parse-able
         if (!new ItemParser(this.itemRaw).isValid())
             throw new TSLSyntaxError("Invalid item text");
+    }
+
+    private int parseInt(String string) throws TSLSyntaxError {
+        try { return Integer.parseInt(string); } catch (NumberFormatException e) {
+            throw new TSLSyntaxError("Expected an integer, found instead -> %s", string);
+        }
     }
 
     @Override
@@ -49,7 +53,9 @@ public class DropAction extends TSLAction {
 
     private ItemStack createItemStack(EventArguments args) {
         String input = replaceExpressions(itemRaw, args);
-        return new ItemParser(input).generateItemStack(itemAmount);
+        ItemStack itemStack = new ItemParser(input).generateItemStack(itemAmount);
+        itemStack.setItemDamage(itemDamage);
+        return itemStack;
     }
 
     @Override
