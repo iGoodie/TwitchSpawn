@@ -8,9 +8,11 @@ import java.io.File;
 
 public class ConfigManager {
 
+    // Filesystem paths - Must be set on preInit()
     public static String CONFIGS_DIR_PATH;
     public static String TWITCH_SPAWN_CONFIG_DIR_PATH;
 
+    // Configuration objects
     public static CredentialsConfig CREDENTIALS;
     public static TSLRulesetCollection RULESET_COLLECTION;
     public static TitlesConfig TITLES;
@@ -18,18 +20,8 @@ public class ConfigManager {
     public static PreferencesConfig PREFERENCES;
 
     public static void loadConfigs() throws TwitchSpawnLoadingErrors {
-        if(TWITCH_SPAWN_CONFIG_DIR_PATH == null)
-            throw new IllegalArgumentException();
-
-        loadConfigs(new File(CONFIGS_DIR_PATH));
-    }
-
-    public static void loadConfigs(File configsDir) throws TwitchSpawnLoadingErrors {
         TwitchSpawn.LOGGER.info("Loading configs...");
         TwitchSpawnLoadingErrors errors = new TwitchSpawnLoadingErrors();
-
-        CONFIGS_DIR_PATH = configsDir.getPath();
-        TWITCH_SPAWN_CONFIG_DIR_PATH = configsDir.getPath() + File.separator + "TwitchSpawn";
 
         File configDirectory = new File(TWITCH_SPAWN_CONFIG_DIR_PATH);
 

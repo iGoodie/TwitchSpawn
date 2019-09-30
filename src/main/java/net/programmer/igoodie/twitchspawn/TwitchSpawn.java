@@ -9,10 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,6 +22,8 @@ import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
 import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
 
 @Mod(modid = TwitchSpawn.MOD_ID, name = "TwitchSpawn", version = TwitchSpawn.MOD_VERSION)
 public class TwitchSpawn {
@@ -42,20 +41,28 @@ public class TwitchSpawn {
             MinecraftForge.EVENT_BUS.register(StatusIndicatorOverlay.class);
         }
 
-        try {
-            ConfigManager.loadConfigs(event.getModConfigurationDirectory());
-            NetworkManager.initialize();
+        NetworkManager.initialize();
 
-//            ArgumentTypes.register("twitchspawn:streamer", StreamerArgumentType.class,
-//                    new ArgumentSerializer<>(StreamerArgumentType::streamerNick));
-//            ArgumentTypes.register("twitchspawn:ruleset", RulesetNameArgumentType.class,
-//                    new ArgumentSerializer<>(RulesetNameArgumentType::rulesetName));
+        // Set configurations folder path
+        String configsFolder = event.getModConfigurationDirectory().getPath();
+        ConfigManager.CONFIGS_DIR_PATH = configsFolder;
+        ConfigManager.TWITCH_SPAWN_CONFIG_DIR_PATH = configsFolder + File.separator + "TwitchSpawn";
 
-        } catch (TwitchSpawnLoadingErrors e) {
+        LOGGER.info("preInit()");
+    }
+
+    @Mod.EventHandler
+    public void init(final FMLInitializationEvent event) {
+        LOGGER.info("init()");
+    }
+
+    @Mod.EventHandler
+    public void postInit(final FMLPostInitializationEvent event) {
+        try { ConfigManager.loadConfigs(); } catch (TwitchSpawnLoadingErrors e) {
             e.display();
         }
 
-        LOGGER.info("preInit()");
+        LOGGER.info("postInit()");
     }
 
     @SubscribeEvent
