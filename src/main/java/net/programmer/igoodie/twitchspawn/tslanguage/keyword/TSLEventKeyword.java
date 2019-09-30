@@ -22,7 +22,8 @@ public enum TSLEventKeyword {
     TWITCH_SUBSCRIPTION(
             "Twitch Subscription",
             new TSLEventPair("subscription", "twitch"),
-            new TSLEventPair("subscriber", "twitch")
+            new TSLEventPair("subscriber", "twitch"),
+            new TSLEventPair("resub", "twitch")
     ),
     TWITCH_HOST(
             "Twitch Host",
