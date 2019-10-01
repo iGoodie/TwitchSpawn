@@ -117,8 +117,7 @@ public class EitherAction extends TSLAction {
     protected void performAction(EntityPlayerMP player, EventArguments args) {
         selectedAction.reflectedUser = this.reflectedUser;
 
-        if (!silent) selectedAction.process(args); // process() to include notification
-        else selectedAction.performAction(player, args); // No need to include notification
+        selectedAction.performAction(player, args); // No need to include notification
         selectedAction = actions.randomItem();
     }
 
