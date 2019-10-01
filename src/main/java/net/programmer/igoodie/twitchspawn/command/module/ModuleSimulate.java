@@ -107,14 +107,36 @@ public class ModuleSimulate extends CommandModule {
     }
 
     private String getFirstNBT(String[] moduleArgs) {
-        String nbtRaw = "";
+        int startIndex = -1;
+        int finishIndex = -1;
 
-        for (String argument : moduleArgs) {
-            if (argument.contains("{") || argument.contains("}"))
-                nbtRaw += argument + " ";
+        // Detect starting index by forward traversing
+        for (int i = 0; i < moduleArgs.length; i++) {
+            if (moduleArgs[i].contains("{")) {
+                startIndex = i;
+                break;
+            }
         }
 
-        return nbtRaw.isEmpty() ? null : nbtRaw;
+        // Detect finishing index by reverse traversing
+        for (int i = moduleArgs.length - 1; i >= 0; i--) {
+            if (moduleArgs[i].contains("}")) {
+                finishIndex = i;
+                break;
+            }
+        }
+
+        if (startIndex == -1 || finishIndex == -1)
+            return null;
+
+        StringBuilder nbtRaw = new StringBuilder();
+
+        for (int i = startIndex; i <= finishIndex; i++) {
+            nbtRaw.append(moduleArgs[i]);
+        }
+
+        System.out.printf("(%d - %d) NBT: %s\n", startIndex, finishIndex, nbtRaw);
+        return (nbtRaw.length() == 0) ? null : nbtRaw.toString();
     }
 
     private String getStreamerUsername(String[] moduleArgs) {

@@ -76,7 +76,6 @@ public class PreferencesConfig {
     }
 
     private static <T extends Enum<T>> T getEnum(CommentedFileConfig config, String path, Class<T> enumClass) {
-        System.out.printf("%s = %s\n", path, config.get(path));
         return Enum.valueOf(enumClass, config.<String>get(path).toUpperCase());
     }
 
