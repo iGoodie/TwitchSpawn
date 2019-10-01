@@ -1,6 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.google.gson.JsonArray;
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import net.minecraft.command.CommandPlaySound;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
@@ -15,9 +16,11 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
@@ -200,24 +203,41 @@ public abstract class TSLAction implements TSLFlowNode {
     protected void notifyPlayer(EntityPlayerMP player, String title, String subtitle) {
         // Form and send sound packet
         Vec3d playerPosition = player.getPositionVector();
+        float volume = (float) ConfigManager.PREFERENCES.notificationVolume;
+        float pitch = ConfigManager.PREFERENCES.notificationPitch == -1
+                ? (float) Math.random() : (float) ConfigManager.PREFERENCES.notificationPitch;
         ResourceLocation soundLocation = new ResourceLocation("minecraft:entity.player.levelup");
         SoundCategory soundCategory = SoundCategory.MASTER;
         SoundEvent soundEvent = new SoundEvent(soundLocation);
         SPacketSoundEffect soundPacket = new SPacketSoundEffect(soundEvent, soundCategory,
-                playerPosition.x, playerPosition.y, playerPosition.z, 1.0f, 0.0f);
+                playerPosition.x, playerPosition.y, playerPosition.z, volume, pitch);
         player.connection.sendPacket(soundPacket);
 
-        // Form and send title packet
-        ITextComponent text = ITextComponent.Serializer.fromJsonLenient(title);
-        SPacketTitle packet = new SPacketTitle(SPacketTitle.Type.TITLE, text,
-                DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
-        player.connection.sendPacket(packet);
+        System.out.println(ConfigManager.PREFERENCES.messageDisplay);
 
-        // Form and send subtitle packet
+        if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.DISABLED)
+            return; // Stop here since message displaying is disabled
+
+        // Form text and subtext components
+        ITextComponent text = ITextComponent.Serializer.fromJsonLenient(title);
         ITextComponent subtext = ITextComponent.Serializer.fromJsonLenient(subtitle);
-        SPacketTitle subtitlePacket = new SPacketTitle(SPacketTitle.Type.SUBTITLE, subtext,
-                DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
-        player.connection.sendPacket(subtitlePacket);
+
+        if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.TITLES) {
+            // Form title and subtitle packets
+            SPacketTitle packet = new SPacketTitle(SPacketTitle.Type.TITLE, text,
+                    DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+            SPacketTitle subtitlePacket = new SPacketTitle(SPacketTitle.Type.SUBTITLE, subtext,
+                    DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+
+            // Send them over
+            player.connection.sendPacket(packet);
+            player.connection.sendPacket(subtitlePacket);
+        }
+
+        if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.CHAT) {
+            if (text != null) player.sendMessage(new TextComponentString(">> ").appendSibling(text));
+            if (subtext != null) player.sendMessage(new TextComponentString(">> ").appendSibling(subtext));
+        }
     }
 
     /**
