@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
+@Mod.EventBusSubscriber
 @Mod(modid = TwitchSpawn.MOD_ID, name = "TwitchSpawn", version = TwitchSpawn.MOD_VERSION)
 public class TwitchSpawn {
 
@@ -65,14 +66,6 @@ public class TwitchSpawn {
         LOGGER.info("postInit()");
     }
 
-    @SubscribeEvent
-    public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
-        // TODO: Find answer; Is this redundant? (See https://mcforge.readthedocs.io/en/latest/effects/sounds/)
-        event.getRegistry().register(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, "pop_in")));
-        event.getRegistry().register(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, "pop_out")));
-        LOGGER.info("registerSounds()");
-    }
-
     @Mod.EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
         SERVER = event.getServer();
@@ -99,7 +92,7 @@ public class TwitchSpawn {
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         EntityPlayerMP entity = (EntityPlayerMP) event.player;
 
         String translationKey = TRACE_MANAGER.isRunning() ?
