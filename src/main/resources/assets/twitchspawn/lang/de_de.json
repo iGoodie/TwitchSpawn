@@ -30,5 +30,8 @@
   "commands.twitchspawn.simulate.success": "§a>> Simulation erfolgreich ausgeführt {0}",
   "commands.twitchspawn.simulate.no_perm": "§4>> Du hast keine Berechtigung ein Event zu simulieren.",
 
+  "commands.twitchspawn.test.not_found": "§4>> Kein Regelwerk mit {0} verbunden",
+  "commands.twitchspawn.test.success": "§a>> Erfolgreich Regeln für {0} in die Warteschlange gestellt",
+  
   "errors.twitchspawn.loading": "Kann TwitchSpawn nicht laden."
 }
