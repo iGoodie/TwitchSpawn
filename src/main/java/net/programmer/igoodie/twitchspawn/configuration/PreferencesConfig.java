@@ -1,9 +1,12 @@
 package net.programmer.igoodie.twitchspawn.configuration;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.EnumGetMethod;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.toml.TomlParser;
 import com.google.common.io.Resources;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import org.apache.commons.io.FileUtils;
 
@@ -33,14 +36,17 @@ public class PreferencesConfig {
             }
 
             CommentedFileConfig config = CommentedFileConfig.builder(file).build();
+            CommentedConfig defaultConfig = new TomlParser().parse(defaultScript());
 
             config.load();
 
             getSpecs().correct(config, (action, path, incorrectValue, correctedValue) -> {
                 TwitchSpawn.LOGGER.info("[preferences.toml] Corrected {} to {}", incorrectValue, correctedValue);
+                config.setComment(path, defaultConfig.getComment(path));
             });
 
-            config.save();
+//            config.save();
+            save(config); // Here to put new line delimiters between entries & keep default comments
 
             PreferencesConfig preferencesConfig = new PreferencesConfig();
             preferencesConfig.indicatorDisplay = getEnum(config, "indicatorDisplay", IndicatorDisplay.class);
@@ -54,6 +60,39 @@ public class PreferencesConfig {
 
         } catch (IOException e) {
             throw new InternalError("Tried to read from or save to a non-existing file");
+        }
+    }
+
+    private static void save(CommentedFileConfig config) {
+        StringBuilder data = new StringBuilder();
+
+        for (CommentedConfig.Entry entry : config.entrySet()) {
+            String[] commentLines = entry.getComment().split("\r?\n");
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            for (String commentLine : commentLines) {
+                data.append("#").append(commentLine).append("\r\n");
+            }
+
+            data.append(key).append("=");
+
+            // TODO: append other serialization rules, if needed
+            if (value instanceof String)
+                data.append('"').append(value).append('"');
+            else if (value instanceof Enum)
+                data.append('"').append(value.toString().toLowerCase()).append('"');
+            else
+                data.append(value.toString());
+
+            data.append("\r\n\r\n");
+        }
+
+        try {
+            FileUtils.writeStringToFile(config.getFile(), data.toString(), StandardCharsets.UTF_8);
+
+        } catch (IOException e) {
+            throw new InternalError("Failed writing config on " + config.getFile());
         }
     }
 
@@ -76,7 +115,12 @@ public class PreferencesConfig {
     }
 
     private static <T extends Enum<T>> T getEnum(CommentedFileConfig config, String path, Class<T> enumClass) {
-        return Enum.valueOf(enumClass, config.<String>get(path).toUpperCase());
+        Object value = config.get(path);
+
+        if (!(value instanceof String))
+            return null;
+
+        return Enum.valueOf(enumClass, ((String) value).toUpperCase());
     }
 
     private static <T extends Enum<T>> void defineEnum(ConfigSpec spec, String path, T defaultValue, Class<T> enumClass) {
