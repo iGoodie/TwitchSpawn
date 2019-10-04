@@ -147,8 +147,8 @@ If you're facing any sort of problem, do not hasitate giving our Discord Server 
 ![Error Display Preview](preview/error_preview.png)
 
 ## Translations
-Special thanks to my buddies _Elanor_ and _Vaelios_ for
-translating TwitchSpawn into German and French!
+* My Guildies: Elanor & Vaelios - German and French translations :tada:
+* [SE7-KN8](https://github.com/SE7-KN8) - German translation of `test` command module keys
 
 If you would like to contribute to the translations, consider modifying
 [languages](https://github.com/iGoodie/TwitchSpawn/tree/master/src/main/resources/assets/twitchspawn/lang)
