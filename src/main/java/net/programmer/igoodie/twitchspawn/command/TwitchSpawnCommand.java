@@ -121,7 +121,8 @@ public class TwitchSpawnCommand {
         CommandSource source = context.getSource();
         String sourceNickname = source.getName();
 
-        boolean isOp = Stream.of(TwitchSpawn.SERVER.getPlayerList().getOppedPlayerNames())
+        boolean isOp = TwitchSpawn.SERVER.isSinglePlayer()
+                || Stream.of(TwitchSpawn.SERVER.getPlayerList().getOppedPlayerNames())
                 .anyMatch(oppedPlayerName -> oppedPlayerName.equalsIgnoreCase(sourceNickname));
 
         // If is not OP or has no permission
