@@ -5,6 +5,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -80,6 +81,9 @@ public class ExpressionEvaluator {
 
         if (expression.equals("time_utc"))
             return getDateFormat("HH:mm:ss", TimeZone.getTimeZone("UTC")).format(new Date());
+
+        if (expression.equals("unix"))
+            return String.valueOf(Instant.now().getEpochSecond());
 
         return null;
     }
