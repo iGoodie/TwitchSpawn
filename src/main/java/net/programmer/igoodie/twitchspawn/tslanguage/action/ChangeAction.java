@@ -7,6 +7,7 @@ import net.minecraft.util.NonNullList;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
+import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
 import net.programmer.igoodie.twitchspawn.util.ItemParser;
 
 import java.util.LinkedList;
@@ -75,7 +76,11 @@ public class ChangeAction extends ItemSelectiveAction {
         this.itemDamage = itemPart.size() >= 3 ? parseInt(itemPart.get(2)) : 0;
 
         // Check if given item word is parse-able
-        if (!new ItemParser(this.itemRaw).isValid())
+        EventArguments randomEvent = EventArguments.createRandom("RandomStreamer");
+        String randomItem = ExpressionEvaluator.replaceExpressions(this.itemRaw, expression -> {
+            return ExpressionEvaluator.fromArgs(expression, randomEvent);
+        });
+        if (!new ItemParser(randomItem).isValid())
             throw new TSLSyntaxError("Invalid item text");
     }
 

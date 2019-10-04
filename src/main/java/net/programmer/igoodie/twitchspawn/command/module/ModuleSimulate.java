@@ -132,7 +132,7 @@ public class ModuleSimulate extends CommandModule {
         StringBuilder nbtRaw = new StringBuilder();
 
         for (int i = startIndex; i <= finishIndex; i++) {
-            nbtRaw.append(moduleArgs[i]);
+            nbtRaw.append(moduleArgs[i]).append(" ");
         }
 
         System.out.printf("(%d - %d) NBT: %s\n", startIndex, finishIndex, nbtRaw);
