@@ -2,8 +2,11 @@ package net.programmer.igoodie.twitchspawn.util;
 
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,10 +68,28 @@ public class ExpressionEvaluator {
         if (expression.equals("raiders") && args.raiderCount != 0)
             return String.valueOf(args.raiderCount);
 
+        if (expression.equals("date"))
+            return getDateFormat("dd-MM-yyyy", TimeZone.getDefault()).format(new Date());
+
+        if (expression.equals("date_utc"))
+            return getDateFormat("dd-MM-yyyy", TimeZone.getTimeZone("UTC")).format(new Date());
+
         if (expression.equals("time"))
-            return new SimpleDateFormat("HH:mm:ss").format(new Date());
+            return getDateFormat("HH:mm:ss", TimeZone.getDefault()).format(new Date());
+
+        if (expression.equals("time_utc"))
+            return getDateFormat("HH:mm:ss", TimeZone.getTimeZone("UTC")).format(new Date());
+
+        if (expression.equals("unix"))
+            return String.valueOf(Instant.now().getEpochSecond());
 
         return null;
+    }
+
+    private static DateFormat getDateFormat(String format, TimeZone timezone) {
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(timezone);
+        return dateFormat;
     }
 
 }

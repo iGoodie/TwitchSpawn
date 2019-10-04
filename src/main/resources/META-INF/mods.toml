@@ -9,7 +9,7 @@ displayName="TwitchSpawn"
 authors="iGoodie"
 logoFile="pack.png"
 description='''
-    TwitchSpawn listens for live events related to your Twitch channel using Streamlabs Socket API.
+    TwitchSpawn listens for live events related to your Twitch channel using various Socket APIs.
     Then it handles those events with the rules handcrafted by you!
 '''
 
