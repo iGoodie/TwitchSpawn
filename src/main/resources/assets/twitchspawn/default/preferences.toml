@@ -3,3 +3,18 @@
 # "circle_only" to show the circle only, without the logo
 # "disabled" to fully disable
 indicatorDisplay = "enabled"
+
+# Displaying style of the event messages. Can be:
+# "titles" to display on titles in the middle of screen
+# "chat" to display on chatbox
+# "disabled" to fully disable
+messageDisplay = "titles"
+
+# Volume of the notification sound
+# Min: 0.0 - Max: 1.0
+notificationVolume = 1.0
+
+# Pitch of the notification sound
+# Min: 0.0 - Max: 1.0
+# Alternatively -1.0 for random pitch each time
+notificationPitch = 1.0

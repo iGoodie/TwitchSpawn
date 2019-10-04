@@ -7,8 +7,10 @@ import net.minecraft.network.play.server.STitlePacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
@@ -189,22 +191,40 @@ public abstract class TSLAction implements TSLFlowNode {
 
     protected void notifyPlayer(ServerPlayerEntity player, String title, String subtitle) {
         // Form and send sound packet
+        float volume = (float) ConfigManager.PREFERENCES.notificationVolume;
+        float pitch = ConfigManager.PREFERENCES.notificationPitch == -1
+                ? (float) Math.random() : (float) ConfigManager.PREFERENCES.notificationPitch;
         ResourceLocation soundLocation = new ResourceLocation("minecraft:entity.player.levelup");
         SoundCategory category = SoundCategory.MASTER;
-        SPlaySoundPacket packetSound = new SPlaySoundPacket(soundLocation, category, player.getPositionVec(), 1.0f, 0.0f);
+        SPlaySoundPacket packetSound = new SPlaySoundPacket(soundLocation, category, player.getPositionVec(), volume, pitch);
         player.connection.sendPacket(packetSound);
 
-        // Form and send title packet
-        ITextComponent text = ITextComponent.Serializer.fromJsonLenient(title);
-        STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text,
-                DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
-        player.connection.sendPacket(packet);
+        System.out.printf("messageDisplay=%s\n", ConfigManager.PREFERENCES.messageDisplay);
 
-        // Form and send subtitle packet
+        if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.DISABLED)
+            return; // Stop here since message displaying is disabled
+
+        // Form text and subtext components
+        ITextComponent text = ITextComponent.Serializer.fromJsonLenient(title);
         ITextComponent subtext = ITextComponent.Serializer.fromJsonLenient(subtitle);
-        STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
-                DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
-        player.connection.sendPacket(subtitlePacket);
+
+
+        if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.TITLES) {
+            // Form title and subtitle packets
+            STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text,
+                    DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+            STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
+                    DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+
+            // Send them over
+            player.connection.sendPacket(packet);
+            player.connection.sendPacket(subtitlePacket);
+        }
+
+        if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.CHAT) {
+            if (text != null) player.sendMessage(new StringTextComponent(">> ").appendSibling(text));
+            if (subtext != null) player.sendMessage(new StringTextComponent(">> ").appendSibling(subtext));
+        }
     }
 
     /**
