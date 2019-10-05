@@ -95,6 +95,7 @@ public class ModuleSimulate extends CommandModule {
                 simulatedEvent.subscriptionMonths = nbt.getInteger("months");
                 simulatedEvent.raiderCount = nbt.getInteger("raiders");
                 simulatedEvent.viewerCount = nbt.getInteger("viewers");
+                simulatedEvent.subscriptionTier = nbt.hasKey("tier", 3) ? nbt.getInteger("tier") : -1;
             }
 
             ConfigManager.RULESET_COLLECTION.handleEvent(simulatedEvent);

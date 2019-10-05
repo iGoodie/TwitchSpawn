@@ -74,7 +74,17 @@ public class EventArguments {
                 Object value = field.get(this);
                 Object defaultValue = Defaults.defaultValue(field.getType());
 
-                if (value != null && !value.equals(defaultValue)) {
+                if (value == null)
+                    continue;
+
+                if (!value.equals(defaultValue)) {
+                    sb.append(delimiter);
+                    sb.append(field.getName()).append("=").append(value);
+                    delimiter = ", ";
+                }
+
+                // Exception for tier field. (where default 0=Prime)
+                else if (field.getName().equalsIgnoreCase("tier") && value.equals(0)) {
                     sb.append(delimiter);
                     sb.append(field.getName()).append("=").append(value);
                     delimiter = ", ";

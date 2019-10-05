@@ -111,25 +111,6 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
         });
     }
 
-    private int extractTier(JSONObject message) {
-        String tierString = JSONUtils.extractFrom(message, "tier", String.class, null);
-
-        if (tierString == null)
-            return -1;
-
-        if (tierString.equalsIgnoreCase("Prime"))
-            return 0; // tier = 0 stands for Prime
-
-        if (tierString.equalsIgnoreCase("1000"))
-            return 1;
-        if (tierString.equalsIgnoreCase("2000"))
-            return 2;
-        if (tierString.equalsIgnoreCase("3000"))
-            return 3;
-
-        return -1; // Unknown tier String
-    }
-
     private JSONArray extractMessages(JSONObject event) {
         try {
             Object messageField = event.get("message");
