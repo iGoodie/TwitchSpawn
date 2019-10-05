@@ -67,8 +67,8 @@ public abstract class SocketIOTracer {
 
     protected abstract void onLiveEvent(Socket socket, CredentialsConfig.Streamer streamer, Object... args);
 
-    protected int extractTier(JSONObject message) {
-        String tierString = JSONUtils.extractFrom(message, "tier", String.class, null);
+    protected int extractTier(JSONObject message, String tierFieldName) {
+        String tierString = JSONUtils.extractFrom(message, tierFieldName, String.class, null);
 
         if (tierString == null)
             return -1;
