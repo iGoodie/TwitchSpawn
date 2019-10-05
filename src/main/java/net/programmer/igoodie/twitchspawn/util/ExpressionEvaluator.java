@@ -64,6 +64,9 @@ public class ExpressionEvaluator {
         if (expression.equals("months") && args.subscriptionMonths != 0)
             return String.valueOf(args.subscriptionMonths);
 
+        if (expression.equals("tier") && args.subscriptionTier != -1)
+            return String.valueOf(args.subscriptionTier);
+
         if (expression.equals("viewers") && args.viewerCount != 0)
             return String.valueOf(args.viewerCount);
 

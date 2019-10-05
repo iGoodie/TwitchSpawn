@@ -12,6 +12,7 @@ import net.programmer.igoodie.twitchspawn.util.JSONUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import scala.util.parsing.json.JSON;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -103,20 +104,40 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
             eventArguments.subscriptionMonths = JSONUtils.extractNumberFrom(message, "months", 0).intValue();
             eventArguments.raiderCount = JSONUtils.extractNumberFrom(message, "raiders", 0).intValue();
             eventArguments.viewerCount = JSONUtils.extractNumberFrom(message, "viewers", 0).intValue();
+            eventArguments.subscriptionTier = extractTier(message);
 
             // Pass the model to the handler
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);
         });
     }
 
+    private int extractTier(JSONObject message) {
+        String tierString = JSONUtils.extractFrom(message, "tier", String.class, null);
+
+        if (tierString == null)
+            return -1;
+
+        if (tierString.equalsIgnoreCase("Prime"))
+            return 0; // tier = 0 stands for Prime
+
+        if (tierString.equalsIgnoreCase("1000"))
+            return 1;
+        if (tierString.equalsIgnoreCase("2000"))
+            return 2;
+        if (tierString.equalsIgnoreCase("3000"))
+            return 3;
+
+        return -1; // Unknown tier String
+    }
+
     private JSONArray extractMessages(JSONObject event) {
         try {
             Object messageField = event.get("message");
 
-            if(messageField instanceof JSONArray)
+            if (messageField instanceof JSONArray)
                 return JSONUtils.extractFrom(event, "message", JSONArray.class, new JSONArray());
 
-            else if(messageField instanceof JSONObject)
+            else if (messageField instanceof JSONObject)
                 return new JSONArray().put(messageField);
 
             return null;

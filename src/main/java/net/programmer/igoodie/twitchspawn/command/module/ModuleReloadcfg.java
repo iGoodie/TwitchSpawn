@@ -24,8 +24,6 @@ public class ModuleReloadcfg extends CommandModule {
                 || Stream.of(TwitchSpawn.SERVER.getPlayerList().getOppedPlayerNames())
                 .anyMatch(oppedPlayerName -> oppedPlayerName.equalsIgnoreCase(senderNickname));
 
-        System.out.printf("isOp: %s\n", isOp);
-
         // If is not OP or has no permission
         if (!isOp && !ConfigManager.CREDENTIALS.hasPermission(senderNickname)) {
             commandSender.sendMessage(new TextComponentTranslation("commands.twitchspawn.reloadcfg.no_perm"));
