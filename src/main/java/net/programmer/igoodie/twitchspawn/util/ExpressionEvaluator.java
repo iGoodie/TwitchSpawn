@@ -65,7 +65,7 @@ public class ExpressionEvaluator {
             return String.valueOf(args.subscriptionMonths);
 
         if (expression.equals("tier") && args.subscriptionTier != -1)
-            return String.valueOf(args.subscriptionTier);
+            return args.subscriptionTier == 0 ? "Prime" : String.valueOf(args.subscriptionTier);
 
         if (expression.equals("viewers") && args.viewerCount != 0)
             return String.valueOf(args.viewerCount);
