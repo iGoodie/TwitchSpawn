@@ -10,6 +10,7 @@ import net.minecraft.util.NonNullList;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
+import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -81,7 +82,10 @@ public class ChangeAction extends ItemSelectiveAction {
         }
 
         try { // Check if given item word is parse-able
-            new ItemParser(new StringReader(this.itemRaw), true).parse();
+            EventArguments randomEvent = EventArguments.createRandom("RandomStreamer");
+            String randomItem = ExpressionEvaluator.replaceExpressions(this.itemRaw,
+                    expression -> ExpressionEvaluator.fromArgs(expression, randomEvent));
+            new ItemParser(new StringReader(randomItem), true).parse();
 
         } catch (CommandSyntaxException e) {
             throw new TSLSyntaxError(e.getRawMessage().getString());
