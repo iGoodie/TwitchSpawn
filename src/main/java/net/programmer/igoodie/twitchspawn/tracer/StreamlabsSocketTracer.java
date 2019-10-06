@@ -103,6 +103,7 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
             eventArguments.subscriptionMonths = JSONUtils.extractNumberFrom(message, "months", 0).intValue();
             eventArguments.raiderCount = JSONUtils.extractNumberFrom(message, "raiders", 0).intValue();
             eventArguments.viewerCount = JSONUtils.extractNumberFrom(message, "viewers", 0).intValue();
+            eventArguments.subscriptionTier = extractTier(message, "sub_plan");
 
             // Pass the model to the handler
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);
@@ -113,10 +114,10 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
         try {
             Object messageField = event.get("message");
 
-            if(messageField instanceof JSONArray)
+            if (messageField instanceof JSONArray)
                 return JSONUtils.extractFrom(event, "message", JSONArray.class, new JSONArray());
 
-            else if(messageField instanceof JSONObject)
+            else if (messageField instanceof JSONObject)
                 return new JSONArray().put(messageField);
 
             return null;

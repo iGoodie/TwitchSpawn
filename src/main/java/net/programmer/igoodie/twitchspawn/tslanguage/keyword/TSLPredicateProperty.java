@@ -29,6 +29,10 @@ public enum TSLPredicateProperty {
             "subscriptionMonths",
             "months", "subscription_months"
     ),
+    TIER(
+            "subscriptionTier",
+            "tier", "subscription_tier"
+    ),
     VIEWERS(
             "viewerCount",
             "viewers", "viewer_count"

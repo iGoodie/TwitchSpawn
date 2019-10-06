@@ -3,6 +3,8 @@ package net.programmer.igoodie.twitchspawn.tracer;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
+import net.programmer.igoodie.twitchspawn.util.JSONUtils;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.LinkedList;
@@ -64,5 +66,24 @@ public abstract class SocketIOTracer {
     protected abstract void onDisconnect(Socket socket, CredentialsConfig.Streamer streamer, Object... args);
 
     protected abstract void onLiveEvent(Socket socket, CredentialsConfig.Streamer streamer, Object... args);
+
+    protected int extractTier(JSONObject message, String tierFieldName) {
+        String tierString = JSONUtils.extractFrom(message, tierFieldName, String.class, null);
+
+        if (tierString == null)
+            return -1;
+
+        if (tierString.equalsIgnoreCase("Prime"))
+            return 0; // tier = 0 stands for Prime
+
+        if (tierString.equalsIgnoreCase("1000"))
+            return 1;
+        if (tierString.equalsIgnoreCase("2000"))
+            return 2;
+        if (tierString.equalsIgnoreCase("3000"))
+            return 3;
+
+        return -1; // Unknown tier String
+    }
 
 }
