@@ -64,7 +64,8 @@ public class TSLRulesetCollection {
         }
 
         // Queue incoming event arguments
-        getQueue(args.streamerNickname).queue(() -> eventNode.process(args));
+        getQueue(args.streamerNickname).queue(() ->
+                TwitchSpawn.SERVER.addScheduledTask(() -> eventNode.process(args)));
         TwitchSpawn.LOGGER.info("Queued handler for {} event.", eventKeyword);
     }
 
