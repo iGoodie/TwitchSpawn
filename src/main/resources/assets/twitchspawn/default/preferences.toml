@@ -18,3 +18,8 @@ notificationVolume = 1.0
 # Min: 0.0 - Max: 1.0
 # Alternatively -1.0 for random pitch each time
 notificationPitch = 1.0
+
+# Delay between each event to be handled
+# Unit of it is milliseconds (5000 milliseconds = 5 seconds)
+# Min: 0
+notificationDelay = 5000

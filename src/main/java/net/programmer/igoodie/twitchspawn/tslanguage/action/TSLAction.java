@@ -33,10 +33,6 @@ import java.util.List;
 
 public abstract class TSLAction implements TSLFlowNode {
 
-    private static final int DEFAULT_FADE_IN_TICKS = 10;
-    private static final int DEFAULT_STAY_TICKS = 70;
-    private static final int DEFAULT_FADE_OUT_TICKS = 20;
-
     /**
      * Determines whether action is a reflection or not
      */
@@ -223,9 +219,13 @@ public abstract class TSLAction implements TSLFlowNode {
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.TITLES) {
             // Form title and subtitle packets
             SPacketTitle packet = new SPacketTitle(SPacketTitle.Type.TITLE, text,
-                    DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.1f / 50), // 10
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.7f / 50), // 70
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.2f / 50)); // 20
             SPacketTitle subtitlePacket = new SPacketTitle(SPacketTitle.Type.SUBTITLE, subtext,
-                    DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.1f / 50), // 10
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.7f / 50), // 70
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.2f / 50)); // 20
 
             // Send them over
             player.connection.sendPacket(packet);

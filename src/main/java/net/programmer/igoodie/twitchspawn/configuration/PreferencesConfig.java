@@ -53,6 +53,7 @@ public class PreferencesConfig {
             preferencesConfig.messageDisplay = getEnum(config, "messageDisplay", MessageDisplay.class);
             preferencesConfig.notificationVolume = config.get("notificationVolume");
             preferencesConfig.notificationPitch = config.get("notificationPitch");
+            preferencesConfig.notificationDelay = config.getInt("notificationDelay");
 
             config.close();
 
@@ -108,8 +109,9 @@ public class PreferencesConfig {
             if (!(rawValue instanceof Number))
                 return false;
             double value = ((Number) rawValue).doubleValue();
-            return value == -1.0 || 0.0 <= value && value <= 1.0;
+            return (value == -1.0) || (0.0 <= value && value <= 1.0);
         });
+        spec.defineInRange("notificationDelay", 5000, 0, Integer.MAX_VALUE);
 
         return spec;
     }
@@ -117,10 +119,13 @@ public class PreferencesConfig {
     private static <T extends Enum<T>> T getEnum(CommentedFileConfig config, String path, Class<T> enumClass) {
         Object value = config.get(path);
 
-        if (!(value instanceof String))
-            return null;
+        if (value instanceof String)
+            return Enum.valueOf(enumClass, ((String) value).toUpperCase());
 
-        return Enum.valueOf(enumClass, ((String) value).toUpperCase());
+        if (enumClass.isInstance(value))
+            return enumClass.cast(value);
+
+        return null;
     }
 
     private static <T extends Enum<T>> void defineEnum(ConfigSpec spec, String path, T defaultValue, Class<T> enumClass) {
@@ -156,5 +161,6 @@ public class PreferencesConfig {
 
     public double notificationVolume;
     public double notificationPitch;
+    public int notificationDelay;
 
 }

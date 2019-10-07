@@ -136,7 +136,6 @@ public class ModuleSimulate extends CommandModule {
             nbtRaw.append(moduleArgs[i]).append(" ");
         }
 
-        System.out.printf("(%d - %d) NBT: %s\n", startIndex, finishIndex, nbtRaw);
         return (nbtRaw.length() == 0) ? null : nbtRaw.toString();
     }
 
