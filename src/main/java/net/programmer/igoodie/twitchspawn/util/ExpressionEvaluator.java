@@ -1,13 +1,11 @@
 package net.programmer.igoodie.twitchspawn.util;
 
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.regex.Matcher;

@@ -33,6 +33,32 @@
       "color": "gold"
     }
   ],
+  "twitch subscription gift": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " gifted",
+      "color": "white"
+    },
+    {
+      "text": " ${amount_i}",
+      "color": "gold"
+    },
+    {
+      "text": " x ",
+      "color": "white"
+    },
+    {
+      "text": "Tier ${tier}",
+      "color": "gold"
+    },
+    {
+      "text": " subs!",
+      "color": "white"
+    }
+  ],
   "twitch host": [
     {
       "text": "${actor}",
