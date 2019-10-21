@@ -5,13 +5,14 @@ import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
+import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
 
 import java.util.List;
 
 public class ForAction extends TSLAction {
 
     private TSLAction action;
-    private int iterationCount;
+    private String iterationCount;
 
     /*
      * FOR 5 TIMES
@@ -33,9 +34,13 @@ public class ForAction extends TSLAction {
             throw new TSLSyntaxError("Expected TIMES, but found -> %s", actionWords.get(1));
 
         try {
-            this.iterationCount = Integer.parseInt(actionWords.get(0));
+            this.iterationCount = actionWords.get(0);
             this.action = TSLParser.parseAction(words.get(2), words.subList(3, words.size()));
             this.action.silent = true;
+
+            // Check if given iteration count is parse-able
+            EventArguments randomEvent = EventArguments.createRandom("RandomStreamer");
+            evaluateIterationCount(randomEvent);
 
         } catch (NumberFormatException e) {
             throw new TSLSyntaxError("Malformed number word -> %s", actionWords.get(0));
@@ -45,6 +50,8 @@ public class ForAction extends TSLAction {
     @Override
     protected void performAction(EntityPlayerMP player, EventArguments args) {
         action.reflectedUser = this.reflectedUser;
+
+        int iterationCount = evaluateIterationCount(args);
 
         for (int i = 0; i < iterationCount; i++) {
             action.performAction(player, args);
@@ -59,8 +66,16 @@ public class ForAction extends TSLAction {
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
         if (expression.equals("loopCount"))
-            return String.valueOf(iterationCount);
+            return String.valueOf(evaluateIterationCount(args));
         return null;
+    }
+
+    private int evaluateIterationCount(EventArguments args) {
+        String iterationCountEvaluated = ExpressionEvaluator.replaceExpressions(this.iterationCount, expression -> {
+            return ExpressionEvaluator.fromArgs(expression, args);
+        });
+
+        return Integer.parseInt(iterationCountEvaluated);
     }
 
 }
