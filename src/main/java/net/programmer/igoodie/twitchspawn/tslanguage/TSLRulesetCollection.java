@@ -1,6 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
@@ -12,8 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class TSLRulesetCollection {
-
-    private static long TITLE_DURATION = 5 * 1000; // milliseconds
 
     private TSLRuleset defaultRuleset;
     private Map<String, TSLRuleset> streamerRulesets; // Maps lowercase nicks to TSLTree
@@ -91,7 +90,7 @@ public class TSLRulesetCollection {
         TimeTaskQueue queue = eventQueues.get(streamerNick.toLowerCase());
 
         if (queue == null) { // Lazy init
-            queue = new TimeTaskQueue(TITLE_DURATION);
+            queue = new TimeTaskQueue(ConfigManager.PREFERENCES.notificationDelay);
             eventQueues.put(streamerNick.toLowerCase(), queue);
         }
 

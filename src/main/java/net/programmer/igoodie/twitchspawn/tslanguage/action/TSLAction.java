@@ -210,9 +210,13 @@ public abstract class TSLAction implements TSLFlowNode {
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.TITLES) {
             // Form title and subtitle packets
             STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text,
-                    DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.1f / 50), // 10
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.7f / 50), // 70
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.2f / 50)); // 20
             STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
-                    DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.1f / 50), // 10
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.7f / 50), // 70
+                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.2f / 50)); // 20
 
             // Send them over
             player.connection.sendPacket(packet);
