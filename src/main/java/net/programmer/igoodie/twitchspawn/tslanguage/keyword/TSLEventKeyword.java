@@ -25,6 +25,10 @@ public enum TSLEventKeyword {
             new TSLEventPair("subscriber", "twitch"),
             new TSLEventPair("resub", "twitch")
     ),
+    TWITCH_SUBSCRIPTION_GIFT(
+            "Twitch Subscription Gift",
+            new TSLEventPair("subMysteryGift", "twitch")
+    ),
     TWITCH_HOST(
             "Twitch Host",
             new TSLEventPair("host", "twitch")

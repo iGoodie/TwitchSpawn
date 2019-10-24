@@ -199,8 +199,6 @@ public abstract class TSLAction implements TSLFlowNode {
         SPlaySoundPacket packetSound = new SPlaySoundPacket(soundLocation, category, player.getPositionVec(), volume, pitch);
         player.connection.sendPacket(packetSound);
 
-        System.out.printf("messageDisplay=%s\n", ConfigManager.PREFERENCES.messageDisplay);
-
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.DISABLED)
             return; // Stop here since message displaying is disabled
 
