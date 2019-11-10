@@ -15,36 +15,16 @@ import org.json.JSONObject;
 import scala.util.parsing.json.JSON;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class StreamlabsSocketTracer extends SocketIOTracer {
 
-    public Set<Socket> authorized;
+    public boolean authorized;
 
     public StreamlabsSocketTracer(TraceManager manager) {
         super(Platform.STREAMLABS, manager);
-        this.authorized = new HashSet<>();
-    }
-
-    @Override
-    public void start() {
-        TwitchSpawn.LOGGER.info("Starting Streamlabs Tracer...");
-
-        // Create socket for every credential with Streamlabs platform
-        ConfigManager.CREDENTIALS.streamers.stream()
-                .filter(streamer -> streamer.platform.equals(Platform.STREAMLABS))
-                .forEach(this::createSocket);
-
-        this.sockets.forEach(Socket::connect);
-    }
-
-    @Override
-    public void stop() {
-        TwitchSpawn.LOGGER.info("Stopping Streamlabs Tracer...");
-
-        this.sockets.forEach(Socket::disconnect);
-
-        this.sockets.clear();
+        this.authorized = false;
     }
 
     @Override
@@ -57,17 +37,15 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
     @Override
     protected void onConnect(Socket socket, CredentialsConfig.Streamer streamer, Object... args) {
         TwitchSpawn.LOGGER.info("Connected to Streamlabs Socket API with {}'s token successfully!", streamer.twitchNick);
-        authorized.add(socket);
+        authorized = true;
     }
 
     @Override
     protected void onDisconnect(Socket socket, CredentialsConfig.Streamer streamer, Object... args) {
         TwitchSpawn.LOGGER.info("Disconnected from {}'s Streamlabs Socket connection. ({})",
-                streamer.minecraftNick, authorized.contains(socket) ? "intentional" : "unauthorized");
+                streamer.minecraftNick, authorized ? "intentional" : "unauthorized");
 
-        authorized.remove(socket);
-
-        if (manager.isRunning() && !authorized.contains(socket)) {
+        if (manager.isRunning() && !authorized) { // TODO: concern what to do in this case?
             manager.stop(null, streamer.twitchNick + " unauthorized by the socket server");
         }
     }

@@ -18,32 +18,11 @@ import java.util.TimerTask;
 
 public class StreamElementsSocketTracer extends SocketIOTracer {
 
-    public Set<Socket> authorized;
+    public boolean authorized;
 
     public StreamElementsSocketTracer(TraceManager manager) {
         super(Platform.STREAMELEMENTS, manager);
-        this.authorized = new HashSet<>();
-    }
-
-    @Override
-    public void start() {
-        TwitchSpawn.LOGGER.info("Starting StreamElements Tracer...");
-
-        // Create socket for every credential with StreamElements platform
-        ConfigManager.CREDENTIALS.streamers.stream()
-                .filter(streamer -> streamer.platform.equals(Platform.STREAMELEMENTS))
-                .forEach(this::createSocket);
-
-        this.sockets.forEach(Socket::connect);
-    }
-
-    @Override
-    public void stop() {
-        TwitchSpawn.LOGGER.info("Stopping StreamElements Tracer...");
-
-        this.sockets.forEach(Socket::disconnect);
-
-        this.sockets.clear();
+        this.authorized = false;
     }
 
     @Override
@@ -58,14 +37,14 @@ public class StreamElementsSocketTracer extends SocketIOTracer {
 
         socket.on("authenticated", foo -> {
             TwitchSpawn.LOGGER.info("Connected to StreamElements Socket API with {}'s token successfully!", streamer.twitchNick);
-            authorized.add(socket);
+            authorized = true;
         });
 
         // TODO: refactor dis, duh :V
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if (manager.isRunning() && !authorized.contains(socket)) {
+                if (manager.isRunning() && !authorized) {
                     TwitchSpawn.LOGGER.info("Disconnected from {}'s StreamElements Socket connection. (unauthorized)", streamer.minecraftNick);
                     manager.stop(null, streamer.twitchNick + " unauthorized by the socket server");
                 }

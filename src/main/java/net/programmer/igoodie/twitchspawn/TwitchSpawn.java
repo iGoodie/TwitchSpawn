@@ -103,7 +103,21 @@ public class TwitchSpawn {
         NetworkManager.CHANNEL.sendTo(
                 new StatusChangedPacket.Message(TRACE_MANAGER.isRunning()),
                 entity);
+
+        if(TRACE_MANAGER.isRunning())
+            TRACE_MANAGER.connectStreamer(entity.getName());
+
         LOGGER.info("onPlayerLoggedIn()");
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        EntityPlayerMP entity = (EntityPlayerMP) event.player;
+
+        if(TRACE_MANAGER.isRunning())
+            TRACE_MANAGER.disconnectStreamer(entity.getName());
+
+        LOGGER.info("onPlayerLoggedOut()");
     }
 
 }
