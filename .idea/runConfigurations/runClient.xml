@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="runClient" type="Application" factoryName="Application" singleton="false">
+  <configuration default="false" name="runClient" type="Application" factoryName="Application" singleton="true">
     <envs>
       <env name="MOD_CLASSES" value="examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\resources\main;examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\classes\java\main" />
       <env name="MCP_MAPPINGS" value="snapshot_20190719-1.14.3" />
@@ -13,7 +13,8 @@
       <env name="MC_VERSION" value="1.14.4" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="GradleStart" />
-    <module name="TwitchSpawn-1.12.x-TSL.main" />
+    <module name="TwitchSpawn-1.12.2.main" />
+    <option name="PROGRAM_PARAMETERS" value="-username=iGoodie" />
     <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=info -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump &quot;-Dos.name=Windows 10&quot; -Dos.version=10.0" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <method v="2">

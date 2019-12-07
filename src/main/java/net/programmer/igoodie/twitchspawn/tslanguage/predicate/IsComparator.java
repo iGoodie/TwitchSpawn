@@ -10,6 +10,9 @@ public class IsComparator extends TSLComparator {
 
     @Override
     public boolean compare(Object leftHand) {
+        if (leftHand instanceof Boolean)
+            return leftHand.toString().equalsIgnoreCase(value);
+
         return leftHand instanceof String
                 && value.equalsIgnoreCase((String) leftHand);
     }

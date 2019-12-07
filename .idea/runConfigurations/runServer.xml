@@ -10,7 +10,7 @@
       <env name="MC_VERSION" value="1.14.4" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="GradleStartServer" />
-    <module name="TwitchSpawn-1.12.x-TSL.main" />
+    <module name="TwitchSpawn-1.12.2.main" />
     <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=info -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <method v="2">
