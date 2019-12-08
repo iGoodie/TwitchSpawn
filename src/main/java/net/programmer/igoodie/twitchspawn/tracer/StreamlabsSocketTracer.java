@@ -12,11 +12,6 @@ import net.programmer.igoodie.twitchspawn.util.JSONUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import scala.util.parsing.json.JSON;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 public class StreamlabsSocketTracer extends SocketIOTracer {
 
@@ -83,7 +78,7 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
             eventArguments.raiderCount = JSONUtils.extractNumberFrom(message, "raiders", 0).intValue();
             eventArguments.viewerCount = JSONUtils.extractNumberFrom(message, "viewers", 0).intValue();
             eventArguments.subscriptionTier = extractTier(message, "sub_plan");
-            eventArguments.isGifted = JSONUtils.extractFrom(message, "gifter_twitch_id", String.class, null) != null;
+            eventArguments.gifted = JSONUtils.extractFrom(message, "gifter_twitch_id", String.class, null) != null;
 
             // Pass the model to the handler
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);

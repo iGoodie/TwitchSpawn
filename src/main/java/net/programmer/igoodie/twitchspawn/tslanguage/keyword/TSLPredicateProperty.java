@@ -33,9 +33,9 @@ public enum TSLPredicateProperty {
             "subscriptionTier",
             "tier", "subscription_tier"
     ),
-    IS_GIFTER(
-            "isGifted",
-            "is_gifted"
+    GIFTED(
+            "gifted",
+            "gifted"
     ),
     VIEWERS(
             "viewerCount",

@@ -13,7 +13,6 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -96,7 +95,7 @@ public class ModuleSimulate extends CommandModule {
                 simulatedEvent.raiderCount = nbt.getInteger("raiders");
                 simulatedEvent.viewerCount = nbt.getInteger("viewers");
                 simulatedEvent.subscriptionTier = nbt.hasKey("tier", 3) ? nbt.getInteger("tier") : -1;
-                simulatedEvent.isGifted = nbt.getBoolean("isGifted");
+                simulatedEvent.gifted = nbt.getBoolean("gifted");
             }
 
             ConfigManager.RULESET_COLLECTION.handleEvent(simulatedEvent);
