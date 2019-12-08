@@ -104,6 +104,7 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
             eventArguments.raiderCount = JSONUtils.extractNumberFrom(message, "raiders", 0).intValue();
             eventArguments.viewerCount = JSONUtils.extractNumberFrom(message, "viewers", 0).intValue();
             eventArguments.subscriptionTier = extractTier(message, "sub_plan");
+            eventArguments.gifted = JSONUtils.extractFrom(message, "gifter_twitch_id", String.class, null) != null;
 
             // Pass the model to the handler
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);

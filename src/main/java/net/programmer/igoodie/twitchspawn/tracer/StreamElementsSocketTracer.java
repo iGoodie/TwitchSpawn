@@ -109,6 +109,7 @@ public class StreamElementsSocketTracer extends SocketIOTracer {
 //        eventArguments.raiderCount = JSONUtils.extractNumberFrom(message, "raiders", 0).intValue(); // Raids aren't supported (?)
         eventArguments.viewerCount = JSONUtils.extractNumberFrom(data, "amount ", 0).intValue();
         eventArguments.subscriptionTier = extractTier(data, "tier");
+        // TODO: add gifted
 
         // Pass the model to the handler
         ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);

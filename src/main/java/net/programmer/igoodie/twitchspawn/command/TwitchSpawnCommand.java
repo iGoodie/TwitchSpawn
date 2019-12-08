@@ -229,6 +229,7 @@ public class TwitchSpawnCommand {
                 simulatedEvent.raiderCount = nbt.getInt("raiders");
                 simulatedEvent.viewerCount = nbt.getInt("viewers");
                 simulatedEvent.subscriptionTier = nbt.contains("tier", 3) ? nbt.getInt("tier") : -1;
+                simulatedEvent.gifted = nbt.getBoolean("gifted");
             }
 
             ConfigManager.RULESET_COLLECTION.handleEvent(simulatedEvent);

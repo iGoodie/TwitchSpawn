@@ -65,6 +65,9 @@ public class ExpressionEvaluator {
         if (expression.equals("tier") && args.subscriptionTier != -1)
             return args.subscriptionTier == 0 ? "Prime" : String.valueOf(args.subscriptionTier);
 
+        if (expression.equals("gifted"))
+            return String.valueOf(args.gifted);
+
         if (expression.equals("viewers") && args.viewerCount != 0)
             return String.valueOf(args.viewerCount);
 

@@ -33,6 +33,7 @@ public class EventArguments {
 
     public int subscriptionMonths;
     public int subscriptionTier = -1; // 0=Prime, 1=T1, 2=T2, 3=T3
+    public boolean gifted;
 
     public int viewerCount;
     public int raiderCount;
@@ -60,6 +61,7 @@ public class EventArguments {
         this.donationCurrency = new String[]{"USD", "TRY", "EUR"}[random.nextInt(3)];
         this.subscriptionMonths = random.nextInt(100 - 1) + 1;
         this.subscriptionTier = random.nextInt(3 + 1);
+        this.gifted = random.nextBoolean();
         this.viewerCount = random.nextInt(100 - 1) + 1;
         this.raiderCount = random.nextInt(100 - 1) + 1;
     }

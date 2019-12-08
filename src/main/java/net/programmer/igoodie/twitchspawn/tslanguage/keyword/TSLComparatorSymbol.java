@@ -6,6 +6,8 @@ public enum TSLComparatorSymbol {
 
     IN_RANGE(
             "IN RANGE", InRangeComparator.class),
+    IS(
+            "IS", IsComparator.class),
     PREFIX(
             "PREFIX", PrefixComparator.class),
     POSTFIX(
