@@ -119,6 +119,7 @@ public class EitherAction extends TSLAction {
 
         selectedAction.performAction(player, args); // No need to include notification
         selectedAction = actions.randomItem();
+        message = selectedAction.message;
     }
 
     @Override
