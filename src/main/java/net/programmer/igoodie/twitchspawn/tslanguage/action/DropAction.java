@@ -41,8 +41,10 @@ public class DropAction extends TSLAction {
         String randomItem = ExpressionEvaluator.replaceExpressions(this.itemRaw, expression -> {
             return ExpressionEvaluator.fromArgs(expression, randomEvent);
         });
-        if (!new ItemParser(randomItem).isValid())
-            throw new TSLSyntaxError("Invalid item text");
+        ItemParser itemParser = new ItemParser(randomItem);
+        if (!itemParser.isValid()) {
+            throw new TSLSyntaxError("Invalid item text (%s)", itemParser.getError().getMessage());
+        }
     }
 
     @Override

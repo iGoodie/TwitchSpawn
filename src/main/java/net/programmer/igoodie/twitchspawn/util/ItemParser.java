@@ -6,6 +6,7 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 public class ItemParser {
 
@@ -41,6 +42,19 @@ public class ItemParser {
             return false;
 
         return true;
+    }
+
+    public TSLSyntaxError getError() {
+        if (getItem() == null)
+            return new TSLSyntaxError("Unknown item name");
+
+        try {
+            JsonToNBT.getTagFromJson(itemNbt);
+            return null;
+
+        } catch (NBTException e) {
+            return new TSLSyntaxError(e.getMessage());
+        }
     }
 
     public ItemStack generateItemStack(int amount) {
