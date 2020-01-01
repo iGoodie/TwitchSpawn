@@ -10,11 +10,13 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ReflectAction extends TSLAction {
 
     private boolean reflectEveryone;
+    private int reflectRandomN;
     private List<String> reflectedUsers;
     private TSLAction action;
 
@@ -25,17 +27,25 @@ public class ReflectAction extends TSLAction {
             throw new TSLSyntaxError("Invalid length of words: " + words);
 
         // "REFLECT %% REFLECT %% ..." is not allowed
-        if (words.get(1).equalsIgnoreCase(TSLActionKeyword.ofClass(getClass())))
+        String reflectActionName = TSLActionKeyword.ofClass(getClass());
+        if (words.stream().anyMatch(word -> word.equalsIgnoreCase(reflectActionName)))
             throw new TSLSyntaxError("Cannot have a cyclic REFLECT rule.");
 
         String usersRaw = words.get(0);
 
         if (usersRaw.equals("*")) {
             this.reflectEveryone = true;
+            this.reflectRandomN = 0;
+            this.reflectedUsers = null;
+
+        } else if (usersRaw.matches("\\d+")) {
+            this.reflectEveryone = false;
+            this.reflectRandomN = parseInt(usersRaw);
             this.reflectedUsers = null;
 
         } else {
             this.reflectEveryone = false;
+            this.reflectRandomN = 0;
             this.reflectedUsers = Arrays.asList(usersRaw.split(",\\s*"));
         }
 
@@ -50,9 +60,7 @@ public class ReflectAction extends TSLAction {
         action.process(args);
 
         // Select where to reflect
-        List<String> reflectedUsers = this.reflectEveryone
-                ? Arrays.asList(player.getServer().getOnlinePlayerNames())
-                : this.reflectedUsers;
+        List<String> reflectedUsers = getReflectedPlayers(player);
 
         // Reflect to selected users
         reflectedUsers.forEach(username -> {
@@ -77,6 +85,29 @@ public class ReflectAction extends TSLAction {
                 reflectAction(reflectedPlayer, args);
             }
         });
+    }
+
+    private List<String> getReflectedPlayers(EntityPlayerMP player) {
+        if (this.reflectEveryone) {
+            return Arrays.asList(player.getServer().getOnlinePlayerNames());
+        }
+
+        if (this.reflectRandomN != 0) {
+            List<String> reflectedPlayers = new LinkedList<>();
+            List<String> onlinePlayers = new LinkedList<>(Arrays.asList(player.getServer().getOnlinePlayerNames()));
+
+            for (int i = 0; i < reflectRandomN; i++) {
+                if (onlinePlayers.size() == 0) break;
+
+                int index = (int) (Math.random() * onlinePlayers.size());
+                String selectedPlayer = onlinePlayers.remove(index);
+                reflectedPlayers.add(selectedPlayer);
+            }
+
+            return reflectedPlayers;
+        }
+
+        return this.reflectedUsers;
     }
 
     private void reflectAction(EntityPlayerMP player, EventArguments args) {
