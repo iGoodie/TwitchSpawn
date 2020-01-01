@@ -81,12 +81,24 @@ public class EitherAction extends TSLAction {
         return TSLParser.parseAction(actionName, actionArgs);
     }
 
-    private List<List<String>> splitActions(List<String> words) {
+    private List<List<String>> splitActions(List<String> words) throws TSLSyntaxError {
         List<List<String>> actionsRaw = new LinkedList<>();
         List<String> actionRaw = new LinkedList<>();
 
-        for (String word : words) {
-            if (word.equalsIgnoreCase(DELIMITER)) {
+        for (int i = 0; i < words.size(); i++) {
+            boolean lastWord = (i == words.size() - 1);
+            String word = words.get(i);
+
+            if (lastWord) {
+                if (word.equalsIgnoreCase(DELIMITER))
+                    throw new TSLSyntaxError("Unexpected %s word at the end.", DELIMITER);
+                actionRaw.add(word);
+            }
+
+            if (word.equalsIgnoreCase(DELIMITER) || lastWord) {
+                if (actionRaw.isEmpty())
+                    throw new TSLSyntaxError("Expected an action after %s word.", DELIMITER);
+
                 actionsRaw.add(actionRaw);
                 actionRaw = new LinkedList<>();
                 continue;
@@ -94,8 +106,6 @@ public class EitherAction extends TSLAction {
 
             actionRaw.add(word);
         }
-
-        actionsRaw.add(actionRaw);
 
         return actionsRaw;
     }
