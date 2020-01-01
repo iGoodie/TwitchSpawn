@@ -1,6 +1,8 @@
 package net.programmer.igoodie.twitchspawn.client.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.Sound;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -29,8 +31,12 @@ public class StatusIndicatorOverlay {
 
         String soundName = running ? "pop_in" : "pop_out";
 
-        Minecraft.getMinecraft().player
-                .playSound(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, soundName)), 1f, 1f);
+        Minecraft minecraft = Minecraft.getMinecraft();
+        EntityPlayerSP self = minecraft.player;
+
+        if (self != null) { // Here to hopefully fix an obscure Null Pointer (From UNKNOWN PENGUIN's log)
+            self.playSound(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, soundName)), 1f, 1f);
+        }
     }
 
     @SubscribeEvent
@@ -83,7 +89,7 @@ public class StatusIndicatorOverlay {
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
         minecraft.getTextureManager().bindTexture(Gui.ICONS);
-        
+
         drew = true;
     }
 
