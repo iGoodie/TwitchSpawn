@@ -67,7 +67,7 @@ public class ForAction extends TSLAction {
     protected String subtitleEvaluator(String expression, EventArguments args) {
         if (expression.equals("loopCount"))
             return String.valueOf(evaluateIterationCount(args));
-        return null;
+        return action.subtitleEvaluator(expression, args);
     }
 
     private int evaluateIterationCount(EventArguments args) {
