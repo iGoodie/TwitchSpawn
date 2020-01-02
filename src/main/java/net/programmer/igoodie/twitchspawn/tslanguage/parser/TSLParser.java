@@ -11,6 +11,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLComparatorSymbol
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLComparator;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;
+import net.programmer.igoodie.twitchspawn.util.GsonUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -69,7 +70,9 @@ public class TSLParser {
                 String jsonString = words.get(i + 1);
 
                 try {
-                    return new JsonParser().parse(jsonString).getAsJsonArray();
+                    JsonArray parsedMessage = new JsonParser().parse(jsonString).getAsJsonArray();
+                    GsonUtils.removeInvalidTextComponent(parsedMessage); // <-- Will also remove null elements created by trailing comma chars
+                    return parsedMessage;
 
                 } catch (JsonParseException e) {
                     throw new TSLSyntaxError("Malformed JSON array -> %s", jsonString);
