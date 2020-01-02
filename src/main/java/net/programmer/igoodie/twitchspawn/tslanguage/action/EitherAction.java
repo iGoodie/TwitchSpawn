@@ -35,6 +35,7 @@ public class EitherAction extends TSLAction {
             throw new TSLSyntaxError("Expected at least 2 actions, found -> " + this.actions.size());
 
         selectedAction = actions.randomItem();
+        message = selectedAction.message;
     }
 
     private void parseActions(List<String> words) throws TSLSyntaxError {
@@ -119,6 +120,7 @@ public class EitherAction extends TSLAction {
 
         selectedAction.performAction(player, args); // No need to include notification
         selectedAction = actions.randomItem();
+        message = selectedAction.message;
     }
 
     @Override
