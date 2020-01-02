@@ -4,12 +4,15 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.MessageArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.STitlePacket;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
@@ -21,10 +24,14 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLTokenizer;
 import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -57,6 +64,11 @@ public class TwitchSpawnCommand {
         root.then(Commands.literal("test")
                 .then(CommandArguments.streamer("streamer_nick")
                         .executes(context -> testModule(context, StreamerArgumentType.getStreamer(context, "streamer_nick"))))
+        );
+
+        root.then(Commands.literal("execute")
+                .then(Commands.argument("tsl_action", MessageArgument.message())
+                        .executes(TwitchSpawnCommand::executeModule))
         );
 
         dispatcher.register(root);
@@ -242,6 +254,28 @@ public class TwitchSpawnCommand {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public static int executeModule(CommandContext<CommandSource> context) throws CommandSyntaxException {
+        try {
+            String[] words = MessageArgument.getMessage(context, "tsl_action")
+                    .getUnformattedComponentText().split("\\s+");
+
+            if (words.length == 0)
+                throw new CommandException(new StringTextComponent("Expected at least 1 TSL word!"));
+
+            List<String> wordTokens = TSLTokenizer.intoWords(String.join(" ", words));
+            String actionName = wordTokens.remove(0);
+
+            TSLAction tslAction = TSLParser.parseAction(actionName, wordTokens);
+            EventArguments eventArguments = EventArguments.createRandom(context.getSource().getName());
+            tslAction.process(eventArguments);
+
+        } catch (TSLSyntaxError e) {
+            throw new CommandException(new StringTextComponent(e.getMessage()));
+        }
+
+        return 1;
     }
 
     private static final int DEFAULT_FADE_IN_TICKS = 10;
