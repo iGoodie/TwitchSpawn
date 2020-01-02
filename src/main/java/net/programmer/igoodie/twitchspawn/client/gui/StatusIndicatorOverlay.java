@@ -2,6 +2,7 @@ package net.programmer.igoodie.twitchspawn.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -26,8 +27,12 @@ public class StatusIndicatorOverlay {
 
         String soundName = running ? "pop_in" : "pop_out";
 
-        Minecraft.getInstance().player
-                .playSound(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, soundName)), 1f, 1f);
+        Minecraft minecraft = Minecraft.getInstance();
+        ClientPlayerEntity self = minecraft.player;
+
+        if (self != null) { // Here to hopefully fix an obscure Null Pointer (From UNKNOWN PENGUIN's log)
+            self.playSound(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, soundName)), 1f, 1f);
+        }
     }
 
     @SubscribeEvent
