@@ -53,7 +53,12 @@ public class ModuleTest extends CommandModule {
     @Override
     public void execute(ICommandSender commandSender, String[] moduleArgs) throws CommandException {
         String streamerNickname = getArgument(moduleArgs, 0);
-
+        String senderNickname = commandSender.getName();
+        if (!ConfigManager.CREDENTIALS.hasPermission(senderNickname)) {
+            commandSender.sendMessage(new TextComponentTranslation("commands.twitchspawn.test.no_perm"));
+            TwitchSpawn.LOGGER.info("{} tried to test a ruleset, but no permission", senderNickname);
+            return;
+        }
         if (streamerNickname == null)
             throw new WrongUsageException(getUsage());
 

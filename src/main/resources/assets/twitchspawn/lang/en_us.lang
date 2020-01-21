@@ -32,5 +32,8 @@ commands.twitchspawn.simulate.no_perm=§4>> You do not have permission to simula
 
 commands.twitchspawn.test.not_found=§4>> No ruleset associated with %1$s
 commands.twitchspawn.test.success=§a>> Successfully queued rules for %1$s
+commands.twitchspawn.test.no_perm=§4>> You do not have permission to test rulesets.
+
+commands.twitchspawn.execute.no_perm=§4>> You do not have permission to execute actions.
 
 errors.twitchspawn.loading=Cannot load TwitchSpawn

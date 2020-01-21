@@ -2,6 +2,9 @@ package net.programmer.igoodie.twitchspawn.command.module;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
@@ -26,7 +29,13 @@ public class ModuleExecute extends CommandModule {
 
     @Override
     public void execute(ICommandSender commandSender, String[] moduleArgs) throws CommandException {
-        try {
+        String senderNickname = commandSender.getName();
+        if (!ConfigManager.CREDENTIALS.hasPermission(senderNickname)) {
+            commandSender.sendMessage(new TextComponentTranslation("commands.twitchspawn.execute.no_perm"));
+            TwitchSpawn.LOGGER.info("{} tried to execute an action, but no permission", senderNickname);
+            return;
+        }
+        try { 
             TSLAction tslAction = parseAction(moduleArgs);
             EventArguments eventArguments = EventArguments.createRandom(commandSender.getName());
             tslAction.process(eventArguments);
