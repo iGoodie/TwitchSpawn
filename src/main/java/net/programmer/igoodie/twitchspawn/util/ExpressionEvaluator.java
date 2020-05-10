@@ -41,6 +41,9 @@ public class ExpressionEvaluator {
         if (expression.equals("event"))
             return args.eventName;
 
+        if (expression.equals("message"))
+            return args.message;
+
         if (expression.equals("actor"))
             return args.actorNickname;
 
