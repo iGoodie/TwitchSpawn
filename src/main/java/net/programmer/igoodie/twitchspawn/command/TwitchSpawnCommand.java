@@ -48,6 +48,8 @@ public class TwitchSpawnCommand {
 
         root.then(Commands.literal("reloadcfg").executes(TwitchSpawnCommand::reloadModule));
 
+        root.then(Commands.literal("quickrefresh").executes(TwitchSpawnCommand::quickRefreshModule));
+
         root.then(Commands.literal("rules")
                 .executes(context -> rulesModule(context, null))
                 .then(CommandArguments.rulesetName("ruleset_name")
@@ -163,6 +165,25 @@ public class TwitchSpawnCommand {
                     "commands.twitchspawn.reloadcfg.invalid_syntax", errorLog), false);
             return 0;
         }
+    }
+
+    public static int quickRefreshModule(CommandContext<CommandSource> context) {
+        String sourceNickname = context.getSource().getName();
+
+        if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
+            context.getSource().sendFeedback(new TranslationTextComponent(
+                    "commands.twitchspawn.reloadcfg.no_perm"), true);
+            TwitchSpawn.LOGGER.info("{} tried to run TwitchSpawn, but no permission", sourceNickname);
+            return 0;
+        }
+
+        if (TwitchSpawn.TRACE_MANAGER.isRunning()) {
+            TwitchSpawn.TRACE_MANAGER.stop(context.getSource(), "Quick refreshing");
+        }
+
+        reloadModule(context);
+        startModule(context);
+        return 1;
     }
 
     /* ------------------------------------------------------------ */
