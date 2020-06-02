@@ -23,3 +23,8 @@ notificationPitch = 1.0
 # Unit of it is milliseconds (5000 milliseconds = 5 seconds)
 # Min: 0
 notificationDelay = 5000
+
+# Attempt to auto-start the mod when the server/world is starting
+# Connection issues will be resulted in mod to stop. However, you can still start it manually.
+# Either "enabled" or "disabled"
+autoStart = "disabled"

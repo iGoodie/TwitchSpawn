@@ -26,6 +26,7 @@ import net.programmer.igoodie.twitchspawn.command.RulesetNameArgumentType;
 import net.programmer.igoodie.twitchspawn.command.StreamerArgumentType;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
 import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
@@ -86,6 +87,11 @@ public class TwitchSpawn {
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
         TwitchSpawnCommand.register(event.getCommandDispatcher());
+
+        if (ConfigManager.PREFERENCES.autoStart == PreferencesConfig.AutoStartEnum.ENABLED) {
+            LOGGER.info("Auto-start is enabled. Attempting to start tracers.");
+            TRACE_MANAGER.start();
+        }
     }
 
     @SubscribeEvent

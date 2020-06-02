@@ -23,6 +23,10 @@ public class PreferencesConfig {
         DISABLED, TITLES, CHAT
     }
 
+    public enum AutoStartEnum {
+        DISABLED, ENABLED
+    }
+
     public static PreferencesConfig create(File file) {
         try {
             // File is not there, create an empty file
@@ -52,6 +56,7 @@ public class PreferencesConfig {
             preferencesConfig.notificationVolume = config.get("notificationVolume");
             preferencesConfig.notificationPitch = config.get("notificationPitch");
             preferencesConfig.notificationDelay = config.getInt("notificationDelay");
+            preferencesConfig.autoStart = getEnum(config, "autoStart", AutoStartEnum.class);
 
             config.close();
 
@@ -110,6 +115,7 @@ public class PreferencesConfig {
             return (value == -1.0) || (0.0 <= value && value <= 1.0);
         });
         spec.defineInRange("notificationDelay", 5000, 0, Integer.MAX_VALUE);
+        defineEnum(spec, "autoStart", AutoStartEnum.DISABLED, AutoStartEnum.class);
 
         return spec;
     }
@@ -160,5 +166,7 @@ public class PreferencesConfig {
     public double notificationVolume;
     public double notificationPitch;
     public int notificationDelay;
+
+    public AutoStartEnum autoStart;
 
 }
