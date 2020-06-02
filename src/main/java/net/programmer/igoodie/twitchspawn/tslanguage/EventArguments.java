@@ -38,6 +38,8 @@ public class EventArguments {
     public int viewerCount;
     public int raiderCount;
 
+    public String rewardTitle;
+
     public EventArguments(String eventType, String eventAccount) {
         this.eventType = eventType;
         this.eventAccount = eventAccount;

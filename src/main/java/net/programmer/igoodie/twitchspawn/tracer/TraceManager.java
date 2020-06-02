@@ -14,11 +14,15 @@ public class TraceManager {
 
     private boolean running;
     private List<SocketIOTracer> socketIOTracers;
+    private List<WebSocketTracer> webSocketTracers;
 
     public TraceManager() {
         this.socketIOTracers = new LinkedList<>();
         this.socketIOTracers.add(new StreamlabsSocketTracer(this));
         this.socketIOTracers.add(new StreamElementsSocketTracer(this));
+
+        this.webSocketTracers = new LinkedList<>();
+        this.webSocketTracers.add(new TwitchPubSubTracer(this));
     }
 
     public boolean isRunning() {
@@ -34,6 +38,7 @@ public class TraceManager {
 
         // Start tracers
         socketIOTracers.forEach(SocketIOTracer::start);
+        webSocketTracers.forEach(WebSocketTracer::start);
 
         running = true;
 
@@ -53,6 +58,7 @@ public class TraceManager {
 
         // Stop tracers
         socketIOTracers.forEach(SocketIOTracer::stop);
+        webSocketTracers.forEach(WebSocketTracer::stop);
 
         running = false;
 
