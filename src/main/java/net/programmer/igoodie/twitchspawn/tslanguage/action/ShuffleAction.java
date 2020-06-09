@@ -3,7 +3,6 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -96,7 +95,7 @@ public class ShuffleAction extends ItemSelectiveAction {
                 "/particle minecraft:end_rod ~ ~ ~ 2 2 2 0.0001 400");
     }
 
-    private void shuffle(NonNullList<ItemStack> inventory, int firstIndex, int lastIndex) {
+    private void shuffle(List<ItemStack> inventory, int firstIndex, int lastIndex) {
         for (int i = lastIndex; i > firstIndex; i--) {
             int randomIndex = (int) (Math.random() * (i - firstIndex + 1)) + firstIndex;
 

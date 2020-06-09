@@ -3,7 +3,6 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -35,7 +34,7 @@ public class ThrowAction extends ItemSelectiveAction {
             if (inventoryType == null) {
                 player.inventory.dropAllItems();
             } else {
-                NonNullList<ItemStack> inventory = getInventory(player, inventoryType);
+                List<ItemStack> inventory = getInventory(player, inventoryType);
                 for (int i = 0; i < inventory.size(); i++) {
                     ItemStack itemStack = inventory.get(i);
                     if (!itemStack.isEmpty()) {

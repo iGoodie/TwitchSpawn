@@ -6,7 +6,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.arguments.ItemParser;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -135,7 +134,7 @@ public class ChangeAction extends ItemSelectiveAction {
                 "/particle minecraft:entity_effect ~ ~ ~ 2 2 2 0.1 400");
     }
 
-    private void setAll(NonNullList<ItemStack> inventory, ItemStack itemStack) {
+    private void setAll(List<ItemStack> inventory, ItemStack itemStack) {
         for (int i = 0; i < inventory.size(); i++) {
             inventory.set(i, itemStack.copy());
         }

@@ -2,7 +2,6 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.LinkedList;
@@ -11,7 +10,7 @@ import java.util.List;
 public abstract class ItemSelectiveAction extends TSLAction {
 
     public enum InventoryType {
-        MAIN_INVENTORY(36), ARMOR_INVENTORY(4), OFFHAND_INVENTORY(1);
+        MAIN_INVENTORY(36), ARMOR_INVENTORY(4), HOTBAR_INVENTORY(9), OFFHAND_INVENTORY(1);
 
         public int capacity;
 
@@ -21,10 +20,10 @@ public abstract class ItemSelectiveAction extends TSLAction {
     public enum SelectionType {WITH_INDEX, ONLY_HELD_ITEM, HOTBAR, EVERYTHING, RANDOM}
 
     protected static class InventorySlot {
-        public NonNullList<ItemStack> inventory;
+        public List<ItemStack> inventory;
         public int index;
 
-        public InventorySlot(NonNullList<ItemStack> inventory, int index) {
+        public InventorySlot(List<ItemStack> inventory, int index) {
             this.inventory = inventory;
             this.index = index;
         }
@@ -38,7 +37,7 @@ public abstract class ItemSelectiveAction extends TSLAction {
     protected SelectionType selectionType = SelectionType.WITH_INDEX;
     protected int inventoryIndex = -1;
 
-    protected NonNullList<ItemStack> getInventory(ServerPlayerEntity player, InventoryType inventoryType) {
+    protected List<ItemStack> getInventory(ServerPlayerEntity player, InventoryType inventoryType) {
         switch (inventoryType) {
             case MAIN_INVENTORY:
                 return player.inventory.mainInventory;
@@ -46,6 +45,8 @@ public abstract class ItemSelectiveAction extends TSLAction {
                 return player.inventory.armorInventory;
             case OFFHAND_INVENTORY:
                 return player.inventory.offHandInventory;
+            case HOTBAR_INVENTORY:
+                return player.inventory.mainInventory.subList(0, 8 + 1);
             default:
                 return null; // Not possible
         }
@@ -74,6 +75,8 @@ public abstract class ItemSelectiveAction extends TSLAction {
             inventoryType = InventoryType.MAIN_INVENTORY;
         else if (inventoryName.equalsIgnoreCase("armors"))
             inventoryType = InventoryType.ARMOR_INVENTORY;
+        else if (inventoryName.equalsIgnoreCase("hotbar"))
+            inventoryType = InventoryType.HOTBAR_INVENTORY;
         else
             throw new TSLSyntaxError("Unknown inventory name -> %s", inventoryName);
 
@@ -179,7 +182,7 @@ public abstract class ItemSelectiveAction extends TSLAction {
         return possibleSlots.get(randomIndex);
     }
 
-    protected InventorySlot randomInventorySlot(NonNullList<ItemStack> inventory, boolean includeEmptySlots) {
+    protected InventorySlot randomInventorySlot(List<ItemStack> inventory, boolean includeEmptySlots) {
         List<InventorySlot> possibleSlots = new LinkedList<>();
 
         for (int i = 0; i < inventory.size(); i++) {
