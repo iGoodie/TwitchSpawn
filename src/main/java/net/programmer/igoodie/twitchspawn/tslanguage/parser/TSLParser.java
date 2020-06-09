@@ -36,7 +36,7 @@ public class TSLParser {
             String fractionGroup = matcher.group("fraction");
 
             int decimal = Integer.parseInt(decimalGroup);
-            int fraction = fractionGroup == null ? 0 : Integer.parseInt(fractionGroup);
+            int fraction = fractionGroup == null ? 0 : Integer.parseInt(String.format("%-2s", fractionGroup).replace(' ', '0'));
 
             return decimal * 100 + fraction;
 

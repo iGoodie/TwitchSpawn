@@ -50,14 +50,16 @@ public class EitherAction extends TSLAction {
                 if (!containsPercentage(actionRaw))
                     throw new TSLSyntaxError("Expected chance information on rule#%d", (i + 1));
 
+                String percentage = null;
+
                 try {
                     TSLAction action = parseSingleAction(actionRaw.subList(3, actionRaw.size()));
-                    String percentage = actionRaw.get(1);
+                    percentage = actionRaw.get(1);
                     actions.addElement(action, percentage);
 
                 } catch (IllegalStateException e) {
-                    throw new TSLSyntaxError("Expected total of a 100.00%% probability, found -> %.02f%%",
-                            actions.getTotalPercentage() / 100f);
+                    throw new TSLSyntaxError("Cannot add the action with %1$s%% probability, which goes above 100%%. " +
+                            "(%1$.02f%% + %2$s%% > 100%%)", actions.getTotalPercentage() / 100f, percentage);
                 }
 
             } else {
@@ -66,9 +68,10 @@ public class EitherAction extends TSLAction {
             }
         }
 
-        if (chanceMode && actions.getTotalPercentage() != 100_00)
+        if (chanceMode && actions.getTotalPercentage() != 100_00) {
             throw new TSLSyntaxError("Expected total of a 100.00%% probability, found -> %.02f%%",
                     actions.getTotalPercentage() / 100f);
+        }
     }
 
     private TSLAction parseSingleAction(List<String> actionWords) throws TSLSyntaxError {
