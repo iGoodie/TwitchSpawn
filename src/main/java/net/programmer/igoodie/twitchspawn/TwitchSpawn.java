@@ -13,6 +13,7 @@ import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 import net.programmer.igoodie.twitchspawn.command.ItemDataCommand;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
 import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
@@ -73,6 +74,12 @@ public class TwitchSpawn {
     public void onServerStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new TwitchSpawnCommand());
         event.registerServerCommand(new ItemDataCommand());
+
+        if (ConfigManager.PREFERENCES.autoStart == PreferencesConfig.AutoStartEnum.ENABLED) {
+            LOGGER.info("Auto-start is enabled. Attempting to start tracers.");
+            TRACE_MANAGER.start();
+        }
+
         LOGGER.info("onServerStarting()");
     }
 
@@ -100,7 +107,7 @@ public class TwitchSpawn {
                 new StatusChangedPacket.Message(TRACE_MANAGER.isRunning()),
                 entity);
 
-        if(TRACE_MANAGER.isRunning())
+        if (TRACE_MANAGER.isRunning())
             TRACE_MANAGER.connectStreamer(entity.getName());
 
         LOGGER.info("onPlayerLoggedIn()");
@@ -110,7 +117,7 @@ public class TwitchSpawn {
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         EntityPlayerMP entity = (EntityPlayerMP) event.player;
 
-        if(TRACE_MANAGER.isRunning())
+        if (TRACE_MANAGER.isRunning())
             TRACE_MANAGER.disconnectStreamer(entity.getName());
 
         LOGGER.info("onPlayerLoggedOut()");
