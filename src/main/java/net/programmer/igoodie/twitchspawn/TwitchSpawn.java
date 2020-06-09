@@ -113,9 +113,20 @@ public class TwitchSpawn {
 
         entity.sendMessage(new TranslationTextComponent(translationKey));
 
+        if (TRACE_MANAGER.isRunning())
+            TRACE_MANAGER.connectStreamer(entity.getName().getString());
+
         NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(TRACE_MANAGER.isRunning()),
                 entity.connection.netManager,
                 NetworkDirection.PLAY_TO_CLIENT);
+    }
+
+    @SubscribeEvent
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        ServerPlayerEntity entity = (ServerPlayerEntity) event.getPlayer();
+
+        if (TRACE_MANAGER.isRunning())
+            TRACE_MANAGER.disconnectStreamer(entity.getName().getString());
     }
 
 }
