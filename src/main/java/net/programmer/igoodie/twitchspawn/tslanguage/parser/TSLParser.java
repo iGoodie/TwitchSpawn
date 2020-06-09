@@ -105,7 +105,7 @@ public class TSLParser {
             if (e.getCause() instanceof TSLSyntaxError)
                 throw (TSLSyntaxError) e.getCause();
             e.getCause().printStackTrace();
-            throw new InternalError("Constructor threw unexpected Throwable: " + e.getCause().getClass().getSimpleName());
+            throw new InternalError("Constructor threw unexpected Throwable: ", e.getCause());
 
         } catch (ClassCastException e) {
             throw new InternalError("Cannot cast " + actionClass.getSimpleName() + " to " + TSLAction.class.getSimpleName());

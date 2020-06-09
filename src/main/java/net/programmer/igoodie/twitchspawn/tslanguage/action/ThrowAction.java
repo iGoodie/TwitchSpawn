@@ -35,7 +35,7 @@ public class ThrowAction extends ItemSelectiveAction {
             if (inventoryType == null) {
                 player.inventory.dropAllItems();
             } else {
-                NonNullList<ItemStack> inventory = getInventory(player, inventoryType);
+                List<ItemStack> inventory = getInventory(player, inventoryType);
                 for (int i = 0; i < inventory.size(); i++) {
                     ItemStack itemStack = inventory.get(i);
                     if (!itemStack.isEmpty()) {

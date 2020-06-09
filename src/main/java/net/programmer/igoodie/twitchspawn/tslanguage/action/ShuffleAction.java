@@ -96,7 +96,7 @@ public class ShuffleAction extends ItemSelectiveAction {
                 "/particle endRod ~ ~ ~ 2 2 2 0.1 800");
     }
 
-    private void shuffle(NonNullList<ItemStack> inventory, int firstIndex, int lastIndex) {
+    private void shuffle(List<ItemStack> inventory, int firstIndex, int lastIndex) {
         for (int i = lastIndex; i > firstIndex; i--) {
             int randomIndex = (int) (Math.random() * (i - firstIndex + 1)) + firstIndex;
 

@@ -129,7 +129,7 @@ public class ChangeAction extends ItemSelectiveAction {
                 "/particle enchantmenttable ~ ~ ~ 2 2 2 0.1 400");
     }
 
-    private void setAll(NonNullList<ItemStack> inventory, ItemStack itemStack) {
+    private void setAll(List<ItemStack> inventory, ItemStack itemStack) {
         for (int i = 0; i < inventory.size(); i++) {
             inventory.set(i, itemStack.copy());
         }
