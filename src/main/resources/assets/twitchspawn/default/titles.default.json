@@ -97,6 +97,16 @@
       "color": "white"
     }
   ],
+  "twitch channel point reward": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " redeemed an award!",
+      "color": "white"
+    }
+  ],
   "youtube subscription": [
     "Incoming youtube subscription"
   ],

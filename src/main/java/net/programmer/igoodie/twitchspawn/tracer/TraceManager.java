@@ -15,9 +15,13 @@ public class TraceManager {
 
     private boolean running;
     private Map<String, Socket> sockets; // mc_nick.lowercase() -> sio_socket
+    private List<WebSocketTracer> webSocketTracers;
 
     public TraceManager() {
         this.sockets = new HashMap<>();
+
+        this.webSocketTracers = new LinkedList<>();
+        this.webSocketTracers.add(new TwitchPubSubTracer(this));
     }
 
     public boolean isRunning() {
@@ -30,6 +34,9 @@ public class TraceManager {
         if (isRunning()) throw new IllegalStateException("Tracer is already started");
 
         running = true;
+
+        // Start Websocket tracers
+        webSocketTracers.forEach(WebSocketTracer::start);
 
         // Connect online players from credentials.toml
         for (CredentialsConfig.Streamer streamer : ConfigManager.CREDENTIALS.streamers) {
@@ -52,6 +59,9 @@ public class TraceManager {
         if (!isRunning()) throw new IllegalStateException("Tracer is already stopped");
 
         running = false;
+
+        // Stop Websocket tracers
+        webSocketTracers.forEach(WebSocketTracer::stop);
 
         // Disconnect each alive socket and reset the map
         for (Socket socket : sockets.values()) {

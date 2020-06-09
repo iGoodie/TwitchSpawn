@@ -45,7 +45,10 @@ public enum TSLPredicateProperty {
             "raiderCount",
             "raiders", "raider_count"
     ),
-    ;
+    REWARD_TITLE(
+            "rewardTitle",
+            "title", "reward_title"
+    );
 
     public static boolean exists(String tslField) {
         for (TSLPredicateProperty property : values()) {

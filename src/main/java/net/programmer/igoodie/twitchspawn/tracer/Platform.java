@@ -8,7 +8,10 @@ public enum Platform {
     STREAMELEMENTS(
             "StreamElements",
             "https://realtime.streamelements.com"),
-    ;
+    TWITCH_PUBSUB(
+            "Twitch PubSub",
+            "wss://pubsub-edge.twitch.tv"
+    );
 
     public static Platform withName(String name) {
         for (Platform platform : values()) {

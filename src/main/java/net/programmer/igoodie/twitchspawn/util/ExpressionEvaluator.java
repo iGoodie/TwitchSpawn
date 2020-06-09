@@ -47,6 +47,9 @@ public class ExpressionEvaluator {
         if (expression.equals("message"))
             return args.message;
 
+        if (expression.equals("title"))
+            return args.rewardTitle;
+
         if (expression.equals("streamer"))
             return args.streamerNickname;
 

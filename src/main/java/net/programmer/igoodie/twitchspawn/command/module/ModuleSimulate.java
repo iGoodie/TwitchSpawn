@@ -96,6 +96,7 @@ public class ModuleSimulate extends CommandModule {
                 simulatedEvent.viewerCount = nbt.getInteger("viewers");
                 simulatedEvent.subscriptionTier = nbt.hasKey("tier", 3) ? nbt.getInteger("tier") : -1;
                 simulatedEvent.gifted = nbt.getBoolean("gifted");
+                simulatedEvent.rewardTitle = nbt.getString("title");
             }
 
             ConfigManager.RULESET_COLLECTION.handleEvent(simulatedEvent);
