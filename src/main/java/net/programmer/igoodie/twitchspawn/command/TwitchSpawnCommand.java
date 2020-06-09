@@ -15,7 +15,7 @@ import java.util.*;
 
 public class TwitchSpawnCommand extends CommandBase {
 
-    Map<String, CommandModule> modules;
+    public Map<String, CommandModule> modules;
 
     public TwitchSpawnCommand() {
         this.modules = new HashMap<>();
@@ -28,6 +28,7 @@ public class TwitchSpawnCommand extends CommandBase {
         registerModule(new ModuleSimulate());
         registerModule(new ModuleTest());
         registerModule(new ModuleExecute());
+        registerModule(new ModuleQuickRefresh(this));
     }
 
     private void registerModule(CommandModule module) {
