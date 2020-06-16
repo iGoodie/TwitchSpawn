@@ -86,7 +86,7 @@ public class TwitchPubSubTracer extends WebSocketTracer {
             return authentication;
 
         } catch (JSONException e) {
-            throw new InternalError("TODO: Error message");
+            throw new InternalError("TODO: Error message", e);
         }
     }
 
@@ -97,13 +97,13 @@ public class TwitchPubSubTracer extends WebSocketTracer {
             return ping;
 
         } catch (JSONException e) {
-            throw new InternalError("TODO: Error message");
+            throw new InternalError("TODO: Error message", e);
         }
     }
 
     protected String nicknameToIDSync(String nickname) {
         try {
-            URL url = new URL("https://decapi.me/twitch/id/" + nickname);
+            URL url = new URL("http://decapi.me/twitch/id/" + nickname);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
@@ -116,7 +116,7 @@ public class TwitchPubSubTracer extends WebSocketTracer {
 
         } catch (IOException e) {
             // TODO: Unknown username too :p
-            throw new InternalError("TODO: Error message");
+            throw new InternalError("TODO: Error message", e);
         }
     }
 
