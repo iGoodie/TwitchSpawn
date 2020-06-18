@@ -1,9 +1,12 @@
-package net.programmer.igoodie.twitchspawn.tracer;
+package net.programmer.igoodie.twitchspawn.tracer.socket;
 
 import io.socket.client.Socket;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
+import net.programmer.igoodie.twitchspawn.tracer.Platform;
+import net.programmer.igoodie.twitchspawn.tracer.SocketIOTracer;
+import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;

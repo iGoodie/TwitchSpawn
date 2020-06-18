@@ -2,6 +2,7 @@ package net.programmer.igoodie.twitchspawn.tracer;
 
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
 import okhttp3.*;
+import okio.ByteString;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,12 +12,12 @@ public abstract class WebSocketTracer {
 
     protected TraceManager manager;
     protected Platform api;
-    protected List<OkHttpClient> clients;
+    protected List<WebSocket> sockets;
 
     public WebSocketTracer(Platform api, TraceManager manager) {
         this.manager = manager;
         this.api = api;
-        this.clients = new LinkedList<>();
+        this.sockets = new LinkedList<>();
     }
 
     public abstract void start();
@@ -36,6 +37,11 @@ public abstract class WebSocketTracer {
             }
 
             @Override
+            public void onMessage(WebSocket webSocket, ByteString bytes) {
+                WebSocketTracer.this.onMessage(streamer, webSocket, bytes.toString());
+            }
+
+            @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
                 WebSocketTracer.this.onClosing(streamer, webSocket, code, reason);
             }
@@ -47,7 +53,7 @@ public abstract class WebSocketTracer {
         };
     }
 
-    protected OkHttpClient startClient(WebSocketListener socket) {
+    protected WebSocket startClient(WebSocketListener listener) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .readTimeout(0, TimeUnit.MILLISECONDS)
                 .build();
@@ -56,9 +62,7 @@ public abstract class WebSocketTracer {
                 .url(api.url)
                 .build();
 
-        client.newWebSocket(connectRequest, socket);
-
-        return client;
+        return client.newWebSocket(connectRequest, listener);
     }
 
     protected void onOpen(CredentialsConfig.Streamer streamer, WebSocket socket, Response response) {}

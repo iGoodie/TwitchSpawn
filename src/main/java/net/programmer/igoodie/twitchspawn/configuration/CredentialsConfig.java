@@ -155,7 +155,8 @@ public class CredentialsConfig {
             if (streamer.twitchNick == null
                     || streamer.minecraftNick == null
                     || streamer.platform == null
-                    || streamer.token == null) {
+                    || streamer.token == null
+                    || streamer.tokenChat == null) {
                 TwitchSpawn.LOGGER.info("Correcting {}: Streamer on index {} is missing some fields -> {}", path, i, element);
                 streamer = Streamer.from(streamer, new Streamer());
                 streamers.set(i, toConfig(converter, streamer));
@@ -197,6 +198,7 @@ public class CredentialsConfig {
             created.twitchNick = (other.twitchNick != null ? other : defaultStreamer).twitchNick;
             created.platform = (other.platform != null ? other : defaultStreamer).platform;
             created.token = (other.token != null ? other : defaultStreamer).token;
+            created.tokenChat = (other.tokenChat != null ? other : defaultStreamer).tokenChat;
             return created;
         }
 
@@ -204,6 +206,7 @@ public class CredentialsConfig {
         public String twitchNick = "TWITCH_NICK";
         public Platform platform = Platform.STREAMLABS;
         public String token = "YOUR_TOKEN_HERE";
+        public String tokenChat = "YOUR_CHAT_TOKEN_HERE";
 
         public Streamer() {}
 
@@ -218,7 +221,9 @@ public class CredentialsConfig {
                     .append("minecraftNick=").append(minecraftNick).append(",")
                     .append("twitchNick=").append(twitchNick).append(",")
                     .append("platform=").append(platform).append(",")
-                    .append("token=").append(token != null ? token.replaceAll("\\w", "#") : null).append("}")
+                    .append("token=").append(token != null ? token.replaceAll("\\w", "#") : null)
+                    .append("tokenChat=").append(tokenChat != null ? tokenChat.replaceAll("\\w", "#") : null)
+                    .append("}")
                     .toString();
         }
     }

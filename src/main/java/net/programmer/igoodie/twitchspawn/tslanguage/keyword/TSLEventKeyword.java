@@ -46,6 +46,10 @@ public enum TSLEventKeyword {
             "Twitch Channel Point Reward",
             new TSLEventPair("channelPointReward", "twitch")
     ),
+    TWITCH_CHAT_MESSAGE(
+            "Twitch Chat Message",
+            new TSLEventPair("chat", "twitch")
+    ),
     YOUTUBE_SUBSCRIPTION(
             "Youtube Subscription",
             new TSLEventPair("follow", "youtube"),

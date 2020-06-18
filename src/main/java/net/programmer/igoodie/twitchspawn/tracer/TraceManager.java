@@ -9,6 +9,10 @@ import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
+import net.programmer.igoodie.twitchspawn.tracer.chat.TwitchChatTracer;
+import net.programmer.igoodie.twitchspawn.tracer.socket.StreamElementsSocketTracer;
+import net.programmer.igoodie.twitchspawn.tracer.socket.StreamlabsSocketTracer;
+import net.programmer.igoodie.twitchspawn.tracer.socket.TwitchPubSubTracer;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,9 +27,7 @@ public class TraceManager {
 
     public TraceManager() {
         this.sockets = new HashMap<>();
-
         this.webSocketTracers = new LinkedList<>();
-        this.webSocketTracers.add(new TwitchPubSubTracer(this));
     }
 
     public boolean isRunning() {
@@ -42,6 +44,8 @@ public class TraceManager {
         running = true;
 
         // Start Websocket tracers
+        this.webSocketTracers.add(new TwitchPubSubTracer(this)); // TODO: Extract to a worker, not master
+        this.webSocketTracers.add(new TwitchChatTracer(this)); // TODO: Extract to a worker, not master
         webSocketTracers.forEach(WebSocketTracer::start);
 
         // Connect online players from credentials.toml
