@@ -67,8 +67,9 @@ public class TraceManager {
 
         running = false;
 
-        // Stop Websocket tracers
+        // Stop Websocket tracers and reset the list
         webSocketTracers.forEach(WebSocketTracer::stop);
+        webSocketTracers.clear();
 
         // Disconnect each alive socket and reset the map
         for (Socket socket : sockets.values()) {
