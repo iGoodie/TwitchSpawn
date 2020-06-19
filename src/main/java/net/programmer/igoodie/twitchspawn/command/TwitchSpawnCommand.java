@@ -27,7 +27,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLTokenizer;
-import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
+import net.programmer.igoodie.twitchspawn.util.EventQueue;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -313,7 +313,7 @@ public class TwitchSpawnCommand {
 
         ServerPlayerEntity streamerPlayer = context.getSource().asPlayer();
         TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNick);
-        TimeTaskQueue queue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNick);
+        EventQueue queue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNick);
 
         Collection<TSLEvent> events = ruleset.getEvents();
         Iterator<TSLEvent> eventIterator = events.iterator();

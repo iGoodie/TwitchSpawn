@@ -6,7 +6,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
-import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
+import net.programmer.igoodie.twitchspawn.util.EventQueue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,7 @@ public class TSLRulesetCollection {
 
     private TSLRuleset defaultRuleset;
     private Map<String, TSLRuleset> streamerRulesets; // Maps lowercase nicks to TSLTree
-    private Map<String, TimeTaskQueue> eventQueues; // Maps lowercase nicks to TimeTaskQueue
+    private Map<String, EventQueue> eventQueues; // Maps lowercase nicks to TimeTaskQueue
 
     public TSLRulesetCollection(TSLRuleset defaultTree, List<TSLRuleset> streamerTrees) {
         if (defaultTree == null)
@@ -68,13 +68,8 @@ public class TSLRulesetCollection {
         }
 
         // Queue incoming event arguments
-        TimeTaskQueue streamerQueue = getQueue(args.streamerNickname);
-        streamerQueue.queue(() -> TwitchSpawn.SERVER.execute(() -> {
-            boolean performed = eventNode.process(args);
-            if (performed && cooldownBucket != null) {
-                cooldownBucket.consume(args.actorNickname);
-            }
-        }));
+        EventQueue eventQueue = getQueue(args.streamerNickname);
+        eventQueue.queue(eventNode, args, cooldownBucket);
         TwitchSpawn.LOGGER.info("Queued handler for {} event.", eventKeyword);
         return true;
     }
@@ -97,11 +92,11 @@ public class TSLRulesetCollection {
         return streamerRulesets.get(streamerNick.toLowerCase());
     }
 
-    public TimeTaskQueue getQueue(String streamerNick) {
-        TimeTaskQueue queue = eventQueues.get(streamerNick.toLowerCase());
+    public EventQueue getQueue(String streamerNick) {
+        EventQueue queue = eventQueues.get(streamerNick.toLowerCase());
 
         if (queue == null) { // Lazy init
-            queue = new TimeTaskQueue(ConfigManager.PREFERENCES.notificationDelay);
+            queue = new EventQueue(ConfigManager.PREFERENCES.notificationDelay);
             eventQueues.put(streamerNick.toLowerCase(), queue);
         }
 
@@ -109,7 +104,7 @@ public class TSLRulesetCollection {
     }
 
     public void clearQueue() {
-        eventQueues.values().forEach(TimeTaskQueue::clearAll);
+        eventQueues.values().forEach(EventQueue::reset);
     }
 
 }
