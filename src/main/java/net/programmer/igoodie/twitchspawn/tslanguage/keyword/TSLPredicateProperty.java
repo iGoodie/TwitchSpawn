@@ -48,6 +48,10 @@ public enum TSLPredicateProperty {
     REWARD_TITLE(
             "rewardTitle",
             "title", "reward_title"
+    ),
+    CHAT_BADGES(
+            "chatBadges",
+            "badges", "chat_badges"
     );
 
     public static boolean exists(String tslField) {
