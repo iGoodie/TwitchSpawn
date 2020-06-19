@@ -319,6 +319,21 @@ public abstract class TSLAction implements TSLFlowNode {
             public MinecraftServer getServer() {
                 return sourceCommandSender.getServer();
             }
+
+            @Override
+            public boolean equals(Object obj) {
+                return sourceCommandSender.equals(obj);
+            }
+
+            @Override
+            public int hashCode() {
+                return sourceCommandSender.hashCode();
+            }
+
+            @Override
+            public String toString() {
+                return sourceCommandSender.toString();
+            }
         };
     }
 
