@@ -16,7 +16,8 @@ public class StatusChangedPacket {
         return new StatusChangedPacket(buffer.readBoolean());
     }
 
-    public static void handle(final StatusChangedPacket packet, Supplier<NetworkEvent.Context> context) {
+    public static void handle(final StatusChangedPacket packet,
+                              Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             StatusIndicatorOverlay.setRunning(packet.status);
         });

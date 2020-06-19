@@ -21,6 +21,7 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkDirection;
+import net.programmer.igoodie.twitchspawn.client.gui.GlobalChatCooldownOverlay;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 import net.programmer.igoodie.twitchspawn.command.RulesetNameArgumentType;
 import net.programmer.igoodie.twitchspawn.command.StreamerArgumentType;
@@ -68,6 +69,7 @@ public class TwitchSpawn {
 
     private void clientSetup(final FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(StatusIndicatorOverlay.class);
+        MinecraftForge.EVENT_BUS.register(GlobalChatCooldownOverlay.class);
     }
 
     private void dedicatedServerSetup(final FMLDedicatedServerSetupEvent event) {}

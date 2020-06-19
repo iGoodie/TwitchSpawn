@@ -1,6 +1,10 @@
 package net.programmer.igoodie.twitchspawn.util;
 
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.network.NetworkManager;
+import net.programmer.igoodie.twitchspawn.network.packet.GlobalChatCooldownPacket;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 
@@ -37,7 +41,7 @@ public class EventQueue {
 
                     frozenUntil = now + cooldown;
 
-                } catch(Throwable e) {
+                } catch (Throwable e) {
                     discardedEvents++;
                     // TODO: "Event failed HUD"
                 }
@@ -48,8 +52,21 @@ public class EventQueue {
 
     public void queue(TSLEvent eventNode, EventArguments args, CooldownBucket cooldownBucket) {
         if (eventNode.willPerform(args)) {
-            if (cooldownBucket != null)
+            if (cooldownBucket != null) {
                 cooldownBucket.consume(args.actorNickname);
+
+                ServerPlayerEntity playerEntity = TwitchSpawn.SERVER
+                        .getPlayerList()
+                        .getPlayerByUsername(args.streamerNickname);
+
+                if (playerEntity != null) {
+                    NetworkManager.CHANNEL.sendTo(
+                            new GlobalChatCooldownPacket(cooldownBucket.getGlobalCooldownTimestamp()),
+                            playerEntity.connection.netManager,
+                            NetworkDirection.PLAY_TO_CLIENT
+                    );
+                }
+            }
         }
         tasks.add(new TimerTask() {
             @Override
