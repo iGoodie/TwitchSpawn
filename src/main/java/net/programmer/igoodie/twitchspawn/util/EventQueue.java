@@ -41,6 +41,10 @@ public class EventQueue {
     }
 
     public void queue(TSLEvent eventNode, EventArguments args, CooldownBucket cooldownBucket) {
+        if (eventNode.willPerform(args)) {
+            if (cooldownBucket != null)
+                cooldownBucket.consume(args.actorNickname);
+        }
         tasks.add(new TimerTask() {
             @Override
             public void run() {
@@ -52,9 +56,6 @@ public class EventQueue {
                         discardedEvents++;
                         return;
                     }
-
-                    if (cooldownBucket != null)
-                        cooldownBucket.consume(args.actorNickname);
 
                     frozenUntil = now + cooldown;
                     succeededEvents++;

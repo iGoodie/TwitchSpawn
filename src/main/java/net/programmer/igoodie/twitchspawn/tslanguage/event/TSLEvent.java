@@ -67,5 +67,16 @@ public class TSLEvent implements TSLFlowNode {
         return success;
     }
 
+    @Override
+    public boolean willPerform(EventArguments args) {
+        if (!args.eventName.equalsIgnoreCase(this.name)) return false;
+
+        for (TSLFlowNode nextNode : nextNodes) {
+            if (nextNode.willPerform(args))
+                return true;
+        }
+
+        return false;
+    }
 }
 

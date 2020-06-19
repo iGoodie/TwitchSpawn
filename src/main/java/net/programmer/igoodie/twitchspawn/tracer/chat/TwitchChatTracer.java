@@ -32,7 +32,9 @@ public class TwitchChatTracer extends WebSocketTracer {
         for (CredentialsConfig.Streamer streamer : ConfigManager.CREDENTIALS.streamers) {
             WebSocketListener socket = createSocket(streamer);
             this.sockets.add(startClient(socket));
-            this.cooldownBuckets.put(streamer.twitchNick, new CooldownBucket());
+            this.cooldownBuckets.put(streamer.twitchNick,
+                    new CooldownBucket(ConfigManager.PREFERENCES.chatGlobalCooldown,
+                            ConfigManager.PREFERENCES.chatIndividualCooldown));
         }
     }
 
