@@ -15,6 +15,10 @@ public enum TSLEventKeyword {
             new TSLEventPair("tip", "twitch"),
             new TSLEventPair("tip", "youtube")
     ),
+    LOYALTY_POINT_REDEMPTION(
+            "Royalty Point Redemption",
+            new TSLEventPair("redemption", "")
+    ),
     TWITCH_FOLLOW(
             "Twitch Follow",
             new TSLEventPair("follow", "twitch")
