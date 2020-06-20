@@ -40,6 +40,16 @@ public class ExecuteAction extends TSLAction {
                         .getCommandManager()
                         .handleCommand(source, replaceExpressions(command, args));
 
+                if (result <= 0) { // Wohooo we knew iGoodie liked hacky solutions. ( ? :/ )
+                    // If it yielded an error, and not worked as expected
+                    // Then turn on the feedback, and run it again! Brilliant! What could go wrong? :))))))
+                    CommandSource newSource = player.getCommandSource()
+                            .withPermissionLevel(9999);
+                    TwitchSpawn.SERVER
+                            .getCommandManager()
+                            .handleCommand(newSource, replaceExpressions(command, args));
+                }
+
                 TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, replaceExpressions(command, args));
             });
         }
