@@ -37,43 +37,45 @@ import java.util.stream.Stream;
 
 public class TwitchSpawnCommand {
 
-    public static final String COMMAND_NAME = "twitchspawn";
+    public static final String[] COMMAND_NAMES = {"twitchspawn", "ts"};
 
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralArgumentBuilder<CommandSource> root = Commands.literal(COMMAND_NAME);
+        for (String commandName : COMMAND_NAMES) {
+            LiteralArgumentBuilder<CommandSource> root = Commands.literal(commandName);
 
-        root.then(Commands.literal("status").executes(TwitchSpawnCommand::statusModule));
-        root.then(Commands.literal("start").executes(TwitchSpawnCommand::startModule));
-        root.then(Commands.literal("stop").executes(TwitchSpawnCommand::stopModule));
+            root.then(Commands.literal("status").executes(TwitchSpawnCommand::statusModule));
+            root.then(Commands.literal("start").executes(TwitchSpawnCommand::startModule));
+            root.then(Commands.literal("stop").executes(TwitchSpawnCommand::stopModule));
 
-        root.then(Commands.literal("reloadcfg").executes(TwitchSpawnCommand::reloadModule));
+            root.then(Commands.literal("reloadcfg").executes(TwitchSpawnCommand::reloadModule));
 
-        root.then(Commands.literal("quickrefresh").executes(TwitchSpawnCommand::quickRefreshModule));
+            root.then(Commands.literal("quickrefresh").executes(TwitchSpawnCommand::quickRefreshModule));
 
-        root.then(Commands.literal("rules")
-                .executes(context -> rulesModule(context, null))
-                .then(CommandArguments.rulesetName("ruleset_name")
-                        .executes(context -> rulesModule(context, RulesetNameArgumentType.getRulesetName(context, "ruleset_name"))))
-        );
+            root.then(Commands.literal("rules")
+                    .executes(context -> rulesModule(context, null))
+                    .then(CommandArguments.rulesetName("ruleset_name")
+                            .executes(context -> rulesModule(context, RulesetNameArgumentType.getRulesetName(context, "ruleset_name"))))
+            );
 
-        root.then(Commands.literal("simulate")
-                .then(CommandArguments.nbtCompound("event_simulation_json")
-                        .executes(context -> simulateModule(context, null))
-                        .then(CommandArguments.streamer("streamer_nick")
-                                .executes(context -> simulateModule(context, StreamerArgumentType.getStreamer(context, "streamer_nick")))))
-        );
+            root.then(Commands.literal("simulate")
+                    .then(CommandArguments.nbtCompound("event_simulation_json")
+                            .executes(context -> simulateModule(context, null))
+                            .then(CommandArguments.streamer("streamer_nick")
+                                    .executes(context -> simulateModule(context, StreamerArgumentType.getStreamer(context, "streamer_nick")))))
+            );
 
-        root.then(Commands.literal("test")
-                .then(CommandArguments.streamer("streamer_nick")
-                        .executes(context -> testModule(context, StreamerArgumentType.getStreamer(context, "streamer_nick"))))
-        );
+            root.then(Commands.literal("test")
+                    .then(CommandArguments.streamer("streamer_nick")
+                            .executes(context -> testModule(context, StreamerArgumentType.getStreamer(context, "streamer_nick"))))
+            );
 
-        root.then(Commands.literal("execute")
-                .then(Commands.argument("tsl_action", MessageArgument.message())
-                        .executes(TwitchSpawnCommand::executeModule))
-        );
+            root.then(Commands.literal("execute")
+                    .then(Commands.argument("tsl_action", MessageArgument.message())
+                            .executes(TwitchSpawnCommand::executeModule))
+            );
 
-        dispatcher.register(root);
+            dispatcher.register(root);
+        }
     }
 
     /* ------------------------------------------------------------ */
