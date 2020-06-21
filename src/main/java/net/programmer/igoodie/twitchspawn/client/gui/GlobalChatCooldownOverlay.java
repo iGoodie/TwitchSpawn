@@ -8,6 +8,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 
 public class GlobalChatCooldownOverlay {
@@ -43,9 +45,21 @@ public class GlobalChatCooldownOverlay {
             int minutes = Math.min(99, Math.max(0, (int) (cooldown / 60)));
             int seconds = Math.min(59, Math.max(0, (int) (cooldown % 60)));
 
-            int x = 20;
-            int y = 30;
             float scale = 0.5f;
+            int x, y;
+
+            if (ConfigManager.PREFERENCES.indicatorDisplay == PreferencesConfig.IndicatorDisplay.ENABLED) {
+                x = 20;
+                y = 30;
+
+            } else if (ConfigManager.PREFERENCES.indicatorDisplay == PreferencesConfig.IndicatorDisplay.CIRCLE_ONLY) {
+                x = 40;
+                y = 6;
+
+            } else {
+                x = 10;
+                y = 5;
+            }
 
             GlStateManager.pushMatrix();
             GlStateManager.scalef(scale, scale, scale);

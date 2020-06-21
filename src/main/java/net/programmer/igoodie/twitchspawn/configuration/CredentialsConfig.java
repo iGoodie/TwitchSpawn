@@ -206,7 +206,7 @@ public class CredentialsConfig {
         public String twitchNick = "TWITCH_NICK";
         public Platform platform = Platform.STREAMLABS;
         public String token = "YOUR_TOKEN_HERE";
-        public String tokenChat = "YOUR_CHAT_TOKEN_HERE";
+        public String tokenChat = "YOUR_CHAT_TOKEN_HERE - Can be generated from https://twitchapps.com/tmi/";
 
         public Streamer() {}
 

@@ -32,9 +32,9 @@ autoStart = "disabled"
 # Global cooldown before Twitch Chat Message event can be triggered.
 # Unit of it is milliseconds (1000 milliseconds = 1 second)
 # Min: 0
-chatGlobalCooldown = 1000
+chatGlobalCooldown = 60000
 
 # Individual cooldown before an individual viewer can trigger a new Twitch Chat Message event
 # Unit of it is milliseconds (1000 milliseconds = 1 second)
 # Min: 0
-chatIndividualCooldown = 1000
+chatIndividualCooldown = 120000
