@@ -257,7 +257,7 @@ public class TwitchSpawnCommand {
 
             } else {
                 simulatedEvent.actorNickname = nbt.getString("actor").isEmpty() ? "SimulatorDude" : nbt.getString("actor");
-                simulatedEvent.message = "Simulating a message";
+                simulatedEvent.message = nbt.contains("message") ? nbt.getString("message") : "Simulating a message";
                 simulatedEvent.donationAmount = nbt.getDouble("amount");
                 simulatedEvent.donationCurrency = nbt.getString("currency");
                 simulatedEvent.subscriptionMonths = nbt.getInt("months");
