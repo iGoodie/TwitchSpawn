@@ -88,7 +88,7 @@ public class ModuleSimulate extends CommandModule {
 
             } else {
                 simulatedEvent.actorNickname = nbt.getString("actor").isEmpty() ? "SimulatorDude" : nbt.getString("actor");
-                simulatedEvent.message = "Simulating a message";
+                simulatedEvent.message = nbt.hasKey("message") ? nbt.getString("message") : "Simulating a message";
                 simulatedEvent.donationAmount = nbt.getDouble("amount");
                 simulatedEvent.donationCurrency = nbt.getString("currency");
                 simulatedEvent.subscriptionMonths = nbt.getInteger("months");
