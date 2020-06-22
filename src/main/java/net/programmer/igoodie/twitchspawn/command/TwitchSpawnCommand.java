@@ -46,7 +46,7 @@ public class TwitchSpawnCommand extends CommandBase {
     @Nonnull
     @Override
     public String getUsage(@Nonnull ICommandSender sender) {
-        return "/twitcspawn " + String.join("|", modules.keySet());
+        return "/twitchspawn " + String.join("|", modules.keySet());
     }
 
     @Override

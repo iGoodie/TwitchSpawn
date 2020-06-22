@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.programmer.igoodie.twitchspawn.client.gui.GlobalChatCooldownOverlay;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 import net.programmer.igoodie.twitchspawn.command.ItemDataCommand;
+import net.programmer.igoodie.twitchspawn.command.TSCommand;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
@@ -75,6 +76,7 @@ public class TwitchSpawn {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new TwitchSpawnCommand());
+        event.registerServerCommand(new TSCommand());
         event.registerServerCommand(new ItemDataCommand());
 
         if (ConfigManager.PREFERENCES.autoStart == PreferencesConfig.AutoStartEnum.ENABLED) {
