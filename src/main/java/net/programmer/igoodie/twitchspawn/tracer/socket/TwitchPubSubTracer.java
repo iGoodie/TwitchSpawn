@@ -1,8 +1,11 @@
-package net.programmer.igoodie.twitchspawn.tracer;
+package net.programmer.igoodie.twitchspawn.tracer.socket;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
+import net.programmer.igoodie.twitchspawn.tracer.Platform;
+import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
+import net.programmer.igoodie.twitchspawn.tracer.WebSocketTracer;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -31,15 +34,16 @@ public class TwitchPubSubTracer extends WebSocketTracer {
     public void start() {
         for (CredentialsConfig.Streamer streamer : ConfigManager.CREDENTIALS.streamers) {
             WebSocketListener socket = createSocket(streamer);
-            this.clients.add(startClient(socket));
+            this.sockets.add(startClient(socket));
         }
     }
 
     @Override
     public void stop() {
-        for (OkHttpClient client : this.clients) {
-            // TODO: Test shutdown for async issues
-            client.dispatcher().executorService().shutdown();
+        for (WebSocket socket : this.sockets) {
+            if (!socket.close(1000, null)) {
+                socket.cancel();
+            }
         }
 
         pingSchedulers.forEach(timer -> {

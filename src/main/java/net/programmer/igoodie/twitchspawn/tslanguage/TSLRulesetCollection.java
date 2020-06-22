@@ -6,6 +6,7 @@ import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
+import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
 
 import java.util.HashMap;
@@ -33,7 +34,11 @@ public class TSLRulesetCollection {
         }
     }
 
-    public void handleEvent(EventArguments args) {
+    public boolean handleEvent(EventArguments args) {
+        return handleEvent(args, null);
+    }
+
+    public boolean handleEvent(EventArguments args, CooldownBucket cooldownBucket) {
         TwitchSpawn.LOGGER.info("Handling (for {}) arguments {}", args.streamerNickname, args);
 
         // Fetch event pair and keyword
@@ -43,7 +48,7 @@ public class TSLRulesetCollection {
         // Event pair is not known by TSL
         if (eventKeyword == null) {
             TwitchSpawn.LOGGER.info("Event pair not known by TSL -> {}. Skipped handling", eventPair);
-            return;
+            return false;
         }
 
         // Fetch associated Ruleset
@@ -60,13 +65,18 @@ public class TSLRulesetCollection {
         // No handler was bound, skip handling
         if (eventNode == null) {
             TwitchSpawn.LOGGER.info("No rule was found for {}. Skipped handling", eventKeyword);
-            return;
+            return false;
         }
 
         // Queue incoming event arguments
-        getQueue(args.streamerNickname).queue(() ->
-                TwitchSpawn.SERVER.addScheduledTask(() -> eventNode.process(args)));
+        getQueue(args.streamerNickname).queue(() -> TwitchSpawn.SERVER.addScheduledTask(() -> {
+            boolean performed = eventNode.process(args);
+            if (performed && cooldownBucket != null) {
+                cooldownBucket.consume(args.actorNickname);
+            }
+        }));
         TwitchSpawn.LOGGER.info("Queued handler for {} event.", eventKeyword);
+        return true;
     }
 
     public boolean hasStreamer(String streamerNick) {

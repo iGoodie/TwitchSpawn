@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="runServer" type="Application" factoryName="Application" singleton="false">
+  <configuration default="false" name="runServer" type="Application" factoryName="Application" singleton="true">
     <envs>
       <env name="MOD_CLASSES" value="examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\resources\main;examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\classes\java\main" />
       <env name="MCP_MAPPINGS" value="snapshot_20190719-1.14.3" />
