@@ -16,7 +16,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
-import net.programmer.igoodie.twitchspawn.util.TimeTaskQueue;
+import net.programmer.igoodie.twitchspawn.util.EventQueue;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -70,7 +70,7 @@ public class ModuleTest extends CommandModule {
 
         EntityPlayerMP streamerPlayer = (EntityPlayerMP) commandSender.getCommandSenderEntity();
         TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNickname);
-        TimeTaskQueue queue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNickname);
+        EventQueue queue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNickname);
 
         Collection<TSLEvent> events = ruleset.getEvents();
         Iterator<TSLEvent> eventIterator = events.iterator();
