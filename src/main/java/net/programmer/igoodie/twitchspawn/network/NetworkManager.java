@@ -4,6 +4,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.client.gui.GlobalChatCooldownOverlay;
+import net.programmer.igoodie.twitchspawn.network.packet.GlobalChatCooldownPacket;
 import net.programmer.igoodie.twitchspawn.network.packet.OsRunPacket;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
 
@@ -18,6 +20,9 @@ public class NetworkManager {
 
         CHANNEL.registerMessage(OsRunPacket.class,
                 OsRunPacket.Message.class, 1, Side.CLIENT);
+
+        CHANNEL.registerMessage(GlobalChatCooldownPacket.class,
+                GlobalChatCooldownPacket.Message.class, 2, Side.CLIENT);
     }
 
 }

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.programmer.igoodie.twitchspawn.client.gui.GlobalChatCooldownOverlay;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 import net.programmer.igoodie.twitchspawn.command.ItemDataCommand;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
@@ -37,6 +38,7 @@ public class TwitchSpawn {
     public void preInit(final FMLPreInitializationEvent event) {
         if (event.getSide() == Side.CLIENT) {
             MinecraftForge.EVENT_BUS.register(StatusIndicatorOverlay.class);
+            MinecraftForge.EVENT_BUS.register(GlobalChatCooldownOverlay.class);
         }
 
         NetworkManager.initialize();

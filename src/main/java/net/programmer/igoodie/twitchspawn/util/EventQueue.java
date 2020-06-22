@@ -1,6 +1,9 @@
 package net.programmer.igoodie.twitchspawn.util;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.network.NetworkManager;
+import net.programmer.igoodie.twitchspawn.network.packet.GlobalChatCooldownPacket;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 
@@ -48,8 +51,20 @@ public class EventQueue {
 
     public void queue(TSLEvent eventNode, EventArguments args, CooldownBucket cooldownBucket) {
         if (eventNode.willPerform(args)) {
-            if (cooldownBucket != null)
+            if (cooldownBucket != null) {
                 cooldownBucket.consume(args.actorNickname);
+
+                EntityPlayerMP playerEntity = TwitchSpawn.SERVER
+                        .getPlayerList()
+                        .getPlayerByUsername(args.streamerNickname);
+
+                if (playerEntity != null) {
+                    NetworkManager.CHANNEL.sendTo(
+                            new GlobalChatCooldownPacket.Message(cooldownBucket.getGlobalCooldownTimestamp()),
+                            playerEntity
+                    );
+                }
+            }
         }
         tasks.add(new TimerTask() {
             @Override

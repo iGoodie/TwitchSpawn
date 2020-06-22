@@ -77,7 +77,7 @@ public class TwitchChatTracer extends WebSocketTracer {
 
             } else if (TwitchChatMessage.matches(message)) {
                 TwitchChatMessage twitchChatMessage = new TwitchChatMessage(message);
-                onChatMessage(streamer, twitchChatMessage);
+                onChatMessage(streamer, twitchChatMessage, socket);
 
             } else if (message.contains(":tmi.twitch.tv NOTICE")) {
                 if (message.contains("Improperly formatted auth")) {
@@ -94,7 +94,7 @@ public class TwitchChatTracer extends WebSocketTracer {
         });
     }
 
-    protected void onChatMessage(CredentialsConfig.Streamer streamer, TwitchChatMessage twitchChatMessage) {
+    protected void onChatMessage(CredentialsConfig.Streamer streamer, TwitchChatMessage twitchChatMessage, WebSocket socket) {
         CooldownBucket cooldownBucket = cooldownBuckets.get(streamer.twitchNick);
 
         if (cooldownBucket.canConsume(twitchChatMessage.username)) {
@@ -109,6 +109,11 @@ public class TwitchChatTracer extends WebSocketTracer {
 
         } else {
             TwitchSpawn.LOGGER.info("Still has {} seconds global cooldown.", cooldownBucket.getGlobalCooldown());
+            if (!cooldownBucket.hasGlobalCooldown()) {
+                socket.send("PRIVMSG #" + streamer.twitchNick.toLowerCase()
+                        + String.format(" :@%s, you still have %s second(s), before you can trigger another action",
+                        twitchChatMessage.username, cooldownBucket.getCooldown(twitchChatMessage.username) / 1000));
+            }
         }
     }
 
