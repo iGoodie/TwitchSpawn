@@ -45,7 +45,7 @@ public class ExpressionEvaluator {
             return args.actorNickname;
 
         if (expression.equals("message"))
-            return args.message;
+            return JSONUtils.escape(args.message);
 
         if (expression.equals("title"))
             return args.rewardTitle;

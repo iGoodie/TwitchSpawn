@@ -30,11 +30,17 @@ public class EventQueue {
         tasks.add(new TimerTask() {
             @Override
             public void run() {
-                long now = System.currentTimeMillis();
+                try {
+                    long now = System.currentTimeMillis();
 
-                task.run();
+                    task.run();
 
-                frozenUntil = now + cooldown;
+                    frozenUntil = now + cooldown;
+
+                } catch (Throwable e) {
+                    discardedEvents++;
+                    // TODO: "Event failed HUD"
+                }
             }
         });
         updateTimer();
@@ -49,19 +55,22 @@ public class EventQueue {
             @Override
             public void run() {
                 TwitchSpawn.SERVER.addScheduledTask(() -> {
-                    long now = System.currentTimeMillis();
-                    boolean performed = eventNode.process(args);
+                    try {
+                        long now = System.currentTimeMillis();
+                        boolean performed = eventNode.process(args);
 
-                    if (!performed) {
+                        if (!performed) {
+                            discardedEvents++;
+                            return;
+                        }
+
+                        frozenUntil = now + cooldown;
+                        succeededEvents++;
+
+                    } catch (Throwable e) {
                         discardedEvents++;
-                        return;
+                        // TODO: "Event failed HUD"
                     }
-
-                    if (cooldownBucket != null)
-                        cooldownBucket.consume(args.actorNickname);
-
-                    frozenUntil = now + cooldown;
-                    succeededEvents++;
                 });
             }
         });
@@ -115,6 +124,7 @@ public class EventQueue {
     public void reset() {
         timer.cancel();
         timer.purge();
+        timer = new Timer();
         timerTicking = false;
         tasks.clear();
         this.frozenUntil = -1;
