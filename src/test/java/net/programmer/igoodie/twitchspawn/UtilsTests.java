@@ -86,13 +86,17 @@ public class UtilsTests {
     @Test
     @DisplayName("should escape JSON strings successfully.")
     public void jsonStringEscapistTest() throws JSONException {
-        String original = "!drop \"\"\"\"\"\"''''\\\\\\\\'\\\\\\\"\\";
+        // !drop " \" \ \\ \' \\' \\\
+        String original = "!drop \" \\\" \\ \\\\ \\' \\\\' \\\\\\";
         String escaped = JSONUtils.escape(original);
 
-        String jsonString = String.format("{text:\'%s\'}", escaped);
+        String jsonString = String.format("{text:'%s'}", escaped);
+        System.out.println("Original : " + original);
+        System.out.println("Formatted: " + escaped);
 
         JSONObject json = new JSONObject(jsonString);
         System.out.println("Parsed: " + json);
+        System.out.println("Text  : " + json.getString("text"));
     }
 
 }

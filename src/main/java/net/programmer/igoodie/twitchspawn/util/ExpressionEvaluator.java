@@ -44,6 +44,9 @@ public class ExpressionEvaluator {
         if (expression.equals("message"))
             return JSONUtils.escape(args.message);
 
+        if (expression.equals("message_unescaped"))
+            return args.message;
+
         if (expression.equals("title"))
             return args.rewardTitle;
 
