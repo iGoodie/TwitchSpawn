@@ -25,7 +25,7 @@ public class ExecuteAction extends TSLAction {
         if (!actionWords.stream().allMatch(word -> word.startsWith("/")))
             throw new TSLSyntaxError("Every command must start with '/' character");
 
-        this.commands = new LinkedList<>(words);
+        this.commands = new LinkedList<>(actionWords);
     }
 
     @Override

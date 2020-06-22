@@ -1,7 +1,10 @@
 package net.programmer.igoodie.twitchspawn;
 
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
+import net.programmer.igoodie.twitchspawn.util.JSONUtils;
 import net.programmer.igoodie.twitchspawn.util.PercentageRandomizer;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,6 +81,22 @@ public class UtilsTests {
         occurrences.forEach((item, occurred) -> {
             System.out.printf("%s = %d/100\n", item, occurred);
         });
+    }
+
+    @Test
+    @DisplayName("should escape JSON strings successfully.")
+    public void jsonStringEscapistTest() throws JSONException {
+        // !drop " \" \ \\ \' \\' \\\
+        String original = "!drop \" \\\" \\ \\\\ \\' \\\\' \\\\\\";
+        String escaped = JSONUtils.escape(original);
+
+        String jsonString = String.format("{text:'%s'}", escaped);
+        System.out.println("Original : " + original);
+        System.out.println("Formatted: " + escaped);
+
+        JSONObject json = new JSONObject(jsonString);
+        System.out.println("Parsed: " + json);
+        System.out.println("Text  : " + json.getString("text"));
     }
 
 }

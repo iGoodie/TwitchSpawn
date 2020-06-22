@@ -49,22 +49,12 @@ public class JSONUtils {
     public static String escape(String jsonString) {
         StringBuilder escapedString = new StringBuilder();
 
-        boolean isEscaping = false;
-
         for (char character : jsonString.toCharArray()) {
-            if (character == '\\' && !isEscaping) {
-                isEscaping = true;
-                escapedString.append(character);
-                continue;
-            }
-
-            if (character == '\'' || character == '\"' || character == '\\') {
-                if (!isEscaping)
-                    escapedString.append("\\");
+            if (character == '\'' || character == '"' || character == '\\') {
+                escapedString.append("\\");
             }
 
             escapedString.append(character);
-            isEscaping = false;
         }
 
         return escapedString.toString();
