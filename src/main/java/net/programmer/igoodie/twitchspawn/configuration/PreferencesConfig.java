@@ -59,6 +59,8 @@ public class PreferencesConfig {
             preferencesConfig.notificationPitch = config.get("notificationPitch");
             preferencesConfig.notificationDelay = config.getInt("notificationDelay");
             preferencesConfig.autoStart = getEnum(config, "autoStart", AutoStartEnum.class);
+            preferencesConfig.chatGlobalCooldown = config.get("chatGlobalCooldown");
+            preferencesConfig.chatIndividualCooldown = config.get("chatIndividualCooldown");
 
             config.close();
 
@@ -118,6 +120,8 @@ public class PreferencesConfig {
         });
         spec.defineInRange("notificationDelay", 5000, 0, Integer.MAX_VALUE);
         defineEnum(spec, "autoStart", AutoStartEnum.DISABLED, AutoStartEnum.class);
+        spec.defineInRange("chatGlobalCooldown", 1000, 0, Integer.MAX_VALUE);
+        spec.defineInRange("chatIndividualCooldown", 1000, 0, Integer.MAX_VALUE);
 
         return spec;
     }
@@ -170,5 +174,8 @@ public class PreferencesConfig {
     public int notificationDelay;
 
     public AutoStartEnum autoStart;
+
+    public int chatGlobalCooldown;
+    public int chatIndividualCooldown;
 
 }

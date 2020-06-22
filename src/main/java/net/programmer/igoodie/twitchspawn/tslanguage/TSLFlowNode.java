@@ -22,4 +22,11 @@ public interface TSLFlowNode {
      */
     boolean process(EventArguments args);
 
+    /**
+     * Checks whether given args will trigger an action or not
+     *
+     * @return True if given args will trigger an action to be performed
+     */
+    boolean willPerform(EventArguments args);
+
 }

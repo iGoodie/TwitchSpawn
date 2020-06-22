@@ -150,6 +150,11 @@ public abstract class TSLAction implements TSLFlowNode {
         return true;
     }
 
+    @Override
+    public boolean willPerform(EventArguments args) {
+        return true;
+    }
+
     protected String titleMessage(EventArguments args) {
         String title = this.isReflection()
                 ? ConfigManager.TITLES.getTextComponentRaw("reflection")

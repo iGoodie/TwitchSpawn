@@ -43,4 +43,10 @@ public class TSLPredicate implements TSLFlowNode {
         return false;
     }
 
+    @Override
+    public boolean willPerform(EventArguments args) {
+        Object value = TSLPredicateProperty.extractFrom(args, fieldAlias);
+        return comparator.compare(value) && next.willPerform(args);
+    }
+
 }

@@ -5,18 +5,15 @@ import java.util.Map;
 
 public class CooldownBucket {
 
-    // TODO: Extract to config
-    private static final int DEFAULT_COOLDOWN = 1 * 10 * 1000;
-
     public int globalCooldownMillis;
     public int cooldownMillis;
 
     public long globalCooldownUntil;
     public Map<String, Long> individualCooldownUntil;
 
-    public CooldownBucket() {
-        this.cooldownMillis = DEFAULT_COOLDOWN;
-        this.globalCooldownMillis = DEFAULT_COOLDOWN;
+    public CooldownBucket(int globalCooldown, int individualCooldown) {
+        this.cooldownMillis = individualCooldown;
+        this.globalCooldownMillis = globalCooldown;
 
         this.globalCooldownUntil = System.currentTimeMillis();
         this.individualCooldownUntil = new HashMap<>();
@@ -24,11 +21,11 @@ public class CooldownBucket {
 
     public float getGlobalCooldown() {
         long now = System.currentTimeMillis();
-        return (globalCooldownUntil - now) / 1000f;
+        return Math.max(0, (globalCooldownUntil - now) / 1000f);
     }
 
     public boolean hasGlobalCooldown() {
-        if (globalCooldownMillis == -1) return false;
+        if (globalCooldownMillis == 0) return false;
         long now = System.currentTimeMillis();
         return now <= globalCooldownUntil;
     }

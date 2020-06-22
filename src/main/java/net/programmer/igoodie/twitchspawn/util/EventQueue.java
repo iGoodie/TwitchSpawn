@@ -41,6 +41,10 @@ public class EventQueue {
     }
 
     public void queue(TSLEvent eventNode, EventArguments args, CooldownBucket cooldownBucket) {
+        if (eventNode.willPerform(args)) {
+            if (cooldownBucket != null)
+                cooldownBucket.consume(args.actorNickname);
+        }
         tasks.add(new TimerTask() {
             @Override
             public void run() {
