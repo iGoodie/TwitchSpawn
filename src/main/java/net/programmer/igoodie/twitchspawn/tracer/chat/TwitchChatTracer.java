@@ -103,7 +103,7 @@ public class TwitchChatTracer extends WebSocketTracer {
             eventArguments.actorNickname = twitchChatMessage.username;
             eventArguments.message = twitchChatMessage.message;
             eventArguments.subscriptionMonths = twitchChatMessage.subscriptionMonths;
-            // TODO: Add badges too
+            eventArguments.chatBadges = twitchChatMessage.badges;
 
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments, cooldownBucket);
 
