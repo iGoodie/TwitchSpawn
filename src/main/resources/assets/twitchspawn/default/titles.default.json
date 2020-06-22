@@ -9,6 +9,16 @@
       "color": "white"
     }
   ],
+  "royalty point redemption": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " redeemed a reward!",
+      "color": "white"
+    }
+  ],
   "twitch follow": [
     {
       "text": "${actor}",
@@ -16,6 +26,16 @@
     },
     {
       "text": " followed you!",
+      "color": "white"
+    }
+  ],
+  "twitch chat message": [
+    {
+      "text": "${actor}",
+      "color": "aqua"
+    },
+    {
+      "text": " sent something in chat!",
       "color": "white"
     }
   ],

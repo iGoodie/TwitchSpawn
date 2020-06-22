@@ -69,6 +69,13 @@ public class TSLParser {
 
                 String jsonString = words.get(i + 1);
 
+                // Yet another hack for backwards compatibility
+                if (jsonString.equalsIgnoreCase("NOTHING")) {
+                    JsonArray displayNothing = new JsonArray();
+                    displayNothing.add("NOTHING_0xDEADC0DE_0xDEADBEEF"); // <-- Super hyper mega hacker move
+                    return displayNothing;
+                }
+
                 try {
                     JsonArray parsedMessage = new JsonParser().parse(jsonString).getAsJsonArray();
                     GsonUtils.removeInvalidTextComponent(parsedMessage); // <-- Will also remove null elements created by trailing comma chars

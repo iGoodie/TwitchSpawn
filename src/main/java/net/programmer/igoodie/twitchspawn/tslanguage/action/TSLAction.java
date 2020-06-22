@@ -221,6 +221,10 @@ public abstract class TSLAction implements TSLFlowNode {
         ITextComponent text = ITextComponent.Serializer.fromJsonLenient(title);
         ITextComponent subtext = ITextComponent.Serializer.fromJsonLenient(subtitle);
 
+        if (subtext != null && subtext.getUnformattedText().equals("NOTHING_0xDEADC0DE_0xDEADBEEF")) {
+            return; // Stop here since it was a  DISPLAYING NOTHING statement
+        }
+
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.TITLES) {
             // Form title and subtitle packets
             SPacketTitle packet = new SPacketTitle(SPacketTitle.Type.TITLE, text,
