@@ -90,6 +90,7 @@ public class StreamElementsSocketTracer extends SocketIOTracer {
         eventArguments.viewerCount = JSONUtils.extractNumberFrom(data, "amount ", 0).intValue();
         eventArguments.subscriptionTier = extractTier(data, "tier");
         // TODO: add gifted
+        eventArguments.rewardTitle = JSONUtils.extractFrom(data, "redemption", String.class, null);
 
         // Pass the model to the handler
         ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);
