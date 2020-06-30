@@ -12,6 +12,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.util.JSONUtils;
+import net.programmer.igoodie.twitchspawn.util.TSHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,7 +74,10 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
             // Refine incoming data into EventArguments model
             EventArguments eventArguments = new EventArguments(eventType, eventAccount);
             eventArguments.streamerNickname = streamer.minecraftNick;
-            eventArguments.actorNickname = JSONUtils.extractFrom(message, "name", String.class, null);
+            eventArguments.actorNickname = TSHelper.jslikeOr(
+                    JSONUtils.extractFrom(message, "name", String.class, null),
+                    JSONUtils.extractFrom(message, "from", String.class, null)
+            );
             eventArguments.message = JSONUtils.extractFrom(message, "message", String.class, null);
             eventArguments.donationAmount = JSONUtils.extractNumberFrom(message, "amount", 0.0).doubleValue();
             eventArguments.donationCurrency = JSONUtils.extractFrom(message, "currency", String.class, null);
@@ -82,7 +86,10 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
             eventArguments.viewerCount = JSONUtils.extractNumberFrom(message, "viewers", 0).intValue();
             eventArguments.subscriptionTier = extractTier(message, "sub_plan");
             eventArguments.gifted = JSONUtils.extractFrom(message, "gifter_twitch_id", String.class, null) != null;
-            eventArguments.rewardTitle = JSONUtils.extractFrom(message, "redemption_name", String.class, null);
+            eventArguments.rewardTitle = TSHelper.jslikeOr(
+                    JSONUtils.extractFrom(message, "redemption_name", String.class, null),
+                    JSONUtils.extractFrom(message, "product", String.class, null)
+            );
 
             // Pass the model to the handler
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);

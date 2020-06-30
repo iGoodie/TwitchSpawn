@@ -19,6 +19,7 @@ public enum TSLEventKeyword {
             "Loyalty Point Redemption",
             new TSLEventPair("redemption", ""),
             new TSLEventPair("redemption", "streamlabs"),
+            new TSLEventPair("loyalty_store_redemption", "streamlabs"),
             new TSLEventPair("redemption", "streamelements")
     ),
     TWITCH_FOLLOW(
