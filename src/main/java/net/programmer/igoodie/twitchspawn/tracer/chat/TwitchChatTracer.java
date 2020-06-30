@@ -97,24 +97,25 @@ public class TwitchChatTracer extends WebSocketTracer {
     protected void onChatMessage(CredentialsConfig.Streamer streamer, TwitchChatMessage twitchChatMessage, WebSocket socket) {
         CooldownBucket cooldownBucket = cooldownBuckets.get(streamer.twitchNick);
 
-        if (cooldownBucket.canConsume(twitchChatMessage.username)) {
-            EventArguments eventArguments = new EventArguments("chat", "twitch");
-            eventArguments.streamerNickname = streamer.minecraftNick;
-            eventArguments.actorNickname = twitchChatMessage.username;
-            eventArguments.message = twitchChatMessage.message;
-            eventArguments.subscriptionMonths = twitchChatMessage.subscriptionMonths;
-            eventArguments.chatBadges = twitchChatMessage.badges;
+        EventArguments eventArguments = new EventArguments("chat", "twitch");
+        eventArguments.streamerNickname = streamer.minecraftNick;
+        eventArguments.actorNickname = twitchChatMessage.username;
+        eventArguments.message = twitchChatMessage.message;
+        eventArguments.subscriptionMonths = twitchChatMessage.subscriptionMonths;
+        eventArguments.chatBadges = twitchChatMessage.badges;
 
+        if (cooldownBucket.hasGlobalCooldown()) {
+            TwitchSpawn.LOGGER.info("Still has {} seconds global cooldown.", cooldownBucket.getGlobalCooldown());
+
+        } else if (cooldownBucket.canConsume(twitchChatMessage.username)) {
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments, cooldownBucket);
 
-        } else {
-            TwitchSpawn.LOGGER.info("Still has {} seconds global cooldown.", cooldownBucket.getGlobalCooldown());
-            if (!cooldownBucket.hasGlobalCooldown()) {
-                socket.send("PRIVMSG #" + streamer.twitchNick.toLowerCase()
-                        + String.format(" :@%s, you still have %s second(s), before you can trigger another action",
-                        twitchChatMessage.username, cooldownBucket.getCooldown(twitchChatMessage.username) / 1000));
-            }
+        } else if (ConfigManager.RULESET_COLLECTION.getRuleset(streamer.minecraftNick).willPerform(eventArguments)) {
+            socket.send("PRIVMSG #" + streamer.twitchNick.toLowerCase()
+                    + String.format(" :@%s, you still have %s second(s), before you can trigger another action",
+                    twitchChatMessage.username, cooldownBucket.getCooldown(twitchChatMessage.username) / 1000));
         }
+
     }
 
     public static void main(String[] args) {
