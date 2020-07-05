@@ -48,6 +48,13 @@ public class TSLRuleset {
         return eventMap.values();
     }
 
+    public boolean willPerform(EventArguments args) {
+        for (TSLEvent event : eventMap.values()) {
+            if (event.willPerform(args)) return true;
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         Map<String, Integer> occurrences = new HashMap<>();
@@ -71,7 +78,7 @@ public class TSLRuleset {
         StringBuilder builder = new StringBuilder();
 
         occurrences.forEach((actionKeyword, occurrence) -> {
-            if(builder.length() != 0) builder.append("\n");
+            if (builder.length() != 0) builder.append("\n");
             builder.append(String.format("%s action %d time(s).", actionKeyword, occurrence));
         });
 
