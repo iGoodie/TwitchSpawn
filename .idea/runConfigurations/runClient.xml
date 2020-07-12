@@ -1,20 +1,20 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="runClient" type="Application" factoryName="Application" singleton="true">
+  <configuration default="false" name="runClient" type="Application" factoryName="Application" singleton="false">
     <envs>
-      <env name="MOD_CLASSES" value="examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\resources\main;examplemod%%D:\IntelliJ IDEA Workspace\TwitchSpawn\build\classes\java\main" />
-      <env name="MCP_MAPPINGS" value="snapshot_20190719-1.14.3" />
-      <env name="MCP_VERSION" value="20190719.225934" />
-      <env name="FORGE_VERSION" value="28.0.45" />
-      <env name="assetIndex" value="1.14" />
+      <env name="MOD_CLASSES" value="examplemod%%$PROJECT_DIR$/../TwitchSpawn-1.16\build\resources\main;examplemod%%$PROJECT_DIR$/../TwitchSpawn-1.16\build\classes\java\main" />
+      <env name="MCP_MAPPINGS" value="snapshot_20200514-1.16" />
+      <env name="MCP_VERSION" value="20200625.160719" />
+      <env name="FORGE_VERSION" value="32.0.63" />
+      <env name="assetIndex" value="1.16" />
       <env name="assetDirectory" value="C:\Users\xgen_\.gradle\caches\forge_gradle\assets" />
-      <env name="nativesDirectory" value="D:\IntelliJ IDEA Workspace\TwitchSpawn\build\natives" />
+      <env name="nativesDirectory" value="$PROJECT_DIR$/../TwitchSpawn-1.16\build\natives" />
       <env name="FORGE_GROUP" value="net.minecraftforge" />
       <env name="target" value="fmluserdevclient" />
-      <env name="MC_VERSION" value="1.14.4" />
+      <env name="MC_VERSION" value="1.16.1" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="net.minecraftforge.userdev.LaunchTesting" />
-    <module name="TwitchSpawn.main" />
-    <option name="PROGRAM_PARAMETERS" value="-username=iGoodie" />
+    <module name="TwitchSpawn-1.16.main" />
+    <option name="PROGRAM_PARAMETERS" value="--username iGoodie" />
     <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=info -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump &quot;-Dos.name=Windows 10&quot; -Dos.version=10.0" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <method v="2">

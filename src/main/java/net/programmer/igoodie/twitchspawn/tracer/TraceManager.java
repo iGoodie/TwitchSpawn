@@ -2,6 +2,7 @@ package net.programmer.igoodie.twitchspawn.tracer;
 
 import io.socket.client.Socket;
 import net.minecraft.command.CommandSource;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
@@ -14,10 +15,7 @@ import net.programmer.igoodie.twitchspawn.tracer.socket.StreamElementsSocketTrac
 import net.programmer.igoodie.twitchspawn.tracer.socket.StreamlabsSocketTracer;
 import net.programmer.igoodie.twitchspawn.tracer.socket.TwitchPubSubTracer;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TraceManager {
 
@@ -55,13 +53,14 @@ public class TraceManager {
             }
         }
 
-        TwitchSpawn.SERVER.getPlayerList().sendMessage(
-                new TranslationTextComponent("commands.twitchspawn.start.success"), true);
-        TwitchSpawn.SERVER.getPlayerList().getPlayers().forEach(player -> {
+        for (ServerPlayerEntity player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
+            UUID uuid = player.getUniqueID();
+            TranslationTextComponent successText = new TranslationTextComponent("commands.twitchspawn.start.success");
+            player.getEntity().sendMessage(successText, uuid);
             NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(true),
                     player.connection.netManager,
                     NetworkDirection.PLAY_TO_CLIENT);
-        });
+        }
     }
 
     public void stop(CommandSource source, String reason) {
@@ -82,14 +81,15 @@ public class TraceManager {
         sockets.clear();
 
         if (TwitchSpawn.SERVER != null) {
-            TwitchSpawn.SERVER.getPlayerList().sendMessage(
-                    new TranslationTextComponent("commands.twitchspawn.stop.success",
-                            source == null ? "Server" : source.getName(), reason));
-            TwitchSpawn.SERVER.getPlayerList().getPlayers().forEach(player -> {
+            for (ServerPlayerEntity player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
+                UUID uuid = player.getUniqueID();
+                TranslationTextComponent successText = new TranslationTextComponent("commands.twitchspawn.stop.success",
+                        source == null ? "Server" : source.getName(), reason);
+                player.getEntity().sendMessage(successText, uuid);
                 NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(false),
                         player.connection.netManager,
                         NetworkDirection.PLAY_TO_CLIENT);
-            });
+            }
         }
     }
 

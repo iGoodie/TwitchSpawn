@@ -1,5 +1,6 @@
 package net.programmer.igoodie.twitchspawn.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -31,8 +32,6 @@ public class GlobalChatCooldownOverlay {
 
     @SubscribeEvent
     public static void onRenderGuiPost(RenderGameOverlayEvent.Post event) {
-        Minecraft minecraft = Minecraft.getInstance();
-
         if (event.getType() != ElementType.HOTBAR)
             return; // Render only on HOTBAR
 
@@ -61,23 +60,25 @@ public class GlobalChatCooldownOverlay {
                 y = 5;
             }
 
-            GlStateManager.pushMatrix();
-            GlStateManager.scalef(scale, scale, scale);
-            renderGlyph(String.format("%02d", minutes), x, (int) (y / scale));
-            renderGlyph(":", x + 32, (int) (y / scale));
-            renderGlyph(String.format("%02d", seconds), (x + 10 + 2 * 18), (int) (y / scale));
-            renderGlyph("i", (int) (x + 10 + 4.25f * 18), (int) ((y - 2) / scale));
-            GlStateManager.popMatrix();
+            MatrixStack matrixStack = event.getMatrixStack();
+
+            matrixStack.push();
+            matrixStack.scale(scale, scale, scale);
+            renderGlyph(matrixStack, String.format("%02d", minutes), x, (int) (y / scale));
+            renderGlyph(matrixStack, ":", x + 32, (int) (y / scale));
+            renderGlyph(matrixStack, String.format("%02d", seconds), (x + 10 + 2 * 18), (int) (y / scale));
+            renderGlyph(matrixStack, "i", (int) (x + 10 + 4.25f * 18), (int) ((y - 2) / scale));
+            matrixStack.pop();
         }
 
         drew = true;
     }
 
-    public static void renderGlyph(String number, int x, int y) {
+    public static void renderGlyph(MatrixStack ms, String number, int x, int y) {
         Minecraft minecraft = Minecraft.getInstance();
 
         minecraft.getTextureManager().bindTexture(cooldownGlyphs);
-        GlStateManager.pushMatrix();
+        ms.push();
         GlStateManager.enableBlend();
 
         if (number.equals("i")) {
@@ -87,10 +88,12 @@ public class GlobalChatCooldownOverlay {
             int h = 25;
 
             minecraft.ingameGUI.blit(
+                    ms,
                     x, y,
                     ux, uy,
                     w, h
             );
+
         } else {
             char[] chars = number.toCharArray();
 
@@ -104,6 +107,7 @@ public class GlobalChatCooldownOverlay {
                 int h = 18;
 
                 minecraft.ingameGUI.blit(
+                        ms,
                         x + offset, y,
                         ux, uy,
                         w, h
@@ -114,7 +118,7 @@ public class GlobalChatCooldownOverlay {
         }
 
         GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
+        ms.pop();
         minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
     }
 

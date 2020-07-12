@@ -1,5 +1,6 @@
 package net.programmer.igoodie.twitchspawn.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -52,6 +53,7 @@ public class StatusIndicatorOverlay {
             return; // The display is disabled, stop here
 
         Minecraft minecraft = Minecraft.getInstance();
+        MatrixStack matrixStack = event.getMatrixStack();
 
         if (event.getType() != ElementType.HOTBAR)
             return; // Render only on HOTBAR
@@ -60,7 +62,7 @@ public class StatusIndicatorOverlay {
         if (drew) return;
 
         minecraft.getTextureManager().bindTexture(indicatorIcons);
-        GlStateManager.pushMatrix();
+        matrixStack.push();
         GlStateManager.enableBlend();
 
         int x = 5, y = 5;
@@ -79,11 +81,11 @@ public class StatusIndicatorOverlay {
             h = 12;
         }
 
-        GlStateManager.scalef(1f, 1f, 1f);
-        minecraft.ingameGUI.blit(x, y, ux, uy, w, h);
+        matrixStack.scale(1f, 1f, 1f);
+        minecraft.ingameGUI.blit(matrixStack, x, y, ux, uy, w, h);
 
         GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
+        matrixStack.pop();
         minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
 
         drew = true;

@@ -28,6 +28,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLTokenizer;
 import net.programmer.igoodie.twitchspawn.util.EventQueue;
+import net.programmer.igoodie.twitchspawn.util.MCPHelpers;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -332,12 +333,12 @@ public class TwitchSpawnCommand {
             eventArguments.actorNickname = "TesterKid";
 
             for (TSLAction action : event.getActions()) {
-                ITextComponent text = ITextComponent.Serializer.fromJsonLenient(
+                ITextComponent text = MCPHelpers.fromJsonLenient(
                         String.format("{text:\"Testing %s action\", color:\"dark_purple\"}", TSLActionKeyword.ofClass(action.getClass())));
                 STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text,
                         DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
 
-                ITextComponent subtext = ITextComponent.Serializer.fromJsonLenient(
+                ITextComponent subtext = MCPHelpers.fromJsonLenient(
                         String.format("{text:\"Rules traversed: %.02f%%\", color:\"dark_purple\"}", 100 * (index + 1f) / ruleset.getRulesRaw().size()));
                 STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
                         DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);

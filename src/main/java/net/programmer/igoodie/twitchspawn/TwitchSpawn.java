@@ -113,7 +113,7 @@ public class TwitchSpawn {
         String translationKey = TRACE_MANAGER.isRunning() ?
                 "commands.twitchspawn.status.on" : "commands.twitchspawn.status.off";
 
-        entity.sendMessage(new TranslationTextComponent(translationKey));
+        entity.sendMessage(new TranslationTextComponent(translationKey), entity.getUniqueID());
 
         if (TRACE_MANAGER.isRunning())
             TRACE_MANAGER.connectStreamer(entity.getName().getString());
