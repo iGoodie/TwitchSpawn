@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -81,6 +82,11 @@ public class TwitchSpawn {
     }
 
     @SubscribeEvent
+    public void onRegisterCommands(RegisterCommandsEvent event) {
+        TwitchSpawnCommand.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
         SERVER = event.getServer();
         TRACE_MANAGER = new TraceManager();
@@ -88,8 +94,6 @@ public class TwitchSpawn {
 
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
-        TwitchSpawnCommand.register(event.getCommandDispatcher());
-
         if (ConfigManager.PREFERENCES.autoStart == PreferencesConfig.AutoStartEnum.ENABLED) {
             LOGGER.info("Auto-start is enabled. Attempting to start tracers.");
             TRACE_MANAGER.start();
