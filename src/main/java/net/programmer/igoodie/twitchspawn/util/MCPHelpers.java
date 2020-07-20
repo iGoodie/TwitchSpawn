@@ -6,7 +6,7 @@ import net.minecraft.util.text.ITextComponent;
 public class MCPHelpers {
 
     public static ITextComponent fromJsonLenient(String string) {
-        return ITextComponent.Serializer.func_240643_a_(string);
+        return ITextComponent.Serializer.func_240644_b_(string);
     }
 
     public static ITextComponent merge(ITextComponent c1, ITextComponent c2) {
