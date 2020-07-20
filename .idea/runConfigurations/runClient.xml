@@ -2,9 +2,9 @@
   <configuration default="false" name="runClient" type="Application" factoryName="Application" singleton="false">
     <envs>
       <env name="MOD_CLASSES" value="examplemod%%$PROJECT_DIR$/../TwitchSpawn-1.16\build\resources\main;examplemod%%$PROJECT_DIR$/../TwitchSpawn-1.16\build\classes\java\main" />
-      <env name="MCP_MAPPINGS" value="snapshot_20200514-1.16" />
+      <env name="MCP_MAPPINGS" value="snapshot_20200707-1.16.1" />
       <env name="MCP_VERSION" value="20200625.160719" />
-      <env name="FORGE_VERSION" value="32.0.63" />
+      <env name="FORGE_VERSION" value="32.0.70" />
       <env name="assetIndex" value="1.16" />
       <env name="assetDirectory" value="C:\Users\xgen_\.gradle\caches\forge_gradle\assets" />
       <env name="nativesDirectory" value="$PROJECT_DIR$/../TwitchSpawn-1.16\build\natives" />
