@@ -83,6 +83,11 @@ public enum TSLEventKeyword {
             "Mixer Host",
             new TSLEventPair("host", "mixer")
     ),
+    // Integration events
+    JUSTGIVING_DONATION(
+            "JustGiving Donation",
+            new TSLEventPair("justgivingdonation", "justgiving")
+    ),
     ;
 
     public static boolean exists(String eventName) {
