@@ -145,6 +145,9 @@
   "mixer host": [
     "Incoming mixer host"
   ],
+  "justgiving donation": [
+    "Incoming justgiving donation"
+  ],
   "reflection": [
     {
       "text": "${streamer}",

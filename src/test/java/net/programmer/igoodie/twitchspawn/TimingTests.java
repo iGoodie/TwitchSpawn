@@ -27,7 +27,7 @@ public class TimingTests {
         for (int i = 5; i >= 0; i--) {
             System.out.println("Waiting for #" + (5 - i + 1));
             Assertions.assertEquals(i, queue.unhandledEventCount());
-            if (i != 0) Thread.sleep(duration);
+            if (i != 0) Thread.sleep(duration - 10);
         }
 
         System.out.println(list);
