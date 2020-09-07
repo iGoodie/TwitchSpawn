@@ -14,6 +14,8 @@ public class ContainsComparator extends TSLComparator {
     public boolean compare(Object leftHand) {
         if (leftHand instanceof Set)
             return ((Set) leftHand).contains(value.toLowerCase());
+        if (leftHand instanceof String)
+            return ((String) leftHand).contains(value);
 
         return false;
     }
