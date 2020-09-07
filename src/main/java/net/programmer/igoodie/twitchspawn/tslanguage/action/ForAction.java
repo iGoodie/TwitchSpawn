@@ -75,7 +75,7 @@ public class ForAction extends TSLAction {
             return ExpressionEvaluator.fromArgs(expression, args);
         });
 
-        return Integer.parseInt(iterationCountEvaluated);
+        return Double.valueOf(iterationCountEvaluated).intValue();
     }
 
 }
