@@ -79,7 +79,7 @@ public class BothAction extends TSLAction {
 
         // Execute once for the last action script
         if (actionAlias.isEmpty())
-            throw new TSLSyntaxError(String.format("Found %s word at an unexpected position. (Word#%d)", DELIMITER, words.size() - 1));
+            throw new TSLSyntaxError("Found %s word at an unexpected position. (Word#%d)", DELIMITER, words.size() - 1);
         parseSingleAction(actionAlias, actionArgs);
     }
 

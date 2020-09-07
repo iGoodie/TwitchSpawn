@@ -8,8 +8,8 @@ public class TSLSyntaxError extends Exception {
 
     private String associatedRule;
 
-    public TSLSyntaxError(String messageFormat, Object...args) {
-        super(String.format(messageFormat, args));
+    public TSLSyntaxError(String messageFormat, Object... args) {
+        super(args.length == 0 ? messageFormat : String.format(messageFormat, args));
     }
 
     public void setAssociatedRule(String associatedRule) {
