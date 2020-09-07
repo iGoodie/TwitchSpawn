@@ -30,10 +30,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLTokenizer;
 import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 import net.programmer.igoodie.twitchspawn.util.MCPHelpers;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class TwitchSpawnCommand {
@@ -71,7 +68,7 @@ public class TwitchSpawnCommand {
             );
 
             root.then(Commands.literal("execute")
-                    .then(Commands.argument("tsl_action", MessageArgument.message())
+                    .then(CommandArguments.tslWords("tsl_action")
                             .executes(TwitchSpawnCommand::executeModule))
             );
 
@@ -283,13 +280,9 @@ public class TwitchSpawnCommand {
 
     public static int executeModule(CommandContext<CommandSource> context) throws CommandSyntaxException {
         try {
-            String[] words = MessageArgument.getMessage(context, "tsl_action")
-                    .getUnformattedComponentText().split("\\s+");
+            String words = TSLWordsArgumentType.getWords(context, "tsl_action");
 
-            if (words.length == 0)
-                throw new CommandException(new StringTextComponent("Expected at least 1 TSL word!"));
-
-            List<String> wordTokens = TSLTokenizer.intoWords(String.join(" ", words));
+            List<String> wordTokens = TSLTokenizer.intoWords(words);
             String actionName = wordTokens.remove(0);
 
             TSLAction tslAction = TSLParser.parseAction(actionName, wordTokens);
