@@ -3,6 +3,7 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class ReflectAction extends TSLAction {
 
+    private boolean onlyReflectedPlayers;
     private boolean reflectEveryone;
     private int reflectRandomN;
     private List<String> reflectedUsers;
@@ -31,7 +33,14 @@ public class ReflectAction extends TSLAction {
         if (words.stream().anyMatch(word -> word.equalsIgnoreCase(reflectActionName)))
             throw new TSLSyntaxError("Cannot have a cyclic REFLECT rule.");
 
-        String usersRaw = words.get(0);
+        LinkedList<String> wordsCloned = new LinkedList<>(words);
+
+        if (wordsCloned.get(0).equalsIgnoreCase("ONLY")) {
+            this.onlyReflectedPlayers = true;
+            wordsCloned.remove(0);
+        }
+
+        String usersRaw = wordsCloned.get(0);
 
         if (usersRaw.equals("*")) {
             this.reflectEveryone = true;
@@ -49,15 +58,22 @@ public class ReflectAction extends TSLAction {
             this.reflectedUsers = Arrays.asList(usersRaw.split(",\\s*"));
         }
 
-        this.action = TSLParser.parseAction(words.get(1), words.size() > 2
-                ? words.subList(2, words.size())
+        this.action = TSLParser.parseAction(wordsCloned.get(1), wordsCloned.size() > 2
+                ? wordsCloned.subList(2, wordsCloned.size())
                 : Collections.emptyList());
     }
 
     @Override
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
         action.reflectedUser = null;
-        action.process(args);
+
+        if (onlyReflectedPlayers) {
+            EventQueue eventQueue = ConfigManager.RULESET_COLLECTION.getQueue(args.streamerNickname);
+            eventQueue.cancelUpcomingSleep();
+
+        } else {
+            action.process(args);
+        }
 
         // Select where to reflect
         List<String> reflectedUsers = getReflectedPlayers(player);
