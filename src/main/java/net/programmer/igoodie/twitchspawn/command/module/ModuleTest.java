@@ -9,6 +9,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
@@ -69,7 +70,7 @@ public class ModuleTest extends CommandModule {
 
         EntityPlayerMP streamerPlayer = (EntityPlayerMP) commandSender.getCommandSenderEntity();
         TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNickname);
-        EventQueue queue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNickname);
+        EventQueue eventQueue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNickname);
 
         Collection<TSLEvent> events = ruleset.getEvents();
         Iterator<TSLEvent> eventIterator = events.iterator();
@@ -96,14 +97,18 @@ public class ModuleTest extends CommandModule {
                 SPacketTitle subtitlePacket = new SPacketTitle(SPacketTitle.Type.SUBTITLE, subtext,
                         DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
 
-                queue.queue(() -> {
+                eventQueue.queue(() -> {
                     streamerPlayer.connection.sendPacket(packet);
                     streamerPlayer.connection.sendPacket(subtitlePacket);
                 });
-                queue.queue(() -> action.process(eventArguments));
+                eventQueue.queueSleep();
+                eventQueue.queue(() -> action.process(eventArguments));
+                eventQueue.queueSleep();
 
                 index++;
             }
+
+            eventQueue.updateThread();
         }
 
         TwitchSpawn.LOGGER.info("Tests queued for {}", streamerNickname);
