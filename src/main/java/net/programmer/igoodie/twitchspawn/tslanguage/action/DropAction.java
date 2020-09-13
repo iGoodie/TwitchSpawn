@@ -30,7 +30,7 @@ public class DropAction extends TSLAction {
         List<String> actionWords = actionPart(words);
 
         if (actionWords.size() != 1 && actionWords.size() != 2 && actionWords.size() != 3)
-            throw new TSLSyntaxError("Invalid length of words: " + actionWords);
+            throw new TSLSyntaxError("Invalid length of words: %s", actionWords);
 
         this.itemRaw = actionWords.get(0);
         this.itemAmount = actionWords.size() >= 2 ? parseInt(actionWords.get(1)) : 1;

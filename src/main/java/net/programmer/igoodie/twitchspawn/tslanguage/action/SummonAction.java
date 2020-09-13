@@ -24,7 +24,7 @@ public class SummonAction extends TSLAction {
         List<String> actionWords = actionPart(words);
 
         if (actionWords.size() != 1 && actionWords.size() != 4 && actionWords.size() != 5)
-            throw new TSLSyntaxError("Invalid length of words (expected 1, 4 or 5): " + actionWords);
+            throw new TSLSyntaxError("Invalid length of words (expected 1, 4 or 5): %s", actionWords);
 
 //        this.entityType = EntityList.getClassFromName(actionWords.get(0));
         this.entityType = EntityList.getClass(new ResourceLocation(actionWords.get(0)));
@@ -35,11 +35,11 @@ public class SummonAction extends TSLAction {
 
         // Entity type is not found within the list
         if (this.entityType == null)
-            throw new TSLSyntaxError("Invalid entity name -> " + actionWords.get(0));
+            throw new TSLSyntaxError("Invalid entity name -> %s", actionWords.get(0));
 
         // Try to parse NBT and see if it's valid
         try { JsonToNBT.getTagFromJson(this.rawNbt); } catch (NBTException e) {
-            throw new TSLSyntaxError("Malformed NBT json -> " + rawNbt);
+            throw new TSLSyntaxError("Malformed NBT json -> %s", rawNbt);
         }
     }
 
@@ -54,7 +54,7 @@ public class SummonAction extends TSLAction {
                 Double.parseDouble(expression);
 
         } catch (NumberFormatException e) {
-            throw new TSLSyntaxError("Malformed position expression -> " + expression);
+            throw new TSLSyntaxError("Malformed position expression -> %s", expression);
         }
 
         return expression;
