@@ -24,7 +24,7 @@ public class ShuffleAction extends ItemSelectiveAction {
         else if (actionWords.size() == 3)
             parseSlot(actionWords);
 
-        else throw new TSLSyntaxError("Invalid length of words: " + actionWords);
+        else throw new TSLSyntaxError("Invalid length of words: %s", actionWords);
     }
 
     private void parseInventoryName(List<String> actionWords) throws TSLSyntaxError {

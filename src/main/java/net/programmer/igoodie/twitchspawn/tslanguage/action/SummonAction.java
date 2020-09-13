@@ -22,7 +22,7 @@ public class SummonAction extends TSLAction {
         List<String> actionWords = actionPart(words);
 
         if (actionWords.size() != 1 && actionWords.size() != 4 && actionWords.size() != 5)
-            throw new TSLSyntaxError("Invalid length of words (expected 1, 4 or 5): " + actionWords);
+            throw new TSLSyntaxError("Invalid length of words (expected 1, 4 or 5): %s", actionWords);
 
         // Fetch TSL input
         this.rawCoordX = actionWords.size() < 4 ? "~" : validateCoordinateExpression(actionWords.get(1));
@@ -36,7 +36,7 @@ public class SummonAction extends TSLAction {
 
         // Entity with given key not found
         if (entityType == null)
-            throw new TSLSyntaxError("Invalid entity name -> " + entityName);
+            throw new TSLSyntaxError("Invalid entity name -> %s", entityName);
 
         this.entityType = entityType;
 
@@ -45,7 +45,7 @@ public class SummonAction extends TSLAction {
             new JsonToNBT(new StringReader(rawNbt)).readStruct();
 
         } catch (CommandSyntaxException e) {
-            throw new TSLSyntaxError("Malformed NBT json -> " + rawNbt);
+            throw new TSLSyntaxError("Malformed NBT json -> %s", rawNbt);
         }
     }
 
@@ -60,7 +60,7 @@ public class SummonAction extends TSLAction {
                 Double.parseDouble(expression);
 
         } catch (NumberFormatException e) {
-            throw new TSLSyntaxError("Malformed position expression -> " + expression);
+            throw new TSLSyntaxError("Malformed position expression -> %s", expression);
         }
 
         return expression;

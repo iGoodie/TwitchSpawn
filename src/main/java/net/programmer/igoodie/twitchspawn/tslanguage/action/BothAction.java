@@ -59,7 +59,7 @@ public class BothAction extends TSLAction {
             // Found a delimiter
             if (word.equalsIgnoreCase(DELIMITER)) {
                 if (actionAlias.isEmpty())
-                    throw new TSLSyntaxError(String.format("Found %s word at an unexpected position. (Word#%d)", DELIMITER, i));
+                    throw new TSLSyntaxError("Found %s word at an unexpected position. (Word#%d)", DELIMITER, words.size() - 1);
                 parseSingleAction(actionAlias, actionArgs);
                 lastDelimiterIndex = i;
                 actionAlias = "";
