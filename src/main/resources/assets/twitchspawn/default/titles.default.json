@@ -145,9 +145,6 @@
   "mixer host": [
     "Incoming mixer host"
   ],
-  "justgiving donation": [
-    "Incoming justgiving donation"
-  ],
   "reflection": [
     {
       "text": "${streamer}",
@@ -164,6 +161,20 @@
     {
       "text": "!",
       "color": "white"
+    }
+  ],
+  "justgiving donation": [
+    {
+      "text": "${actor}",
+      "color": "dark_purple"
+    },
+    {
+      "text": " donated you ${amount_f}${currency}!",
+      "color": "white"
+    },
+    {
+      "text": " (JustGiving)",
+      "color": "gold"
     }
   ]
 }
