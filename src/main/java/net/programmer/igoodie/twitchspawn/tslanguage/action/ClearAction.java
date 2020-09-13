@@ -32,7 +32,10 @@ public class ClearAction extends ItemSelectiveAction {
             if (inventoryType == null) {
                 player.inventory.clear();
             } else {
-                getInventory(player, inventoryType).clear();
+                List<ItemStack> inventory = getInventory(player, inventoryType);
+                for (int i = 0; i < inventory.size(); i++) {
+                    inventory.set(i, ItemStack.EMPTY);
+                }
             }
 
         } else if (selectionType == SelectionType.RANDOM) {
