@@ -7,7 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.MessageArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.STitlePacket;
@@ -70,7 +69,7 @@ public class TwitchSpawnCommand {
             );
 
             root.then(Commands.literal("execute")
-                    .then(Commands.argument("tsl_action", MessageArgument.message())
+                    .then(CommandArguments.tslWords("tsl_action")
                             .executes(TwitchSpawnCommand::executeModule))
             );
 
@@ -282,13 +281,10 @@ public class TwitchSpawnCommand {
 
     public static int executeModule(CommandContext<CommandSource> context) throws CommandSyntaxException {
         try {
-            String[] words = MessageArgument.getMessage(context, "tsl_action")
-                    .getUnformattedComponentText().split("\\s+");
+            String words = TSLWordsArgumentType.getWords(context, "tsl_action");
 
-            if (words.length == 0)
-                throw new CommandException(new StringTextComponent("Expected at least 1 TSL word!"));
+            List<String> wordTokens = TSLTokenizer.intoWords(words);
 
-            List<String> wordTokens = TSLTokenizer.intoWords(String.join(" ", words));
             String actionName = wordTokens.remove(0);
 
             TSLAction tslAction = TSLParser.parseAction(actionName, wordTokens);

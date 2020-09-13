@@ -42,4 +42,8 @@ public class CommandArguments {
         return Commands.argument(name, NBTCompoundTagArgument.func_218043_a());
     }
 
+    public static RequiredArgumentBuilder<CommandSource, String> tslWords(String name) {
+        return Commands.argument(name, TSLWordsArgumentType.tslWords());
+    }
+
 }
