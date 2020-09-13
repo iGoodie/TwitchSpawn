@@ -2,11 +2,11 @@ package net.programmer.igoodie.twitchspawn.tslanguage;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
-import net.programmer.igoodie.twitchspawn.util.EventQueue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +70,8 @@ public class TSLRulesetCollection {
         // Queue incoming event arguments
         EventQueue eventQueue = getQueue(args.streamerNickname);
         eventQueue.queue(eventNode, args, cooldownBucket);
+        eventQueue.queueSleep();
+        eventQueue.updateThread();
         TwitchSpawn.LOGGER.info("Queued handler for {} event.", eventKeyword);
         return true;
     }

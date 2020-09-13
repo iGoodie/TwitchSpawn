@@ -16,7 +16,6 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
-import net.programmer.igoodie.twitchspawn.util.EventQueue;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

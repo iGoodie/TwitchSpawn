@@ -1,6 +1,5 @@
 package net.programmer.igoodie.twitchspawn;
 
-import net.programmer.igoodie.twitchspawn.util.EventQueue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

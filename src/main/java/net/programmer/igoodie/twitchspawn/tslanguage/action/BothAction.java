@@ -3,6 +3,7 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 import com.google.gson.JsonArray;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
@@ -94,16 +95,25 @@ public class BothAction extends TSLAction {
     protected void performAction(EntityPlayerMP player, EventArguments args) {
         this.actions.forEach(action -> action.reflectedUser = this.reflectedUser);
 
+        EventQueue eventQueue = ConfigManager.RULESET_COLLECTION.getQueue(args.streamerNickname);
+
         if (instant) { // Perform them all instantly
-            this.actions.forEach(action -> action.performAction(player, args));
+            for (int i = this.actions.size() - 1; i >= 0; i--) {
+                TSLAction action = this.actions.get(i);
+                eventQueue.queueFirst(action.getClass().getSimpleName(),
+                        () -> action.performAction(player, args));
+            }
 
         } else {
-            this.actions.get(0).process(args); // Perform first one immediately
-            this.actions.subList(1, this.actions.size()) // Queue rest of it
-                    .forEach(action -> ConfigManager.RULESET_COLLECTION
-                            .getQueue(args.streamerNickname)
-                            .queue(() -> action.process(args)));
+            for (int i = this.actions.size() - 1; i >= 0; i--) {
+                TSLAction action = this.actions.get(i);
+                eventQueue.queueFirst(action.getClass().getSimpleName(),
+                        () -> action.process(args));
+                if (i != 0) eventQueue.queueSleepFirst(ConfigManager.PREFERENCES.notificationDelay);
+            }
         }
+
+        eventQueue.updateThread();
     }
 
 }
