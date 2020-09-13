@@ -23,12 +23,7 @@ public class TimingTests {
         queue.queue(() -> list.add(4));
         queue.queue(() -> list.add(5));
 
-        // Wait for timer to consume task
-        for (int i = 5; i >= 0; i--) {
-            System.out.println("Waiting for #" + (5 - i + 1));
-            Assertions.assertEquals(i, queue.unhandledEventCount());
-            if (i != 0) Thread.sleep(duration);
-        }
+        queue.updateThread();
 
         System.out.println(list);
         Assertions.assertIterableEquals(Arrays.asList(1, 2, 3, 4, 5), list);

@@ -17,6 +17,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
@@ -314,7 +315,7 @@ public class TwitchSpawnCommand {
 
         ServerPlayerEntity streamerPlayer = context.getSource().asPlayer();
         TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNick);
-        EventQueue queue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNick);
+        EventQueue eventQueue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNick);
 
         Collection<TSLEvent> events = ruleset.getEvents();
         Iterator<TSLEvent> eventIterator = events.iterator();
@@ -341,14 +342,18 @@ public class TwitchSpawnCommand {
                 STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
                         DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
 
-                queue.queue(() -> {
+                eventQueue.queue(() -> {
                     streamerPlayer.connection.sendPacket(packet);
                     streamerPlayer.connection.sendPacket(subtitlePacket);
                 });
-                queue.queue(() -> action.process(eventArguments));
+                eventQueue.queueSleep();
+                eventQueue.queue(() -> action.process(eventArguments));
+                eventQueue.queueSleep();
 
                 index++;
             }
+
+            eventQueue.updateThread();
         }
 
         TwitchSpawn.LOGGER.info("Tests queued for {}", streamerNick);
