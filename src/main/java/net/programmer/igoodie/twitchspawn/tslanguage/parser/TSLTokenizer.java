@@ -211,12 +211,13 @@ public class TSLTokenizer {
 
         boolean escaping = false;
         boolean inGroup = false;
+        boolean inJsonString = false;
 
         for (char character : line.toCharArray()) {
 
             // Comment character
             if (character == COMMENT) {
-                if (!inGroup)
+                if (!inGroup && !inJsonString)
                     break;
             }
 
@@ -224,6 +225,12 @@ public class TSLTokenizer {
             if (character == GROUPING) {
                 if (!escaping)
                     inGroup = !inGroup;
+            }
+
+            // Json String
+            if (character == '"' || character == '\'') {
+                if (!escaping)
+                    inJsonString = !inJsonString;
             }
 
             // Escape character
