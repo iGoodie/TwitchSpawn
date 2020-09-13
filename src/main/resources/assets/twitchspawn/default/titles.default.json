@@ -162,5 +162,19 @@
       "text": "!",
       "color": "white"
     }
+  ],
+  "justgiving donation": [
+    {
+      "text": "${actor}",
+      "color": "dark_purple"
+    },
+    {
+      "text": " donated you ${amount_f}${currency}!",
+      "color": "white"
+    },
+    {
+      "text": " (JustGiving)",
+      "color": "gold"
+    }
   ]
 }
