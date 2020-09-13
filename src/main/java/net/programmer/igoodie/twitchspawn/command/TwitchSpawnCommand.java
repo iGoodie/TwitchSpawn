@@ -27,7 +27,6 @@ import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLTokenizer;
-import net.programmer.igoodie.twitchspawn.util.EventQueue;
 
 import java.util.Collection;
 import java.util.Iterator;
