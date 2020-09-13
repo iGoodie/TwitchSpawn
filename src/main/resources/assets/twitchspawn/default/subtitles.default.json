@@ -87,6 +87,12 @@
       "color": "white"
     }
   ],
+  "WAIT": [
+    {
+      "text": "will wait for ${waitTime}",
+      "color": "white"
+    }
+  ],
   "OS_RUN": [
     {
       "text": "${actor}",
