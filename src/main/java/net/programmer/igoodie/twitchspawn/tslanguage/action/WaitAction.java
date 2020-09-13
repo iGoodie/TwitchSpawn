@@ -21,6 +21,7 @@ public class WaitAction extends TSLAction {
             new AbstractMap.SimpleEntry<>("minutes", 60 * 1_000L)
     ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+    private String rawExpr;
     private long waitTime;
 
     /*
@@ -36,8 +37,10 @@ public class WaitAction extends TSLAction {
         if (actionWords.size() != 2)
             throw new TSLSyntaxError("Expected two words, found %d instead", actionWords.size());
 
+        this.rawExpr = actionWords.get(0) + " " + actionWords.get(1).toLowerCase();
+
         int number = parseInt(actionWords.get(0));
-        Long timeCoef = UNIT_COEF.get(actionWords.get(1));
+        Long timeCoef = UNIT_COEF.get(actionWords.get(1).toLowerCase());
 
         if (timeCoef == null)
             throw new TSLSyntaxError("Unexpected time unit -> %s", actionWords.get(1));
@@ -49,6 +52,14 @@ public class WaitAction extends TSLAction {
     protected void performAction(ServerPlayerEntity player, EventArguments args) {
         EventQueue queue = ConfigManager.RULESET_COLLECTION.getQueue(args.streamerNickname);
         queue.queueSleepFirst(this.waitTime);
+    }
+
+    @Override
+    protected String subtitleEvaluator(String expression, EventArguments args) {
+        if (expression.equals("waitTime"))
+            return rawExpr;
+
+        return null;
     }
 
 }
