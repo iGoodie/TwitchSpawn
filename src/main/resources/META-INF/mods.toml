@@ -1,5 +1,6 @@
 modLoader="javafml"
 loaderVersion="[32,)"
+license="EPL-1.0"
 issueTrackerURL="https://github.com/iGoodie/TwitchSpawn/issues"
 
 [[mods]]
