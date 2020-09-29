@@ -101,7 +101,7 @@ public enum TSLEventKeyword {
             new TSLEventPair("pledge", "patreon")
     ),
     TreatStream_Treat(
-            "TreatStream Treat"
+            "TreatStream Treat",
             new TSLEventPair("treat", "treatstream")
     ),
     ;
