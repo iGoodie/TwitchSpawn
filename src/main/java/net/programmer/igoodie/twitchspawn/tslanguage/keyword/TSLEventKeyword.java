@@ -88,6 +88,22 @@ public enum TSLEventKeyword {
             "JustGiving Donation",
             new TSLEventPair("justgivingdonation", "justgiving")
     ),
+    Tiltify_Donation(
+            "Tiltify Donation",
+            new TSLEventPair("tiltifydonation", "tiltify")
+    ),
+     ExtraLife_Donation(
+            "ExtraLife Donation",
+            new TSLEventPair("eldonation", "extralife")
+    ),
+    Patreon_Pledge(
+            "Patreon Pledge",
+            new TSLEventPair("pledge", "patreon")
+    ),
+    TreatStream_Treat(
+            "TreatStream Treat"
+            new TSLEventPair("treat", "treatstream")
+    ),
     ;
 
     public static boolean exists(String eventName) {
