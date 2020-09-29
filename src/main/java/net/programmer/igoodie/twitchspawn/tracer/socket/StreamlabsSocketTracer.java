@@ -88,7 +88,8 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
             eventArguments.gifted = JSONUtils.extractFrom(message, "gifter_twitch_id", String.class, null) != null;
             eventArguments.rewardTitle = TSHelper.jslikeOr(
                     JSONUtils.extractFrom(message, "redemption_name", String.class, null),
-                    JSONUtils.extractFrom(message, "product", String.class, null)
+                    JSONUtils.extractFrom(message, "product", String.class, null),
+                    JSONUtils.extractFrom(message, "title", String.class,null)
             );
 
             // Pass the model to the handler
