@@ -1,6 +1,5 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.event;
 
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.predicate.TSLPredicate;

@@ -8,8 +8,9 @@ import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
 import net.programmer.igoodie.twitchspawn.tracer.Platform;
 import net.programmer.igoodie.twitchspawn.tracer.SocketIOTracer;
 import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.EventBuilder;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.util.JSONUtils;
 import net.programmer.igoodie.twitchspawn.util.TSHelper;
@@ -61,36 +62,29 @@ public class StreamlabsSocketTracer extends SocketIOTracer {
 
         String eventType = JSONUtils.extractFrom(event, "type", String.class, null);
         String eventFor = JSONUtils.extractFrom(event, "for", String.class, "streamlabs");
-        String eventAccount = eventFor.replace("_account", "");
+        TSLEventPair eventPair = new TSLEventPair(eventType, eventFor.replace("_account", ""));
 
         JSONUtils.forEach(messages, message -> {
             TwitchSpawn.LOGGER.info("Received Streamlabs packet {} -> {}",
                     new TSLEventPair(eventType, eventFor), message);
 
+            // Fetch the appropriate builder
+            EventBuilder eventBuilder = TSLEventKeyword.getBuilder(eventPair);
+
             // Unregistered event alias
-            if (TSLEventKeyword.ofPair(eventType, eventAccount) == null)
+            if (eventBuilder == null)
                 return; // Stop here, do not handle
 
-            // Refine incoming data into EventArguments model
-            EventArguments eventArguments = new EventArguments(eventType, eventAccount);
-            eventArguments.streamerNickname = streamer.minecraftNick;
-            eventArguments.actorNickname = TSHelper.jslikeOr(
-                    JSONUtils.extractFrom(message, "name", String.class, null),
-                    JSONUtils.extractFrom(message, "from", String.class, null)
-            );
-            eventArguments.message = JSONUtils.extractFrom(message, "message", String.class, null);
-            eventArguments.donationAmount = JSONUtils.extractNumberFrom(message, "amount", 0.0).doubleValue();
-            eventArguments.donationCurrency = JSONUtils.extractFrom(message, "currency", String.class, null);
-            eventArguments.subscriptionMonths = JSONUtils.extractNumberFrom(message, "months", 0).intValue();
-            eventArguments.raiderCount = JSONUtils.extractNumberFrom(message, "raiders", 0).intValue();
-            eventArguments.viewerCount = JSONUtils.extractNumberFrom(message, "viewers", 0).intValue();
-            eventArguments.subscriptionTier = extractTier(message, "sub_plan");
-            eventArguments.gifted = JSONUtils.extractFrom(message, "gifter_twitch_id", String.class, null) != null;
-            eventArguments.rewardTitle = TSHelper.jslikeOr(
-                    JSONUtils.extractFrom(message, "redemption_name", String.class, null),
-                    JSONUtils.extractFrom(message, "product", String.class, null),
-                    JSONUtils.extractFrom(message, "title", String.class,null)
-            );
+            // Build arguments
+            EventArguments eventArguments = eventBuilder.build(streamer, eventPair,
+                    message, Platform.STREAMLABS);
+
+            // Build failed for an unknown reason
+            if (eventArguments == null) {
+                TwitchSpawn.LOGGER.warn("{} was not able to build arguments from incoming data -> {}",
+                        eventBuilder.getClass().getSimpleName(), message.toString());
+                return;
+            }
 
             // Pass the model to the handler
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments);

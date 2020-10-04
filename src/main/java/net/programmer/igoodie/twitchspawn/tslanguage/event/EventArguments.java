@@ -1,7 +1,6 @@
-package net.programmer.igoodie.twitchspawn.tslanguage;
+package net.programmer.igoodie.twitchspawn.tslanguage.event;
 
 import com.google.common.base.Defaults;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 
 import java.lang.reflect.Field;

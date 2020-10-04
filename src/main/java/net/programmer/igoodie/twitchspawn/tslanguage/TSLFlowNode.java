@@ -1,5 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage;
 
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
+
 public interface TSLFlowNode {
 
     /**
