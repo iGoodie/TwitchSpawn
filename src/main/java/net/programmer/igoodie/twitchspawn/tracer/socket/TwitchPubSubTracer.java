@@ -6,7 +6,7 @@ import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
 import net.programmer.igoodie.twitchspawn.tracer.Platform;
 import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
 import net.programmer.igoodie.twitchspawn.tracer.WebSocketTracer;
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -166,6 +166,8 @@ public class TwitchPubSubTracer extends WebSocketTracer {
         int cost = data.optJSONObject("redemption").optJSONObject("reward").optInt("cost");
         String actorNickname = data.optJSONObject("redemption").optJSONObject("user").optString("display_name");
         String actorMessage = data.optJSONObject("redemption").optString("user_input");
+
+        // TODO: Extract to EventBuilder, perhaps? Can stay like this too. Need to reconsider
 
         EventArguments eventArguments = new EventArguments("channelPointReward", "twitch");
         eventArguments.streamerNickname = streamer.minecraftNick;

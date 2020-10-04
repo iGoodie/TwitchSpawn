@@ -2,7 +2,7 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.google.gson.JsonArray;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;

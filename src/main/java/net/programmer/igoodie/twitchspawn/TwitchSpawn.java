@@ -32,6 +32,7 @@ import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
 import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
+import net.programmer.igoodie.twitchspawn.udl.NotepadUDLUpdater;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,6 +70,7 @@ public class TwitchSpawn {
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
+        NotepadUDLUpdater.attemptUpdate();
         MinecraftForge.EVENT_BUS.register(StatusIndicatorOverlay.class);
         MinecraftForge.EVENT_BUS.register(GlobalChatCooldownOverlay.class);
     }

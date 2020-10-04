@@ -1,11 +1,10 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;

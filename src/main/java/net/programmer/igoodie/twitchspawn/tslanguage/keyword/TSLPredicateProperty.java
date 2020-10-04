@@ -1,6 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.keyword;
 
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
