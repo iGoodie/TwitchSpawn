@@ -38,3 +38,7 @@ chatGlobalCooldown = 60000
 # Unit of it is milliseconds (1000 milliseconds = 1 second)
 # Min: 0
 chatIndividualCooldown = 120000
+
+# Whether it should warn users on the chat when a cooldown is present or not
+# Either "enabled" or "disabled"
+chatWarnings = "enabled"

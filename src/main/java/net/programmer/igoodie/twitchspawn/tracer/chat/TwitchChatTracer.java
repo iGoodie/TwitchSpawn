@@ -111,9 +111,11 @@ public class TwitchChatTracer extends WebSocketTracer {
             ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments, cooldownBucket);
 
         } else if (ConfigManager.RULESET_COLLECTION.getRuleset(streamer.minecraftNick).willPerform(eventArguments)) {
-            socket.send("PRIVMSG #" + streamer.twitchNick.toLowerCase()
-                    + String.format(" :@%s, you still have %s second(s), before you can trigger another action",
-                    twitchChatMessage.username, cooldownBucket.getCooldown(twitchChatMessage.username) / 1000));
+            if (ConfigManager.PREFERENCES.chatWarnings) {
+                socket.send("PRIVMSG #" + streamer.twitchNick.toLowerCase()
+                        + String.format(" :@%s, you still have %s second(s), before you can trigger another action",
+                        twitchChatMessage.username, cooldownBucket.getCooldown(twitchChatMessage.username) / 1000));
+            }
         }
 
     }
