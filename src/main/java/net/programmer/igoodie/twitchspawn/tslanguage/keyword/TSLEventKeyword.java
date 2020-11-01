@@ -1,8 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.keyword;
 
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.DonationBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.EventBuilder;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,7 +27,7 @@ public enum TSLEventKeyword {
     ),
     TWITCH_FOLLOW(
             "Twitch Follow",
-            new EventBuilder() {}, // TODO: <--
+            new TwitchFollowBuilder(),
             new TSLEventPair("follow", "twitch")
     ),
     TWITCH_SUBSCRIPTION(
@@ -109,22 +108,22 @@ public enum TSLEventKeyword {
     ),
     TILTIFY_DONATION(
             "Tiltify Donation",
-            new EventBuilder() {}, // TODO: <--
+            new TiltifyBuilder(),
             new TSLEventPair("tiltifydonation", "tiltify")
     ),
     EXTRALIFE_DONATION(
             "ExtraLife Donation",
-            new EventBuilder() {}, // TODO: <--
+            new ExtraLifeBuilder(),
             new TSLEventPair("eldonation", "extralife")
     ),
     PATREON_PLEDGE(
             "Patreon Pledge",
-            new EventBuilder() {}, // TODO: <--
+            new PatreonBuilder(),
             new TSLEventPair("pledge", "patreon")
     ),
     TREATSTREAM_TREAT(
             "TreatStream Treat",
-            new EventBuilder() {}, // TODO: <--
+            new TreatStreamBuilder(),
             new TSLEventPair("treat", "treatstream")
     ),
     ;
