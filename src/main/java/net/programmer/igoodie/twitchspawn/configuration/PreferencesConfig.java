@@ -59,6 +59,7 @@ public class PreferencesConfig {
             preferencesConfig.autoStart = getEnum(config, "autoStart", AutoStartEnum.class);
             preferencesConfig.chatGlobalCooldown = config.get("chatGlobalCooldown");
             preferencesConfig.chatIndividualCooldown = config.get("chatIndividualCooldown");
+            preferencesConfig.chatWarnings = config.get("chatWarnings").equals("enabled");
 
             config.close();
 
@@ -120,6 +121,12 @@ public class PreferencesConfig {
         defineEnum(spec, "autoStart", AutoStartEnum.DISABLED, AutoStartEnum.class);
         spec.defineInRange("chatGlobalCooldown", 1000, 0, Integer.MAX_VALUE);
         spec.defineInRange("chatIndividualCooldown", 1000, 0, Integer.MAX_VALUE);
+        spec.define("chatWarnings", "disabled", rawValue -> {
+            if (!(rawValue instanceof String))
+                return false;
+            String value = ((String) rawValue);
+            return value.equals("enabled") || value.equals("disabled");
+        });
 
         return spec;
     }
@@ -175,5 +182,6 @@ public class PreferencesConfig {
 
     public int chatGlobalCooldown;
     public int chatIndividualCooldown;
+    public boolean chatWarnings;
 
 }
