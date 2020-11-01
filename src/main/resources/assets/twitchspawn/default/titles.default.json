@@ -79,7 +79,7 @@
       "color": "white"
     },
     {
-      "text": " to ${viewers} viewer(s)!",
+      "text": " with ${viewers} viewer(s)!",
       "color": "gold"
     }
   ],
@@ -103,7 +103,7 @@
       "color": "aqua"
     },
     {
-      "text": " donated you ${amount_i} bit(s)",
+      "text": " cheered ${amount_i} bit(s)",
       "color": "white"
     }
   ],
@@ -169,12 +169,69 @@
       "color": "dark_purple"
     },
     {
-      "text": " donated you ${amount_f}${currency}!",
+      "text": " donated ${amount_f}${currency}!",
       "color": "white"
     },
     {
       "text": " (JustGiving)",
       "color": "gold"
     }
+  ],
+  "extralife donation": [
+    {
+      "text": "${actor}",
+      "color": "dark_purple"
+    },
+    {
+      "text": " donated ${amount_f}${currency}!",
+      "color": "white"
+    },
+    {
+      "text": " (ExtraLife)",
+      "color": "gold"
+    }
+  ],
+  "tiltify donation": [
+    {
+      "text": "${actor}",
+      "color": "dark_purple"
+    },
+    {
+      "text": " donated ${amount_f}${currency}!",
+      "color": "white"
+    },
+    {
+      "text": " (Tiltify)",
+      "color": "gold"
+    }
+  ],
+  "patreon pledge": [
+    {
+      "text": "${actor}",
+      "color": "dark_purple"
+    },
+    {
+      "text": " pledged ${amount_f}${currency}!",
+      "color": "white"
+    },
+    {
+      "text": " (Patreon)",
+      "color": "gold"
+    }
+  ],
+  "treatstream treat": [
+    {
+      "text": "${actor}",
+      "color": "dark_purple"
+    },
+    {
+      "text": " treated you to a ${title}!",
+      "color": "white"
+    },
+    {
+      "text": " (TreatStream)",
+      "color": "gold"
+    }
   ]
 }
+
