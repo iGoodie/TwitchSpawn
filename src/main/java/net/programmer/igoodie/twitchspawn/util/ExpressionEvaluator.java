@@ -1,6 +1,6 @@
 package net.programmer.igoodie.twitchspawn.util;
 
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

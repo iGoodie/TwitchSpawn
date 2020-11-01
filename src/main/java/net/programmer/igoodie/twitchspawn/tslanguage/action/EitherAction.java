@@ -2,7 +2,7 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.google.gson.JsonArray;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -60,7 +60,7 @@ public class EitherAction extends TSLAction {
                 } catch (IllegalStateException e) {
                     throw new TSLSyntaxError("Cannot add the action with %1$s%% probability, which goes above 100%%. " +
                             "(%1$.02f%% + %2$s%% > 100%%)", actions.getTotalPercentage() / 100f, percentage);
-                    
+
                 } catch (IllegalArgumentException e) {
                     throw new TSLSyntaxError("Probability expressions accept up to 2 fractional digits." +
                             " %s cannot be parsed.", percentage);

@@ -7,7 +7,7 @@ import net.programmer.igoodie.twitchspawn.tracer.Platform;
 import net.programmer.igoodie.twitchspawn.tracer.TraceManager;
 import net.programmer.igoodie.twitchspawn.tracer.WebSocketTracer;
 import net.programmer.igoodie.twitchspawn.tracer.model.TwitchChatMessage;
-import net.programmer.igoodie.twitchspawn.tslanguage.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 import okhttp3.Response;
 import okhttp3.WebSocket;
