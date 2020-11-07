@@ -14,7 +14,7 @@
 </p>
 
 Long waited update is finally here! :tada: 1.14 Adaptation is alive! (See the [user manual](https://igoodie.gitbook.io/twitchspawn/)!)
- 
+
 ## Brief Summary
 TwitchSpawn is a Minecraft mod designed for Twitch streamers using 3rd party streaming platforms!
 
@@ -51,7 +51,7 @@ With TSL, declaring event handling rules (rule sets) is piece of cake! It is eas
 DROP minecraft:stick 2
  ON Donation
  WITH amount IN RANGE [0,20]
- 
+
 EITHER # Selects one random action
  # Either drops a diamond block
  DROP diamond_block 1
@@ -74,7 +74,7 @@ EXECUTE %/gamerule keepInventory true%
  ]%
  ON Donation
  WITH amount >= 1000
- 
+
  # Instantly does two actions! Throws leggings and boots from the inventory!
 BOTH INSTANTLY
  THROW leggings AND THROW boots
@@ -156,6 +156,7 @@ and creating a PR!
 
 ## Special Thanks
 Special thanks to each one of those beautiful people:
+* [Redowar](https://www.twitch.tv/redowar) - For igniting the initial idea of dropping (*actually Spawn'ing :p*) stuff in-game, dev-version testing and his amazing company!
 * [ToastNomNomNom](https://www.twitch.tv/toastnomnomnom) - For reaching me, motivating me for a whole new paradigm and helping me do the alpha testings!
 * [Köfteistköfte](https://www.youtube.com/user/kofteistkofte) - For his amazing OS_RUN action idea and testings!
 * [AdmiralLemon](https://www.twitch.tv/theadmirallemon) - For his bug reports and helps on debugging!
@@ -165,6 +166,8 @@ Special thanks to each one of those beautiful people:
 * [JimilT92](https://github.com/JimiIT92) - For his amazing insight on placeholder expressions and detailed issues!
 * [BisUmTo](https://www.twitch.tv/bisumto) - For his priceless bug-reports and endless effort on debugging them!
 * [Diaval](https://github.com/thediaval) - For his epic memes and pair programming sessions!
+* [Azelza](https://www.twitch.tv/azelzagaming) - For his unconditional support and love to the Spawn Project!
+* [Atanend](https://www.twitch.tv/atanend), [DesimieS](https://www.twitch.tv/desimies), [Katayanka](https://www.twitch.tv/kata1925), [Grishnack](https://www.twitch.tv/grishnackx) and [Taul](https://www.twitch.tv/taulnyb) - For their assist in alpha testing the TSL2.0 early features!
 * My Guildies: Elanor & Vaelios - For preparing German and French translations!
 * And every single person in our [Discord Server](https://discord.gg/KNxxdvN) for keeping us motivated on this project!
 
