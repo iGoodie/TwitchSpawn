@@ -1,4 +1,4 @@
-package net.programmer.igoodie.twitchspawn.tracer;
+package net.programmer.igoodie.twitchspawn.network;
 
 public enum Platform {
 

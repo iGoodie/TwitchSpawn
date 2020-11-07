@@ -51,8 +51,6 @@ public class StatusIndicatorOverlay {
     public static void onRenderGuiPost(RenderGameOverlayEvent.Post event) {
         if (ConfigManager.PREFERENCES.indicatorDisplay == PreferencesConfig.IndicatorDisplay.DISABLED)
             return; // The display is disabled, stop here
-
-        Minecraft minecraft = Minecraft.getInstance();
         MatrixStack matrixStack = event.getMatrixStack();
 
         if (event.getType() != ElementType.HOTBAR)
@@ -61,6 +59,13 @@ public class StatusIndicatorOverlay {
         // Already drew, stop here
         if (drew) return;
 
+        render(matrixStack, ConfigManager.PREFERENCES.indicatorDisplay);
+
+        drew = true;
+    }
+
+    public static void render(MatrixStack matrixStack, PreferencesConfig.IndicatorDisplay preference) {
+        Minecraft minecraft = Minecraft.getInstance();
         minecraft.getTextureManager().bindTexture(indicatorIcons);
         matrixStack.push();
         GlStateManager.enableBlend();
@@ -69,12 +74,12 @@ public class StatusIndicatorOverlay {
         int ux = -1, uy = -1;
         int w = -1, h = -1;
 
-        if (ConfigManager.PREFERENCES.indicatorDisplay == PreferencesConfig.IndicatorDisplay.ENABLED) {
+        if (preference == PreferencesConfig.IndicatorDisplay.ENABLED) {
             ux = 0;
             uy = running ? 22 : 0;
             w = 65;
             h = 22;
-        } else if (ConfigManager.PREFERENCES.indicatorDisplay == PreferencesConfig.IndicatorDisplay.CIRCLE_ONLY) {
+        } else if (preference == PreferencesConfig.IndicatorDisplay.CIRCLE_ONLY) {
             ux = 0;
             uy = running ? 56 : 44;
             w = 12;
@@ -87,8 +92,6 @@ public class StatusIndicatorOverlay {
         GlStateManager.disableBlend();
         matrixStack.pop();
         minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
-
-        drew = true;
     }
 
 }

@@ -4,13 +4,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.network.packet.EventPacket;
 import net.programmer.igoodie.twitchspawn.network.packet.GlobalChatCooldownPacket;
 import net.programmer.igoodie.twitchspawn.network.packet.OsRunPacket;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
 
 public class NetworkManager {
 
-    private static final String PROTOCOL_VERSION = "0.0.4";
+    private static final String PROTOCOL_VERSION = "0.1.0-iskall";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(TwitchSpawn.MOD_ID, "network"))
@@ -34,6 +35,12 @@ public class NetworkManager {
                 GlobalChatCooldownPacket::encode,
                 GlobalChatCooldownPacket::decode,
                 GlobalChatCooldownPacket::handle
+        );
+
+        CHANNEL.registerMessage(3, EventPacket.class,
+                EventPacket::encode,
+                EventPacket::decode,
+                EventPacket::handle
         );
     }
 

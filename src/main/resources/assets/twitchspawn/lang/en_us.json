@@ -1,4 +1,7 @@
 {
+  "key.category.twitchspawn": "TwitchSpawn",
+  "key.twitchspawn.open_ts_screen": "Open TS Panel",
+
   "modloader.twitchspawn.error.tsl":  "TSL Error: §4{2}",
   "modloader.twitchspawn.error.json":  "JSON Error: §4{2}",
   "modloader.twitchspawn.error.toml":  "TOML Error: §4{2}",

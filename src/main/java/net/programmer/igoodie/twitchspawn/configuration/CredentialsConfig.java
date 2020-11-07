@@ -7,7 +7,7 @@ import com.electronwill.nightconfig.core.io.ParsingException;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import com.electronwill.nightconfig.toml.TomlParser;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.tracer.Platform;
+import net.programmer.igoodie.twitchspawn.network.Platform;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

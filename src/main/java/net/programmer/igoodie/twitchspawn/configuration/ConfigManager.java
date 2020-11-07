@@ -11,11 +11,11 @@ public class ConfigManager {
 
     public static final String CONFIG_DIR_PATH = FMLPaths.CONFIGDIR.get().toString() + File.separator + "TwitchSpawn";
 
-    public static CredentialsConfig CREDENTIALS;
     public static TSLRulesetCollection RULESET_COLLECTION;
     public static TitlesConfig TITLES;
     public static SubtitlesConfig SUBTITLES;
     public static PreferencesConfig PREFERENCES;
+    public static ClientCredentialsConfig CLIENT_CREDS;
 
     public static void loadConfigs() throws TwitchSpawnLoadingErrors {
         TwitchSpawn.LOGGER.info("Loading configs...");
@@ -27,7 +27,7 @@ public class ConfigManager {
             configDirectory.mkdirs();
 
         accumulateExceptions(errors,
-                () -> CREDENTIALS = CredentialsConfig.create(getPath("credentials.toml")));
+                () -> CLIENT_CREDS = (ClientCredentialsConfig) new ClientCredentialsConfig().readConfig());
         accumulateExceptions(errors,
                 () -> RULESET_COLLECTION = RulesConfig.createRules(CONFIG_DIR_PATH));
         accumulateExceptions(errors,
@@ -37,7 +37,7 @@ public class ConfigManager {
         accumulateExceptions(errors,
                 () -> PREFERENCES = PreferencesConfig.create(new File(getPath("preferences.toml"))));
 
-        if(!errors.isEmpty())
+        if (!errors.isEmpty())
             throw errors;
 
         TwitchSpawn.LOGGER.info("Configs loaded successfully!");

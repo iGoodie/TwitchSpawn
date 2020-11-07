@@ -40,13 +40,7 @@ public class TwitchSpawnCommand {
         for (String commandName : COMMAND_NAMES) {
             LiteralArgumentBuilder<CommandSource> root = Commands.literal(commandName);
 
-            root.then(Commands.literal("status").executes(TwitchSpawnCommand::statusModule));
-            root.then(Commands.literal("start").executes(TwitchSpawnCommand::startModule));
-            root.then(Commands.literal("stop").executes(TwitchSpawnCommand::stopModule));
-
             root.then(Commands.literal("reloadcfg").executes(TwitchSpawnCommand::reloadModule));
-
-            root.then(Commands.literal("quickrefresh").executes(TwitchSpawnCommand::quickRefreshModule));
 
             root.then(Commands.literal("rules")
                     .executes(context -> rulesModule(context, null))
@@ -77,80 +71,9 @@ public class TwitchSpawnCommand {
 
     /* ------------------------------------------------------------ */
 
-    public static int statusModule(CommandContext<CommandSource> context) {
-        String translationKey = TwitchSpawn.TRACE_MANAGER.isRunning() ?
-                "commands.twitchspawn.status.on" : "commands.twitchspawn.status.off";
-
-        context.getSource().sendFeedback(new TranslationTextComponent(translationKey), false);
-
-        return 1;
-    }
-
-    public static int startModule(CommandContext<CommandSource> context) {
-        String sourceNickname = context.getSource().getName();
-
-        // If has no permission
-        if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.start.no_perm"), true);
-            TwitchSpawn.LOGGER.info("{} tried to run TwitchSpawn, but no permission", sourceNickname);
-            return 0;
-        }
-
-        try {
-            TwitchSpawn.TRACE_MANAGER.start();
-            return 1;
-
-        } catch (IllegalStateException e) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.start.illegal_state"), true);
-            return 0;
-        }
-    }
-
-    public static int stopModule(CommandContext<CommandSource> context) {
-        String sourceNickname = context.getSource().getName();
-
-        // If has no permission
-        if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.stop.no_perm"), true);
-            TwitchSpawn.LOGGER.info("{} tried to stop TwitchSpawn, but no permission", sourceNickname);
-            return 0;
-        }
-
-        try {
-            TwitchSpawn.TRACE_MANAGER.stop(context.getSource(), "Command execution");
-            return 1;
-
-        } catch (IllegalStateException e) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.stop.illegal_state"), true);
-            return 0;
-        }
-    }
-
     public static int reloadModule(CommandContext<CommandSource> context) {
         CommandSource source = context.getSource();
         String sourceNickname = source.getName();
-
-        boolean isOp = TwitchSpawn.SERVER.isSinglePlayer()
-                || Stream.of(TwitchSpawn.SERVER.getPlayerList().getOppedPlayerNames())
-                .anyMatch(oppedPlayerName -> oppedPlayerName.equalsIgnoreCase(sourceNickname));
-
-        // If is not OP or has no permission
-        if (!isOp && !ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.reloadcfg.no_perm"), true);
-            TwitchSpawn.LOGGER.info("{} tried to reload TwitchSpawn configs, but no permission", sourceNickname);
-            return 0;
-        }
-
-        if (TwitchSpawn.TRACE_MANAGER.isRunning()) {
-            source.sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.reloadcfg.already_started"), false);
-            return 0;
-        }
 
         try {
             ConfigManager.loadConfigs();
@@ -164,25 +87,6 @@ public class TwitchSpawnCommand {
                     "commands.twitchspawn.reloadcfg.invalid_syntax", errorLog), false);
             return 0;
         }
-    }
-
-    public static int quickRefreshModule(CommandContext<CommandSource> context) {
-        String sourceNickname = context.getSource().getName();
-
-        if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
-                    "commands.twitchspawn.reloadcfg.no_perm"), true);
-            TwitchSpawn.LOGGER.info("{} tried to run TwitchSpawn, but no permission", sourceNickname);
-            return 0;
-        }
-
-        if (TwitchSpawn.TRACE_MANAGER.isRunning()) {
-            TwitchSpawn.TRACE_MANAGER.stop(context.getSource(), "Quick refreshing");
-        }
-
-        reloadModule(context);
-        startModule(context);
-        return 1;
     }
 
     /* ------------------------------------------------------------ */
@@ -217,14 +121,6 @@ public class TwitchSpawnCommand {
         try {
             String sourceName = context.getSource().getName();
             String streamerName = streamerNick != null ? streamerNick : sourceName;
-
-            // If has no permission
-            if (!ConfigManager.CREDENTIALS.hasPermission(sourceName)) {
-                context.getSource().sendFeedback(new TranslationTextComponent(
-                        "commands.twitchspawn.simulate.no_perm"), true);
-                TwitchSpawn.LOGGER.info("{} tried to simulate an event, but no permission", sourceName);
-                return 0;
-            }
 
             CompoundNBT nbt = context.getArgument("event_simulation_json", CompoundNBT.class);
             String eventName = nbt.getString("event");

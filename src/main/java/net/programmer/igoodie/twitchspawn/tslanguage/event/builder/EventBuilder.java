@@ -1,7 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.event.builder;
 
-import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
-import net.programmer.igoodie.twitchspawn.tracer.Platform;
+import net.programmer.igoodie.twitchspawn.network.Platform;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.util.JSONUtils;
@@ -11,14 +10,14 @@ import org.json.JSONObject;
 public abstract class EventBuilder {
 
     public <T> EventArguments
-    build(CredentialsConfig.Streamer streamer, TSLEventPair eventPair, T rawData, Platform platform) {
+    build(String minecraftNick, TSLEventPair eventPair, T rawData, Platform platform) {
         // Here as a fallback to ensure backwards compatibility
         if (rawData instanceof JSONObject) {
             if (platform == Platform.STREAMLABS) {
-                return legacyStreamlabsBuilder(streamer, eventPair, (JSONObject) rawData);
+                return legacyStreamlabsBuilder(minecraftNick, eventPair, (JSONObject) rawData);
 
             } else if (platform == Platform.STREAMELEMENTS) {
-                return legacyStreamElementsBuilder(streamer, eventPair, (JSONObject) rawData);
+                return legacyStreamElementsBuilder(minecraftNick, eventPair, (JSONObject) rawData);
             }
         }
 
@@ -26,9 +25,9 @@ public abstract class EventBuilder {
     }
 
     private EventArguments
-    legacyStreamlabsBuilder(CredentialsConfig.Streamer streamer, TSLEventPair eventPair, JSONObject message) {
+    legacyStreamlabsBuilder(String minecraftNick, TSLEventPair eventPair, JSONObject message) {
         EventArguments eventArguments = new EventArguments(eventPair);
-        eventArguments.streamerNickname = streamer.minecraftNick;
+        eventArguments.streamerNickname = minecraftNick;
         eventArguments.actorNickname = TSHelper.jslikeOr(
                 JSONUtils.extractFrom(message, "name", String.class, null),
                 JSONUtils.extractFrom(message, "from", String.class, null)
@@ -51,9 +50,9 @@ public abstract class EventBuilder {
     }
 
     private EventArguments
-    legacyStreamElementsBuilder(CredentialsConfig.Streamer streamer, TSLEventPair eventPair, JSONObject data) {
+    legacyStreamElementsBuilder(String minecraftNick, TSLEventPair eventPair, JSONObject data) {
         EventArguments eventArguments = new EventArguments(eventPair);
-        eventArguments.streamerNickname = streamer.minecraftNick;
+        eventArguments.streamerNickname = minecraftNick;
         eventArguments.actorNickname = JSONUtils.extractFrom(data, "username", String.class, null);
         eventArguments.message = JSONUtils.extractFrom(data, "message", String.class, null);
         eventArguments.donationAmount = JSONUtils.extractNumberFrom(data, "amount", 0.0).doubleValue();

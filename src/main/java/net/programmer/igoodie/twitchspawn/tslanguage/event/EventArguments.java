@@ -1,6 +1,8 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.event;
 
 import com.google.common.base.Defaults;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 
 import java.lang.reflect.Field;
@@ -8,7 +10,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class EventArguments {
+public class EventArguments implements INBTSerializable<CompoundNBT> {
 
     public static EventArguments createRandom(String streamerNickname) {
         EventArguments eventArguments = new EventArguments(TSLEventKeyword.randomPair());
@@ -21,9 +23,9 @@ public class EventArguments {
 
     /* ------------------------------ */
 
-    public final String eventType;
-    public final String eventAccount;
-    public final String eventName;
+    public String eventType;
+    public String eventAccount;
+    public String eventName;
 
     public String streamerNickname;
     public String actorNickname;
@@ -53,6 +55,8 @@ public class EventArguments {
         this(eventPair.getEventType(), eventPair.getEventAccount());
     }
 
+    public EventArguments() { }
+
     public void randomize() {
         randomize("RandomDude", "Random event message");
     }
@@ -69,6 +73,57 @@ public class EventArguments {
         this.gifted = random.nextBoolean();
         this.viewerCount = random.nextInt(100 - 1) + 1;
         this.raiderCount = random.nextInt(100 - 1) + 1;
+    }
+
+    @Override
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putString("eventType", eventType);
+        nbt.putString("eventAccount", eventAccount);
+        nbt.putString("eventName", eventName);
+
+        nbt.putString("streamerNickname", streamerNickname);
+        nbt.putString("actorNickname", actorNickname);
+        if (message != null) nbt.putString("message", message);
+
+        nbt.putDouble("donationAmount", donationAmount);
+        if (donationCurrency != null) nbt.putString("donationCurrency", donationCurrency);
+
+        nbt.putInt("subscriptionMonths", subscriptionMonths);
+        nbt.putInt("subscriptionTier", subscriptionTier);
+        nbt.putBoolean("gifted", gifted);
+
+        nbt.putInt("viewerCount", viewerCount);
+        nbt.putInt("raiderCount", raiderCount);
+
+        if (rewardTitle != null) nbt.putString("rewardTitle", rewardTitle);
+//        public Set<String> chatBadges;
+
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+        this.eventType = nbt.getString("eventType");
+        this.eventAccount = nbt.getString("eventAccount");
+        this.eventName = nbt.getString("eventName");
+
+        this.streamerNickname = nbt.getString("streamerNickname");
+        this.actorNickname = nbt.getString("actorNickname");
+        this.message = nbt.getString("message");
+
+        this.donationAmount = nbt.getDouble("donationAmount");
+        this.donationCurrency = nbt.getString("donationCurrency");
+
+        this.subscriptionMonths = nbt.getInt("subscriptionMonths");
+        this.subscriptionTier = nbt.getInt("subscriptionTier");
+        this.gifted = nbt.getBoolean("gifted");
+
+        this.viewerCount = nbt.getInt("viewerCount");
+        this.raiderCount = nbt.getInt("raiderCount");
+
+        this.rewardTitle = nbt.getString("rewardTitle");
+//        public Set<String> chatBadges;
     }
 
     @Override
