@@ -3,12 +3,12 @@ package net.programmer.igoodie.twitchspawn;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStoppedEvent;
 import net.programmer.igoodie.twitchspawn.client.gui.screen.TwitchSpawnScreen;
 import net.programmer.igoodie.twitchspawn.network.StreamlabsSocket;
 
@@ -24,7 +24,7 @@ public class TwitchSpawnClient {
     }
 
     @SubscribeEvent
-    public static void onLeavingServer(FMLServerStoppedEvent event) {
+    public static void onLeavingServer(ClientPlayerNetworkEvent.LoggedOutEvent event) { // <-- Replace with leave
         StreamlabsSocket.INSTANCE.stop();
     }
 
