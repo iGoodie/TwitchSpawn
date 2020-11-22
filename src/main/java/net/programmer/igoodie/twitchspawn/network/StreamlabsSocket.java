@@ -66,6 +66,7 @@ public class StreamlabsSocket {
         this.socket = null;
         running = false;
         StatusIndicatorOverlay.setRunning(false);
+        TwitchPubSubSocket.INSTANCE.stop();
     }
 
     protected void onConnect(Socket socket, Object... args) {

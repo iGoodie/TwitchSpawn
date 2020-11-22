@@ -10,6 +10,7 @@ import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 import net.programmer.igoodie.twitchspawn.network.StreamlabsSocket;
+import net.programmer.igoodie.twitchspawn.network.TwitchPubSubSocket;
 
 public class TwitchSpawnScreen extends Screen {
 
@@ -24,27 +25,29 @@ public class TwitchSpawnScreen extends Screen {
 
     public void refreshButtons() {
         this.startButton = new Button(
-                10, 55,
+                10, 75,
                 100, 20,
                 new StringTextComponent("Connect"),
                 (button) -> {
                     StreamlabsSocket.INSTANCE.start();
+                    TwitchPubSubSocket.INSTANCE.start();
                 }
         );
         this.startButton.active = !StreamlabsSocket.INSTANCE.running;
 
         this.stopButton = new Button(
-                10, 80,
+                10, 100,
                 100, 20,
                 new StringTextComponent("Disconnect"),
                 (button) -> {
                     StreamlabsSocket.INSTANCE.stop();
+                    TwitchPubSubSocket.INSTANCE.stop();
                 }
         );
         this.stopButton.active = StreamlabsSocket.INSTANCE.running;
 
         this.refreshButton = new Button(
-                10, 105,
+                10, 125,
                 100, 20,
                 new StringTextComponent("Reload Configs"),
                 (button) -> {
@@ -55,6 +58,8 @@ public class TwitchSpawnScreen extends Screen {
                     }
                 }
         );
+
+        this.refreshButton.active = !StreamlabsSocket.INSTANCE.running;
     }
 
     @Override
@@ -79,13 +84,24 @@ public class TwitchSpawnScreen extends Screen {
 
         FontRenderer fontRenderer = getMinecraft().fontRenderer;
 
-        fontRenderer.drawString(matrixStack, StreamlabsSocket.INSTANCE.running ? "> Connected" : "> Not connected",
-                10, 35, 0xFF_FFFFFF);
+        fontRenderer.drawString(matrixStack,
+                StreamlabsSocket.INSTANCE.running
+                        ? "> Streamlabs Connected"
+                        : "> Streamlabs Not connected",
+                10, 35,
+                StreamlabsSocket.INSTANCE.running ? 0xFF_FFFFFF : 0xFF_FF0000);
 
-        refreshButtons();
+        fontRenderer.drawString(matrixStack,
+                TwitchPubSubSocket.INSTANCE.pingScheduler != null
+                        ? "> Twitch PubSub Connected"
+                        : "> Twitch PubSub Not connected",
+                10, 45,
+                TwitchPubSubSocket.INSTANCE.pingScheduler != null ? 0xFF_FFFFFF : 0xFF_FF0000);
+
         startButton.renderButton(matrixStack, mouseX, mouseY, partialTicks);
         stopButton.renderButton(matrixStack, mouseX, mouseY, partialTicks);
         refreshButton.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+        refreshButtons();
     }
 
 }
