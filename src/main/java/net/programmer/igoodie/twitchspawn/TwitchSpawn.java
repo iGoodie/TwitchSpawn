@@ -58,6 +58,7 @@ public class TwitchSpawn {
 
         } catch (TwitchSpawnLoadingErrors e) {
             e.bindFMLWarnings(ModLoadingStage.COMMON_SETUP);
+            e.printStackTrace();
             throw new RuntimeException("TwitchSpawn loading errors occurred");
         }
     }
