@@ -17,7 +17,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class StreamlabsSocket {
 
@@ -26,6 +28,7 @@ public class StreamlabsSocket {
     public Socket socket;
     public boolean running;
     public boolean authorized;
+    public Map<String, Long> subGiftHandleTimestamps;
 
     private StreamlabsSocket() {}
 
@@ -58,6 +61,7 @@ public class StreamlabsSocket {
         this.socket = createSocket();
         this.socket.connect();
         running = true;
+        this.subGiftHandleTimestamps = new HashMap<>();
         StatusIndicatorOverlay.setRunning(true);
     }
 
@@ -98,6 +102,21 @@ public class StreamlabsSocket {
         JSONUtils.forEach(messages, message -> {
             TwitchSpawn.LOGGER.info("Received Streamlabs packet {} -> {}",
                     new TSLEventPair(eventType, eventFor), message);
+
+            // If it's a sub gift -- XXX: Streamlabs notify Sub Gifts twice for some reason :thinking:
+            if (Objects.equals(TSLEventKeyword.ofPair(eventPair), TSLEventKeyword.TWITCH_SUBSCRIPTION_GIFT.eventName)) {
+                String subGiftId = JSONUtils.extractFrom(message, "_id", String.class, null);
+                if (subGiftId != null) {
+                    Long prevTimestamp = this.subGiftHandleTimestamps.get(subGiftId);
+                    long now = System.currentTimeMillis();
+                    if (prevTimestamp == null) {
+                        this.subGiftHandleTimestamps.put(subGiftId, now);
+                    } else if (prevTimestamp + 5000L <= now) {
+                        TwitchSpawn.LOGGER.warn("Sub gift was already handled less than 5 seconds ago. Skipping -> {}", message);
+                        return;
+                    }
+                }
+            }
 
             // Fetch the appropriate builder
             EventBuilder eventBuilder = TSLEventKeyword.getBuilder(eventPair);
