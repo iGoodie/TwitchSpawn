@@ -107,14 +107,13 @@ public class StreamlabsSocket {
             if (Objects.equals(TSLEventKeyword.ofPair(eventPair), TSLEventKeyword.TWITCH_SUBSCRIPTION_GIFT.eventName)) {
                 String subGiftId = JSONUtils.extractFrom(message, "_id", String.class, null);
                 if (subGiftId != null) {
-                    Long prevTimestamp = this.subGiftHandleTimestamps.get(subGiftId);
                     long now = System.currentTimeMillis();
-                    if (prevTimestamp == null) {
-                        this.subGiftHandleTimestamps.put(subGiftId, now);
-                    } else if (prevTimestamp + 5000L <= now) {
+                    Long prevTimestamp = this.subGiftHandleTimestamps.computeIfAbsent(subGiftId, (id) -> now);
+                    if (now - prevTimestamp <= 5000L) {
                         TwitchSpawn.LOGGER.warn("Sub gift was already handled less than 5 seconds ago. Skipping -> {}", message);
                         return;
                     }
+                    this.subGiftHandleTimestamps.put(subGiftId, now);
                 }
             }
 
