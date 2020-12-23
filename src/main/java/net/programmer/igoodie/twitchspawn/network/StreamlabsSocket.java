@@ -30,7 +30,9 @@ public class StreamlabsSocket {
     public boolean authorized;
     public Map<String, Long> subGiftHandleTimestamps;
 
-    private StreamlabsSocket() {}
+    private StreamlabsSocket() {
+        this.subGiftHandleTimestamps = new HashMap<>();
+    }
 
     protected IO.Options generateOptions() {
         IO.Options options = new IO.Options();
@@ -107,13 +109,14 @@ public class StreamlabsSocket {
             if (Objects.equals(TSLEventKeyword.ofPair(eventPair), TSLEventKeyword.TWITCH_SUBSCRIPTION_GIFT.eventName)) {
                 String subGiftId = JSONUtils.extractFrom(message, "_id", String.class, null);
                 if (subGiftId != null) {
+                    Long prevTimestamp = this.subGiftHandleTimestamps.get(subGiftId);
                     long now = System.currentTimeMillis();
-                    Long prevTimestamp = this.subGiftHandleTimestamps.computeIfAbsent(subGiftId, (id) -> now);
-                    if (now - prevTimestamp <= 5000L) {
+                    if (prevTimestamp != null && now - prevTimestamp <= 5000L) {
                         TwitchSpawn.LOGGER.warn("Sub gift was already handled less than 5 seconds ago. Skipping -> {}", message);
                         return;
+                    } else {
+                        this.subGiftHandleTimestamps.put(subGiftId, now);
                     }
-                    this.subGiftHandleTimestamps.put(subGiftId, now);
                 }
             }
 
