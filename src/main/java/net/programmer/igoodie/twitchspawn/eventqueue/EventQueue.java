@@ -40,15 +40,17 @@ public class EventQueue {
                     return;
                 }
 
-                EventQueueTask task = tasks.remove();
+                synchronized (tasks) {
+                    EventQueueTask task = tasks.remove();
 
-                if (task.getType() == EventQueueTask.Type.SLEEP)
-                    state = EventQueueState.COOLDOWN;
+                    if (task.getType() == EventQueueTask.Type.SLEEP)
+                        state = EventQueueState.COOLDOWN;
 
-                task.run();
+                    task.run();
 
-                if (task.getType() == EventQueueTask.Type.SLEEP)
-                    state = EventQueueState.WORKING;
+                    if (task.getType() == EventQueueTask.Type.SLEEP)
+                        state = EventQueueState.WORKING;
+                }
 
             } else {
                 pause();
