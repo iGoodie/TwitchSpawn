@@ -2,6 +2,7 @@ package net.programmer.igoodie.twitchspawn.tslanguage;
 
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.log.TSLogger;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
@@ -39,7 +40,11 @@ public class TSLRulesetCollection {
     }
 
     public boolean handleEvent(EventArguments args, CooldownBucket cooldownBucket) {
-        TwitchSpawn.LOGGER.info("Handling (for {}) arguments {}", args.streamerNickname, args);
+        // Fetch associated Ruleset
+        TSLRuleset ruleset = getRuleset(args.streamerNickname);
+
+        TwitchSpawn.getStreamerLogger(args.streamerNickname)
+                .info("Handling (for {}) arguments {}", args.streamerNickname, args);
 
         // Fetch event pair and keyword
         TSLEventPair eventPair = new TSLEventPair(args.eventType, args.eventAccount);
@@ -47,14 +52,13 @@ public class TSLRulesetCollection {
 
         // Event pair is not known by TSL
         if (eventKeyword == null) {
-            TwitchSpawn.LOGGER.info("Event pair not known by TSL -> {}. Skipped handling", eventPair);
+            TwitchSpawn.getStreamerLogger(args.streamerNickname)
+                    .info("Event pair not known by TSL -> {}. Skipped handling", eventPair);
             return false;
         }
 
-        // Fetch associated Ruleset
-        TSLRuleset ruleset = getRuleset(args.streamerNickname);
-
-        TwitchSpawn.LOGGER.info(ruleset == defaultRuleset
+        TwitchSpawn.getStreamerLogger(args.streamerNickname)
+                .info(ruleset == defaultRuleset
                         ? "No associated ruleset for {} found. Handling with default rules"
                         : "Found associated ruleset for {}. Handling with their rules",
                 args.streamerNickname);
@@ -64,7 +68,8 @@ public class TSLRulesetCollection {
 
         // No handler was bound, skip handling
         if (eventNode == null) {
-            TwitchSpawn.LOGGER.info("No rule was found for {}. Skipped handling", eventKeyword);
+            TwitchSpawn.getStreamerLogger(args.streamerNickname)
+                    .info("No rule was found for {}. Skipped handling", eventKeyword);
             return false;
         }
 
@@ -73,7 +78,8 @@ public class TSLRulesetCollection {
         eventQueue.queue(eventNode, args, cooldownBucket);
         eventQueue.queueSleep();
         eventQueue.updateThread();
-        TwitchSpawn.LOGGER.info("Queued handler for {} event.", eventKeyword);
+        TwitchSpawn.getStreamerLogger(args.streamerNickname)
+                .info("Queued handler for {} event.", eventKeyword);
         return true;
     }
 

@@ -25,17 +25,21 @@ import net.programmer.igoodie.twitchspawn.command.RulesetNameArgumentType;
 import net.programmer.igoodie.twitchspawn.command.StreamerArgumentType;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.log.TSLogger;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.udl.NotepadUDLUpdater;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 @Mod(TwitchSpawn.MOD_ID)
 public class TwitchSpawn {
 
     public static final String MOD_ID = "twitchspawn";
-    public static final Logger LOGGER = LogManager.getLogger(TwitchSpawn.class);
-
+    public static final TSLogger LOGGER = TSLogger.createConsoleLogger(TwitchSpawn.class);
+    private static final Map<String, TSLogger> STREAMER_LOGGERS = new HashMap<>(); // Maps lowercase nicks to TSLogger
     public static MinecraftServer SERVER;
 
     public TwitchSpawn() {
@@ -46,8 +50,21 @@ public class TwitchSpawn {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public static TSLogger getStreamerLogger(String nickname) {
+        return STREAMER_LOGGERS.computeIfAbsent(nickname.toLowerCase(),
+                (key) -> {
+                    try {
+                        return TSLogger.createFileLogger(key);
+                    } catch (IOException e) {
+                        return TwitchSpawn.LOGGER;
+                    }
+                }
+        );
+    }
+
     private void commonSetup(final FMLCommonSetupEvent event) {
         try {
+            TSLogger.clearHistoricalLogs(14);
             ConfigManager.loadConfigs();
             NetworkManager.initialize();
 

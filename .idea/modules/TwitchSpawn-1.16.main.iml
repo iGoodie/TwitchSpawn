@@ -11,6 +11,9 @@
     </facet>
   </component>
   <component name="McpModuleSettings">
-    <option name="srgType" value="SRG" />
+    <option name="mappingFile" value="D:\IntelliJ IDEA Workspace\TwitchSpawn-1.16\build\createMcpToSrg\output.tsrg" />
+    <option name="mcpVersion" value="snapshot_20200707-1.16.1" />
+    <option name="minecraftVersion" value="1.16.1" />
+    <option name="srgType" value="TSRG" />
   </component>
 </module>

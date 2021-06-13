@@ -128,7 +128,7 @@ public abstract class TSLAction implements TSLFlowNode {
                 : getPlayer(args.streamerNickname);
 
         if (player == null) {
-            TwitchSpawn.LOGGER.info("Player {} is not found. Skipping {} event.",
+            TwitchSpawn.LOGGER.trace("Player {} is not found. Skipping {} event.",
                     args.streamerNickname, this.getClass().getSimpleName());
             return false;
         }
@@ -141,8 +141,8 @@ public abstract class TSLAction implements TSLFlowNode {
         // Perform action for found player
         performAction(player, args);
 
-        TwitchSpawn.LOGGER.info("{} action performed for {}",
-                TSLActionKeyword.ofClass(this.getClass()), args.streamerNickname);
+        TwitchSpawn.getStreamerLogger(args.streamerNickname)
+                .info("{} action performed for {}", TSLActionKeyword.ofClass(this.getClass()), args.streamerNickname);
         return true;
     }
 
