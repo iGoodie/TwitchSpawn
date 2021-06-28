@@ -26,8 +26,10 @@ public class TwitchSpawnScreen extends Screen {
     }
 
     public void refreshButtons() {
+        int buttonYOffset = 80;
+
         this.startButton = new Button(
-                10, 75,
+                10, buttonYOffset,
                 100, 20,
                 new StringTextComponent("Connect"),
                 (button) -> SocketManager.start()
@@ -35,7 +37,7 @@ public class TwitchSpawnScreen extends Screen {
         this.startButton.active = !SocketManager.isRunning();
 
         this.stopButton = new Button(
-                10, 100,
+                10, buttonYOffset + 25,
                 100, 20,
                 new StringTextComponent("Disconnect"),
                 (button) -> SocketManager.stop()
@@ -43,7 +45,7 @@ public class TwitchSpawnScreen extends Screen {
         this.stopButton.active = SocketManager.isRunning();
 
         this.refreshButton = new Button(
-                10, 125,
+                10, buttonYOffset + 50,
                 100, 20,
                 new StringTextComponent("Reload Configs"),
                 (button) -> {
@@ -87,10 +89,9 @@ public class TwitchSpawnScreen extends Screen {
         renderBackground(matrixStack);
         StatusIndicatorOverlay.render(matrixStack, PreferencesConfig.IndicatorDisplay.ENABLED);
 
-        FontRenderer fontRenderer = getMinecraft().fontRenderer;
-
-        renderConnectionStatus(matrixStack, SocketManager.STREAMLABS_SOCKET, 10, 35);
-        renderConnectionStatus(matrixStack, SocketManager.TWITCH_PUB_SUB_SOCKET, 10, 45);
+        renderConnectionStatus(matrixStack, SocketManager.STREAMLABS_SOCKET, 10, 35, false);
+        renderConnectionStatus(matrixStack, SocketManager.TWITCH_PUB_SUB_SOCKET, 10, 45, false);
+        renderConnectionStatus(matrixStack, SocketManager.TWITCH_CHAT_SOCKET, 10, 55, true);
 
         refreshButtons();
         startButton.renderButton(matrixStack, mouseX, mouseY, partialTicks);
@@ -98,11 +99,12 @@ public class TwitchSpawnScreen extends Screen {
         refreshButton.renderButton(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    private void renderConnectionStatus(MatrixStack matrixStack, SocketTracer tracer, int x, int y) {
+    private void renderConnectionStatus(MatrixStack matrixStack, SocketTracer tracer, int x, int y, boolean optional) {
         FontRenderer fontRenderer = getMinecraft().fontRenderer;
 
-        String text = String.format("> %s %s", tracer.getPlatform().name,
-                tracer.isConnected() ? "Connected" : "Not Connected");
+        String text = String.format("> %s %s %s", tracer.getPlatform().name,
+                tracer.isConnected() ? "Connected" : "Not Connected",
+                optional ? "(Optional)" : "");
 
         fontRenderer.drawString(matrixStack, text, x, y,
                 tracer.isConnected() ? 0xFF_FFFFFF : 0xFF_FF0000);

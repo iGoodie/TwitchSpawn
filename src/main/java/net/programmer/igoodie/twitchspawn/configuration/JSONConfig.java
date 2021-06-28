@@ -12,7 +12,7 @@ public abstract class JSONConfig {
     protected String extension = ".json";
 
     public void generateConfig() {
-        this.reset();
+        this.fillEmpty();
 
         try {
             this.writeConfig();
@@ -22,22 +22,26 @@ public abstract class JSONConfig {
     }
 
     private File getConfigFile() {
-        return new File(ConfigManager.CONFIG_DIR_PATH + File.separator + this.getName() + this.extension);
+        return new File(ConfigManager.CONFIG_DIR_PATH + File.separator
+                + this.getName() + this.extension);
     }
 
     public abstract String getName();
 
     public JSONConfig readConfig() {
         try {
-            return GSON.fromJson(new FileReader(this.getConfigFile()), this.getClass());
-        } catch (FileNotFoundException e) {
+            JSONConfig config = GSON.fromJson(new FileReader(this.getConfigFile()), this.getClass());
+            config.fillEmpty();
+            config.writeConfig();
+            return config;
+        } catch (IOException e) {
             this.generateConfig();
         }
 
         return this;
     }
 
-    protected abstract void reset();
+    protected abstract void fillEmpty();
 
     public void writeConfig() throws IOException {
         File dir = new File(ConfigManager.CONFIG_DIR_PATH);
