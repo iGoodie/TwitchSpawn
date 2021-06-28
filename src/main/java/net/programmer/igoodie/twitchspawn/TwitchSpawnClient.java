@@ -10,7 +10,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.programmer.igoodie.twitchspawn.client.gui.screen.TwitchSpawnScreen;
-import net.programmer.igoodie.twitchspawn.network.StreamlabsSocket;
+import net.programmer.igoodie.twitchspawn.network.SocketManager;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class TwitchSpawnClient {
@@ -25,7 +25,7 @@ public class TwitchSpawnClient {
 
     @SubscribeEvent
     public static void onLeavingServer(ClientPlayerNetworkEvent.LoggedOutEvent event) { // <-- Replace with leave
-        StreamlabsSocket.INSTANCE.stop();
+        SocketManager.stop();
     }
 
     @SubscribeEvent

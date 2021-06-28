@@ -1,12 +1,16 @@
-package net.programmer.igoodie.twitchspawn.network;
+package net.programmer.igoodie.twitchspawn.network.socket;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
-import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.configuration.ClientCredentialsConfig;
+import net.programmer.igoodie.twitchspawn.network.NetworkManager;
+import net.programmer.igoodie.twitchspawn.network.Platform;
+import net.programmer.igoodie.twitchspawn.network.SocketManager;
 import net.programmer.igoodie.twitchspawn.network.packet.EventPacket;
+import net.programmer.igoodie.twitchspawn.network.socket.base.SocketIOBase;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.EventBuilder;
@@ -16,78 +20,53 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class StreamlabsSocket {
+public class StreamlabsSocket extends SocketIOBase {
 
-    public static final StreamlabsSocket INSTANCE = new StreamlabsSocket();
+    protected boolean authorized;
+    protected Map<String, Long> subGiftHandleTimestamps;
 
-    public Socket socket;
-    public boolean running;
-    public boolean authorized;
-    public Map<String, Long> subGiftHandleTimestamps;
-
-    private StreamlabsSocket() {
+    public StreamlabsSocket() {
+        super(Platform.STREAMLABS);
         this.subGiftHandleTimestamps = new HashMap<>();
     }
 
-    protected IO.Options generateOptions() {
-        IO.Options options = new IO.Options();
-        options.forceNew = true;
-        options.reconnection = true;
-        options.transports = new String[]{"websocket"};
-        options.query = "token=" + ConfigManager.CLIENT_CREDS.streamlabsToken;
+    @Override
+    protected String liveEventChannelName() {
+        return "event";
+    }
+
+    @Override
+    protected IO.Options generateOptions(ClientCredentialsConfig config) {
+        IO.Options options = super.generateOptions(config);
+        options.query = "token=" + config.streamlabsToken;
         return options;
     }
 
-    protected Socket createSocket() {
-        try {
-            IO.Options options = generateOptions();
-            Socket socket = IO.socket(Platform.STREAMLABS.url, options);
-
-            socket.on(Socket.EVENT_CONNECT, args -> onConnect(socket, args));
-            socket.on(Socket.EVENT_DISCONNECT, args -> onDisconnect(socket, args));
-            socket.on("event", args -> onLiveEvent(socket, args));
-
-            return socket;
-
-        } catch (URISyntaxException e) {
-            throw new InternalError("Invalid URI for " + Platform.STREAMLABS.name + " = " + Platform.STREAMLABS.url);
-        }
+    @Override
+    public boolean validateCredentials(ClientCredentialsConfig config) {
+        return config.streamlabsToken != null
+                && !config.streamlabsToken.isEmpty();
     }
 
-    public void start() {
-        this.socket = createSocket();
-        this.socket.connect();
-        running = true;
-        this.subGiftHandleTimestamps = new HashMap<>();
-        StatusIndicatorOverlay.setRunning(true);
-    }
-
-    public void stop() {
-        if (socket != null && socket.connected()) this.socket.disconnect();
-        this.socket = null;
-        running = false;
-        StatusIndicatorOverlay.setRunning(false);
-        TwitchPubSubSocket.INSTANCE.stop();
-    }
-
+    @Override
     protected void onConnect(Socket socket, Object... args) {
         TwitchSpawn.LOGGER.info("Connected to Streamlabs Socket API with the token successfully!");
         authorized = true;
     }
 
+    @Override
     protected void onDisconnect(Socket socket, Object... args) {
         TwitchSpawn.LOGGER.info("Disconnected from Streamlabs Socket connection. ({})",
                 authorized ? "intentional" : "unauthorized");
-        socket.close();
-//        socket.disconnect();
-        stop();
+        SocketManager.stop();
+        this.subGiftHandleTimestamps.clear();
     }
 
+    @Override
     protected void onLiveEvent(Socket socket, Object... args) {
         JSONObject event = (JSONObject) args[0];
         JSONArray messages = extractMessages(event);
@@ -127,9 +106,15 @@ public class StreamlabsSocket {
             if (eventBuilder == null)
                 return; // Stop here, do not handle
 
+            Minecraft minecraft = Minecraft.getInstance();
+            ClientPlayerEntity player = minecraft.player;
+
             // Build arguments
-            EventArguments eventArguments = eventBuilder.build(Minecraft.getInstance().player.getDisplayName().getString(), eventPair,
-                    message, Platform.STREAMLABS);
+            EventArguments eventArguments = eventBuilder.build(
+                    player == null ? "Dev" : player.getDisplayName().getString(),
+                    eventPair,
+                    message,
+                    Platform.STREAMLABS);
 
             // Build failed for an unknown reason
             if (eventArguments == null) {

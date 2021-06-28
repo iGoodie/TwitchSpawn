@@ -6,6 +6,7 @@ public class ClientCredentialsConfig extends JSONConfig {
 
     @Expose public String twitchNickname;
     @Expose public String streamlabsToken;
+    @Expose public String twitchChatToken;
 
     @Override
     public String getName() {
@@ -16,6 +17,7 @@ public class ClientCredentialsConfig extends JSONConfig {
     protected void reset() {
         this.twitchNickname = "";
         this.streamlabsToken = "";
+        this.twitchChatToken = "YOUR_CHAT_TOKEN_HERE - Can be generated from https://twitchapps.com/tmi/";
     }
 
 }
