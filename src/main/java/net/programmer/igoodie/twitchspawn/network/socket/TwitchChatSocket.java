@@ -115,8 +115,8 @@ public class TwitchChatSocket extends WebSocketBase {
         socket.send("NICK " + ConfigManager.CLIENT_CREDS.twitchNickname.toLowerCase());
         socket.send("JOIN #" + ConfigManager.CLIENT_CREDS.twitchNickname.toLowerCase());
         socket.send("CAP REQ :twitch.tv/tags");
-        socket.send("PRIVMSG #" + ConfigManager.CLIENT_CREDS.twitchNickname.toLowerCase()
-                + " :TwitchSpawn now connected to the chat! Hey folks!");
+//        socket.send("PRIVMSG #" + ConfigManager.CLIENT_CREDS.twitchNickname.toLowerCase()
+//                + " :TwitchSpawn now connected to the chat! Hey folks!");
 
         startedWithProperToken = true;
 
