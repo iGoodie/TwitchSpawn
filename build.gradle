@@ -3,21 +3,26 @@ buildscript {
         maven { url = 'https://maven.minecraftforge.net' }
         jcenter()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.1.0"
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 version = mod_version
 group = "igoodie.twitchspawn"
 archivesBaseName = "twitchspawn_" + minecraft_version
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '16' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility =
+        compileJava.targetCompatibility = '16' // Need this here so eclipse task generates correctly.
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
@@ -88,14 +93,8 @@ minecraft {
 }
 
 repositories {
-    mavenLocal()
+    jcenter()
     mavenCentral()
-}
-
-configurations {
-    mods
-    shade
-    compile.extendsFrom shade
 }
 
 dependencies {
@@ -105,11 +104,11 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // Nightly Config by Electronwill
-    shade group: 'com.electronwill.night-config', name: 'core', version: '3.6.0'
-    shade group: 'com.electronwill.night-config', name: 'toml', version: '3.6.0'
+    shadow group: 'com.electronwill.night-config', name: 'core', version: '3.6.0'
+    shadow group: 'com.electronwill.night-config', name: 'toml', version: '3.6.0'
 
     // SocketIO Client
-    shade group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
+    shadow "io.socket:socket.io-client:1.0.0"
 
     // JUnit 5 for testings
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
@@ -122,14 +121,16 @@ dependencies {
 
 }
 
+shadowJar {
+    configurations = [project.configurations.shadow]
+    classifier ""
+//    relocate 'com.electronwill.nightconfig.core', "com.electronwill.nightconfig.${mod_id}.core"
+//    relocate 'com.electronwill.nightconfig.toml', "com.electronwill.nightconfig.${mod_id}.toml"
+//    relocate "io.socket.client", "io.socket.${mod_id}.client"
+}
+
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
-    // Include shaded source in the built mod jar
-    configurations.shade.each { dependency ->
-        from(project.zipTree(dependency)) {
-            exclude 'META-INF', 'META-INF/**'
-        }
-    }
     manifest {
         attributes([
                 "Specification-Title"     : mod_id,
@@ -164,4 +165,12 @@ publishing {
 
 test {
     useJUnitPlatform()
+}
+
+artifacts {
+    archives shadowJar
+}
+
+reobf {
+    shadowJar {}
 }

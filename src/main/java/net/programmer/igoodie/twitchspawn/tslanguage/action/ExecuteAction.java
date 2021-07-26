@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
@@ -28,26 +28,26 @@ public class ExecuteAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
-        CommandSource source = player.getCommandSource()
-                .withPermissionLevel(9999) // OVER 9000!
-                .withFeedbackDisabled();
+    protected void performAction(ServerPlayer player, EventArguments args) {
+        CommandSourceStack source = player.createCommandSourceStack()
+                .withPermission(9999) // OVER 9000!
+                .withSuppressedOutput();
 
 
         for (String command : commands) {
             TwitchSpawn.SERVER.execute(() -> {
                 int result = TwitchSpawn.SERVER
-                        .getCommandManager()
-                        .handleCommand(source, replaceExpressions(command, args));
+                        .getCommands()
+                        .performCommand(source, replaceExpressions(command, args));
 
                 if (result <= 0) { // Wohooo we knew iGoodie liked hacky solutions. ( ? :/ )
                     // If it yielded an error, and not worked as expected
                     // Then turn on the feedback, and run it again! Brilliant! What could go wrong? :))))))
-                    CommandSource newSource = player.getCommandSource()
-                            .withPermissionLevel(9999);
+                    CommandSourceStack newSource = player.createCommandSourceStack()
+                            .withPermission(9999);
                     TwitchSpawn.SERVER
-                            .getCommandManager()
-                            .handleCommand(newSource, replaceExpressions(command, args));
+                            .getCommands()
+                            .performCommand(newSource, replaceExpressions(command, args));
                 }
 
                 TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, replaceExpressions(command, args));

@@ -4,21 +4,24 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.play.server.STitlePacket;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandRuntimeException;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
+import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
@@ -26,19 +29,21 @@ import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLTokenizer;
-import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 import net.programmer.igoodie.twitchspawn.util.MCPHelpers;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class TwitchSpawnCommand {
 
     public static final String[] COMMAND_NAMES = {"twitchspawn", "ts"};
 
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         for (String commandName : COMMAND_NAMES) {
-            LiteralArgumentBuilder<CommandSource> root = Commands.literal(commandName);
+            LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal(commandName);
 
             root.then(Commands.literal("status").executes(TwitchSpawnCommand::statusModule));
             root.then(Commands.literal("start").executes(TwitchSpawnCommand::startModule));
@@ -77,21 +82,21 @@ public class TwitchSpawnCommand {
 
     /* ------------------------------------------------------------ */
 
-    public static int statusModule(CommandContext<CommandSource> context) {
+    public static int statusModule(CommandContext<CommandSourceStack> context) {
         String translationKey = TwitchSpawn.TRACE_MANAGER.isRunning() ?
                 "commands.twitchspawn.status.on" : "commands.twitchspawn.status.off";
 
-        context.getSource().sendFeedback(new TranslationTextComponent(translationKey), false);
+        context.getSource().sendSuccess(new TranslatableComponent(translationKey), false);
 
         return 1;
     }
 
-    public static int startModule(CommandContext<CommandSource> context) {
-        String sourceNickname = context.getSource().getName();
+    public static int startModule(CommandContext<CommandSourceStack> context) {
+        String sourceNickname = context.getSource().getTextName();
 
         // If has no permission
         if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
+            context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.start.no_perm"), true);
             TwitchSpawn.LOGGER.info("{} tried to run TwitchSpawn, but no permission", sourceNickname);
             return 0;
@@ -102,18 +107,18 @@ public class TwitchSpawnCommand {
             return 1;
 
         } catch (IllegalStateException e) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
+            context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.start.illegal_state"), true);
             return 0;
         }
     }
 
-    public static int stopModule(CommandContext<CommandSource> context) {
-        String sourceNickname = context.getSource().getName();
+    public static int stopModule(CommandContext<CommandSourceStack> context) {
+        String sourceNickname = context.getSource().getTextName();
 
         // If has no permission
         if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
+            context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.stop.no_perm"), true);
             TwitchSpawn.LOGGER.info("{} tried to stop TwitchSpawn, but no permission", sourceNickname);
             return 0;
@@ -124,53 +129,53 @@ public class TwitchSpawnCommand {
             return 1;
 
         } catch (IllegalStateException e) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
+            context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.stop.illegal_state"), true);
             return 0;
         }
     }
 
-    public static int reloadModule(CommandContext<CommandSource> context) {
-        CommandSource source = context.getSource();
-        String sourceNickname = source.getName();
+    public static int reloadModule(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        String sourceNickname = source.getTextName();
 
-        boolean isOp = TwitchSpawn.SERVER.isSinglePlayer()
-                || Stream.of(TwitchSpawn.SERVER.getPlayerList().getOppedPlayerNames())
+        boolean isOp = TwitchSpawn.SERVER.isSingleplayer()
+                || Stream.of(TwitchSpawn.SERVER.getPlayerList().getOpNames())
                 .anyMatch(oppedPlayerName -> oppedPlayerName.equalsIgnoreCase(sourceNickname));
 
         // If is not OP or has no permission
         if (!isOp && !ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
+            context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.reloadcfg.no_perm"), true);
             TwitchSpawn.LOGGER.info("{} tried to reload TwitchSpawn configs, but no permission", sourceNickname);
             return 0;
         }
 
         if (TwitchSpawn.TRACE_MANAGER.isRunning()) {
-            source.sendFeedback(new TranslationTextComponent(
+            source.sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.reloadcfg.already_started"), false);
             return 0;
         }
 
         try {
             ConfigManager.loadConfigs();
-            source.sendFeedback(new TranslationTextComponent(
+            source.sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.reloadcfg.success"), false);
             return 1;
 
         } catch (TwitchSpawnLoadingErrors e) {
             String errorLog = "• " + e.toString().replace("\n", "\n• ");
-            source.sendFeedback(new TranslationTextComponent(
+            source.sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.reloadcfg.invalid_syntax", errorLog), false);
             return 0;
         }
     }
 
-    public static int quickRefreshModule(CommandContext<CommandSource> context) {
-        String sourceNickname = context.getSource().getName();
+    public static int quickRefreshModule(CommandContext<CommandSourceStack> context) {
+        String sourceNickname = context.getSource().getTextName();
 
         if (!ConfigManager.CREDENTIALS.hasPermission(sourceNickname)) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
+            context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.reloadcfg.no_perm"), true);
             TwitchSpawn.LOGGER.info("{} tried to run TwitchSpawn, but no permission", sourceNickname);
             return 0;
@@ -187,9 +192,9 @@ public class TwitchSpawnCommand {
 
     /* ------------------------------------------------------------ */
 
-    public static int rulesModule(CommandContext<CommandSource> context, String rulesetName) {
+    public static int rulesModule(CommandContext<CommandSourceStack> context, String rulesetName) {
         if (rulesetName == null) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
+            context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.rules.list",
                     ConfigManager.RULESET_COLLECTION.getStreamers()), true);
             return 1;
@@ -198,7 +203,7 @@ public class TwitchSpawnCommand {
         TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(rulesetName);
 
         if (ruleset == null) {
-            context.getSource().sendFeedback(new TranslationTextComponent(
+            context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.rules.one.fail",
                     rulesetName), true);
             return 0;
@@ -206,31 +211,31 @@ public class TwitchSpawnCommand {
 
         String translationKey = rulesetName.equalsIgnoreCase("default") ?
                 "commands.twitchspawn.rules.default" : "commands.twitchspawn.rules.one";
-        context.getSource().sendFeedback(new TranslationTextComponent(translationKey,
+        context.getSource().sendSuccess(new TranslatableComponent(translationKey,
                 rulesetName, ruleset.toString()), true);
         return 1;
     }
 
     /* ------------------------------------------------------------ */
 
-    public static int simulateModule(CommandContext<CommandSource> context, String streamerNick) {
+    public static int simulateModule(CommandContext<CommandSourceStack> context, String streamerNick) {
         try {
-            String sourceName = context.getSource().getName();
+            String sourceName = context.getSource().getTextName();
             String streamerName = streamerNick != null ? streamerNick : sourceName;
 
             // If has no permission
             if (!ConfigManager.CREDENTIALS.hasPermission(sourceName)) {
-                context.getSource().sendFeedback(new TranslationTextComponent(
+                context.getSource().sendSuccess(new TranslatableComponent(
                         "commands.twitchspawn.simulate.no_perm"), true);
                 TwitchSpawn.LOGGER.info("{} tried to simulate an event, but no permission", sourceName);
                 return 0;
             }
 
-            CompoundNBT nbt = context.getArgument("event_simulation_json", CompoundNBT.class);
+            CompoundTag nbt = context.getArgument("event_simulation_json", CompoundTag.class);
             String eventName = nbt.getString("event");
 
             if (eventName.isEmpty()) {
-                context.getSource().sendFeedback(new TranslationTextComponent(
+                context.getSource().sendSuccess(new TranslatableComponent(
                         "commands.twitchspawn.simulate.missing"), true);
                 return 0;
             }
@@ -238,7 +243,7 @@ public class TwitchSpawnCommand {
             Set<TSLEventPair> eventPairs = TSLEventKeyword.toPairs(eventName);
 
             if (eventPairs == null) {
-                context.getSource().sendFeedback(new TranslationTextComponent(
+                context.getSource().sendSuccess(new TranslatableComponent(
                         "commands.twitchspawn.simulate.invalid_event", eventName), true);
                 return 0;
             }
@@ -267,7 +272,7 @@ public class TwitchSpawnCommand {
 
             ConfigManager.RULESET_COLLECTION.handleEvent(simulatedEvent);
 
-            context.getSource().sendFeedback(new TranslationTextComponent(
+            context.getSource().sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.simulate.success", nbt), true);
 
             return 1;
@@ -277,7 +282,7 @@ public class TwitchSpawnCommand {
         }
     }
 
-    public static int executeModule(CommandContext<CommandSource> context) throws CommandSyntaxException {
+    public static int executeModule(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         try {
             String words = TSLWordsArgumentType.getWords(context, "tsl_action");
 
@@ -285,11 +290,11 @@ public class TwitchSpawnCommand {
             String actionName = wordTokens.remove(0);
 
             TSLAction tslAction = TSLParser.parseAction(actionName, wordTokens);
-            EventArguments eventArguments = EventArguments.createRandom(context.getSource().getName());
+            EventArguments eventArguments = EventArguments.createRandom(context.getSource().getTextName());
             tslAction.process(eventArguments);
 
         } catch (TSLSyntaxError e) {
-            throw new CommandException(new StringTextComponent(e.getMessage()));
+            throw new CommandRuntimeException(new TextComponent(e.getMessage()));
         }
 
         return 1;
@@ -299,14 +304,14 @@ public class TwitchSpawnCommand {
     private static final int DEFAULT_STAY_TICKS = 70;
     private static final int DEFAULT_FADE_OUT_TICKS = 20;
 
-    public static int testModule(CommandContext<CommandSource> context, String streamerNick) throws CommandSyntaxException {
+    public static int testModule(CommandContext<CommandSourceStack> context, String streamerNick) throws CommandSyntaxException {
         if (!ConfigManager.RULESET_COLLECTION.hasStreamer(streamerNick)) {
             TwitchSpawn.LOGGER.info("There are no ruleset associated with {}", streamerNick);
-            context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.test.not_found", streamerNick), true);
+            context.getSource().sendSuccess(new TranslatableComponent("commands.twitchspawn.test.not_found", streamerNick), true);
             return 0;
         }
 
-        ServerPlayerEntity streamerPlayer = context.getSource().asPlayer();
+        ServerPlayer streamerPlayer = context.getSource().getPlayerOrException();
         TSLRuleset ruleset = ConfigManager.RULESET_COLLECTION.getRuleset(streamerNick);
         EventQueue eventQueue = ConfigManager.RULESET_COLLECTION.getQueue(streamerNick);
 
@@ -325,19 +330,20 @@ public class TwitchSpawnCommand {
             eventArguments.actorNickname = "TesterKid";
 
             for (TSLAction action : event.getActions()) {
-                ITextComponent text = MCPHelpers.fromJsonLenient(
+                Component text = MCPHelpers.fromJsonLenient(
                         String.format("{text:\"Testing %s action\", color:\"dark_purple\"}", TSLActionKeyword.ofClass(action.getClass())));
-                STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text,
-                        DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+                ClientboundSetTitleTextPacket packet = new ClientboundSetTitleTextPacket(text);
 
-                ITextComponent subtext = MCPHelpers.fromJsonLenient(
+                Component subtext = MCPHelpers.fromJsonLenient(
                         String.format("{text:\"Rules traversed: %.02f%%\", color:\"dark_purple\"}", 100 * (index + 1f) / ruleset.getRulesRaw().size()));
-                STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
-                        DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
+                ClientboundSetSubtitleTextPacket subtitlePacket = new ClientboundSetSubtitleTextPacket(subtext);
+
+                ClientboundSetTitlesAnimationPacket animationTimePacket = new ClientboundSetTitlesAnimationPacket(DEFAULT_FADE_IN_TICKS, DEFAULT_STAY_TICKS, DEFAULT_FADE_OUT_TICKS);
 
                 eventQueue.queue(() -> {
-                    streamerPlayer.connection.sendPacket(packet);
-                    streamerPlayer.connection.sendPacket(subtitlePacket);
+                    streamerPlayer.connection.send(packet);
+                    streamerPlayer.connection.send(subtitlePacket);
+                    streamerPlayer.connection.send(animationTimePacket);
                 });
                 eventQueue.queueSleep();
                 eventQueue.queue(() -> action.process(eventArguments));
@@ -350,7 +356,7 @@ public class TwitchSpawnCommand {
         }
 
         TwitchSpawn.LOGGER.info("Tests queued for {}", streamerNick);
-        context.getSource().sendFeedback(new TranslationTextComponent("commands.twitchspawn.test.success", streamerNick), true);
+        context.getSource().sendSuccess(new TranslatableComponent("commands.twitchspawn.test.success", streamerNick), true);
         return 1;
     }
 

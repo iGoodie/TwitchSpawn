@@ -1,16 +1,16 @@
 package net.programmer.igoodie.twitchspawn.util;
 
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class MCPHelpers {
 
-    public static ITextComponent fromJsonLenient(String string) {
-        return ITextComponent.Serializer.func_240644_b_(string);
+    public static Component fromJsonLenient(String string) {
+        return Component.Serializer.fromJsonLenient(string);
     }
 
-    public static ITextComponent merge(ITextComponent c1, ITextComponent c2) {
-        IFormattableTextComponent deepCopy = c1.deepCopy();
+    public static Component merge(Component c1, Component c2) {
+        MutableComponent deepCopy = c1.copy();
         deepCopy.getSiblings().add(c2);
         return deepCopy;
     }

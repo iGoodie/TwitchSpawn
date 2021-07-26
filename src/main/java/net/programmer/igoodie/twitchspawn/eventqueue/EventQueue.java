@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.eventqueue;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.packet.GlobalChatCooldownPacket;
@@ -9,7 +9,9 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
 import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 
-import java.util.*;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 public class EventQueue {
 
@@ -129,14 +131,14 @@ public class EventQueue {
             if (cooldownBucket != null) {
                 cooldownBucket.consume(args.actorNickname);
 
-                ServerPlayerEntity playerEntity = TwitchSpawn.SERVER
+                ServerPlayer playerEntity = TwitchSpawn.SERVER
                         .getPlayerList()
-                        .getPlayerByUsername(args.streamerNickname);
+                        .getPlayerByName(args.streamerNickname);
 
                 if (playerEntity != null) {
                     NetworkManager.CHANNEL.sendTo(
                             new GlobalChatCooldownPacket(cooldownBucket.getGlobalCooldownTimestamp()),
-                            playerEntity.connection.netManager,
+                            playerEntity.connection.connection,
                             NetworkDirection.PLAY_TO_CLIENT
                     );
                 }

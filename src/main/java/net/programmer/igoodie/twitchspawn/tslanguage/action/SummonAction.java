@@ -2,9 +2,9 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -32,7 +32,7 @@ public class SummonAction extends TSLAction {
 
         // Fetch entity type
         String entityName = actionWords.get(0);
-        EntityType<?> entityType = EntityType.byKey(entityName).orElse(null);
+        EntityType<?> entityType = EntityType.byString(entityName).orElse(null);
 
         // Entity with given key not found
         if (entityType == null)
@@ -42,7 +42,7 @@ public class SummonAction extends TSLAction {
 
         // Save parsed words
         try {
-            new JsonToNBT(new StringReader(rawNbt)).readStruct();
+            new TagParser(new StringReader(rawNbt)).readStruct();
 
         } catch (CommandSyntaxException e) {
             throw new TSLSyntaxError("Malformed NBT json -> %s", rawNbt);
@@ -67,7 +67,7 @@ public class SummonAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+    protected void performAction(ServerPlayer player, EventArguments args) {
         String command = String.format("/summon %s %s %s %s %s",
                 entityType.getRegistryName(),
                 rawCoordX,
@@ -75,14 +75,15 @@ public class SummonAction extends TSLAction {
                 rawCoordZ,
                 replaceExpressions(rawNbt, args));
 
-        player.getServer().getCommandManager().handleCommand(player.getCommandSource()
-                .withPermissionLevel(9999).withFeedbackDisabled(), command);
+        player.getServer().getCommands().performCommand(player.createCommandSourceStack()
+                .withPermission(9999).withSuppressedOutput(), command);
     }
 
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
-        if (expression.equals("mobName"))
-            return entityType.getName().getString();
+        // XXX: Dunno where that went... Fix that later?
+//        if (expression.equals("mobName"))
+//            return entityType.getName().getString();
         return null;
     }
 

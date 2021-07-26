@@ -1,12 +1,13 @@
 package net.programmer.igoodie.twitchspawn.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.TickEvent;
@@ -29,7 +30,7 @@ public class StatusIndicatorOverlay {
         String soundName = running ? "pop_in" : "pop_out";
 
         Minecraft minecraft = Minecraft.getInstance();
-        ClientPlayerEntity self = minecraft.player;
+        LocalPlayer self = minecraft.player;
 
         if (self != null) { // Here to hopefully fix an obscure Null Pointer (From UNKNOWN PENGUIN's log)
             self.playSound(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, soundName)), 1f, 1f);
@@ -53,17 +54,21 @@ public class StatusIndicatorOverlay {
             return; // The display is disabled, stop here
 
         Minecraft minecraft = Minecraft.getInstance();
-        MatrixStack matrixStack = event.getMatrixStack();
+        PoseStack matrixStack = event.getMatrixStack();
 
-        if (event.getType() != ElementType.HOTBAR)
+        if (event.getType() != ElementType.TEXT)
             return; // Render only on HOTBAR
 
         // Already drew, stop here
         if (drew) return;
 
-        minecraft.getTextureManager().bindTexture(indicatorIcons);
-        matrixStack.push();
-        GlStateManager.enableBlend();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, indicatorIcons);
+
+        matrixStack.pushPose();
 
         int x = 5, y = 5;
         int ux = -1, uy = -1;
@@ -82,11 +87,14 @@ public class StatusIndicatorOverlay {
         }
 
         matrixStack.scale(1f, 1f, 1f);
-        minecraft.ingameGUI.blit(matrixStack, x, y, ux, uy, w, h);
+        minecraft.gui.blit(matrixStack, x, y, ux, uy, w, h);
 
-        GlStateManager.disableBlend();
-        matrixStack.pop();
-        minecraft.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+        matrixStack.popPose();
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.disableBlend();
+        RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
 
         drew = true;
     }

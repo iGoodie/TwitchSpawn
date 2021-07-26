@@ -1,6 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
@@ -48,7 +48,7 @@ public class ForAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+    protected void performAction(ServerPlayer player, EventArguments args) {
         action.reflectedUser = this.reflectedUser;
 
         int iterationCount = evaluateIterationCount(args);

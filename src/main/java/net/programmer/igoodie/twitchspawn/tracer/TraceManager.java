@@ -1,10 +1,10 @@
 package net.programmer.igoodie.twitchspawn.tracer;
 
 import io.socket.client.Socket;
-import net.minecraft.command.CommandSource;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
@@ -48,22 +48,22 @@ public class TraceManager {
 
         // Connect online players from credentials.toml
         for (CredentialsConfig.Streamer streamer : ConfigManager.CREDENTIALS.streamers) {
-            if (TwitchSpawn.SERVER.getPlayerList().getPlayerByUsername(streamer.minecraftNick) != null) {
+            if (TwitchSpawn.SERVER.getPlayerList().getPlayerByName(streamer.minecraftNick) != null) {
                 connectStreamer(streamer.minecraftNick);
             }
         }
 
-        for (ServerPlayerEntity player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
-            UUID uuid = player.getUniqueID();
-            TranslationTextComponent successText = new TranslationTextComponent("commands.twitchspawn.start.success");
-            player.getEntity().sendMessage(successText, uuid);
+        for (ServerPlayer player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
+            UUID uuid = player.getUUID();
+            TranslatableComponent successText = new TranslatableComponent("commands.twitchspawn.start.success");
+            player.sendMessage(successText, uuid);
             NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(true),
-                    player.connection.netManager,
+                    player.connection.connection,
                     NetworkDirection.PLAY_TO_CLIENT);
         }
     }
 
-    public void stop(CommandSource source, String reason) {
+    public void stop(CommandSourceStack source, String reason) {
         if (!isRunning()) throw new IllegalStateException("Tracer is already stopped");
 
         TwitchSpawn.LOGGER.info("Stopping all the tracers...");
@@ -81,13 +81,13 @@ public class TraceManager {
         sockets.clear();
 
         if (TwitchSpawn.SERVER != null) {
-            for (ServerPlayerEntity player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
-                UUID uuid = player.getUniqueID();
-                TranslationTextComponent successText = new TranslationTextComponent("commands.twitchspawn.stop.success",
-                        source == null ? "Server" : source.getName(), reason);
-                player.getEntity().sendMessage(successText, uuid);
+            for (ServerPlayer player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
+                UUID uuid = player.getUUID();
+                TranslatableComponent successText = new TranslatableComponent("commands.twitchspawn.stop.success",
+                        source == null ? "Server" : source.getTextName(), reason);
+                player.sendMessage(successText, uuid);
                 NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(false),
-                        player.connection.netManager,
+                        player.connection.connection,
                         NetworkDirection.PLAY_TO_CLIENT);
             }
         }
