@@ -104,8 +104,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // Nightly Config by Electronwill
-    shadow group: 'com.electronwill.night-config', name: 'core', version: '3.6.0'
-    shadow group: 'com.electronwill.night-config', name: 'toml', version: '3.6.0'
+//    shadow group: 'com.electronwill.night-config', name: 'core', version: '3.6.0'
+//    shadow group: 'com.electronwill.night-config', name: 'toml', version: '3.6.0'
 
     // SocketIO Client
     shadow "io.socket:socket.io-client:1.0.0"
