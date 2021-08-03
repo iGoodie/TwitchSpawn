@@ -59,7 +59,7 @@ public abstract class EventBuilder {
         eventArguments.donationAmount = JSONUtils.extractNumberFrom(data, "amount", 0.0).doubleValue();
         eventArguments.donationCurrency = JSONUtils.extractFrom(data, "currency", String.class, null);
         eventArguments.subscriptionMonths = JSONUtils.extractNumberFrom(data, "amount", 0).intValue();
-//        eventArguments.raiderCount = JSONUtils.extractNumberFrom(message, "raiders", 0).intValue(); // Raids aren't supported (?)
+        eventArguments.raiderCount = JSONUtils.extractNumberFrom(data, "amount", 0).intValue(); // Raids aren't supported (?)
         eventArguments.viewerCount = JSONUtils.extractNumberFrom(data, "amount ", 0).intValue();
         eventArguments.subscriptionTier = extractTier(data, "tier");
         // TODO: add gifted
