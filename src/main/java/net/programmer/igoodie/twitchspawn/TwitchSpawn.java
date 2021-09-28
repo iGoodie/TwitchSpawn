@@ -7,11 +7,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -21,6 +23,7 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.client.gui.GlobalChatCooldownOverlay;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
@@ -65,7 +68,9 @@ public class TwitchSpawn {
 
         } catch (TwitchSpawnLoadingErrors e) {
             e.bindFMLWarnings(ModLoadingStage.COMMON_SETUP);
-            throw new RuntimeException("TwitchSpawn loading errors occurred");
+            if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
+                throw new RuntimeException("TwitchSpawn loading errors occurred");
+            }
         }
     }
 

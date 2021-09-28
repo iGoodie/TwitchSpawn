@@ -31,5 +31,10 @@
       <option name="name" value="maven" />
       <option name="url" value="https://files.minecraftforge.net/maven/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="https://maven.minecraftforge.net/" />
+    </remote-repository>
   </component>
 </project>
