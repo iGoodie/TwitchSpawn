@@ -25,13 +25,13 @@
   "commands.twitchspawn.rules.one": "§3>> Установленные правила загружены на {0} включая следующие:\n{1}",
   "commands.twitchspawn.rules.one.fail": "§4>> Установленные правила не были загружены на {0}",
 
-  "commands.twitchspawn.simulate.missing": "§4>> Отсутствует название события в объекте симуляции. Ожидаемая область \"события\".",
+  "commands.twitchspawn.simulate.missing": "§4>> Отсутствует название события в объекте симуляции. Ожидается поле \"событие\".",
   "commands.twitchspawn.simulate.invalid_event": "§4>> Недопустимое название события -> {0}",
   "commands.twitchspawn.simulate.success": "§a>> Симуляция успешно удалена {0}",
   "commands.twitchspawn.simulate.no_perm": "§4>> У тебя нет прав, чтобы симулировать событие.",
 
   "commands.twitchspawn.test.not_found": "§4>> Нет связанного установленного правила с {0}",
-  "commands.twitchspawn.test.success": "§a>> Successfully queued rules for {0}",
+  "commands.twitchspawn.test.success": "§a>> Правила успешно добавлены в очередь для {0}",
 
   "errors.twitchspawn.loading": "Не удалось загрузить TwitchSpawn"
 }
