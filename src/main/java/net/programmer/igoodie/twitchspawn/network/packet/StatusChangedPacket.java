@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.network.packet;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 
 import java.util.function.Supplier;

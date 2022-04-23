@@ -1,19 +1,19 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
-        jcenter()
         mavenCentral()
         gradlePluginPortal()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath "com.github.jengelman.gradle.plugins:shadow:5.1.0"
+//        classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'com.github.johnrengelman.shadow'
+//apply plugin: 'com.github.johnrengelman.shadow'
+//apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
@@ -21,8 +21,7 @@ version = mod_version
 group = "igoodie.twitchspawn"
 archivesBaseName = "twitchspawn_" + minecraft_version
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility =
-        compileJava.targetCompatibility = '16' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
@@ -97,6 +96,15 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    shade
+    implementation.extendsFrom shade
+}
+
+afterEvaluate {
+    println configurations.runtimeClasspath.extendsFrom
+}
+
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
@@ -108,7 +116,7 @@ dependencies {
 //    shadow group: 'com.electronwill.night-config', name: 'toml', version: '3.6.0'
 
     // SocketIO Client
-    shadow "io.socket:socket.io-client:1.0.0"
+    shade "io.socket:socket.io-client:1.0.0"
 
     // JUnit 5 for testings
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
@@ -121,16 +129,37 @@ dependencies {
 
 }
 
-shadowJar {
-    configurations = [project.configurations.shadow]
-    classifier ""
-//    relocate 'com.electronwill.nightconfig.core', "com.electronwill.nightconfig.${mod_id}.core"
-//    relocate 'com.electronwill.nightconfig.toml', "com.electronwill.nightconfig.${mod_id}.toml"
-//    relocate "io.socket.client", "io.socket.${mod_id}.client"
+// Fix the classpath the right way and once and for all
+afterEvaluate {
+    // Collect deps in runtimeClasspath but NOT in minecraft
+    def deps = (configurations.runtimeClasspath - configurations.minecraft).join(';')
+    // Add deps to classpath
+    minecraft.runs.each { run ->
+        run.token 'minecraft_classpath', deps
+    }
 }
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+}
+
+//shadowJar {
+//    configurations = [project.configurations.shadow]
+//    classifier ""
+////    relocate 'com.electronwill.nightconfig.core', "com.electronwill.nightconfig.${mod_id}.core"
+////    relocate 'com.electronwill.nightconfig.toml', "com.electronwill.nightconfig.${mod_id}.toml"
+////    relocate "io.socket.client", "io.socket.${mod_id}.client"
+//}
+
+// ====================================
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
+    //noinspection GroovyAssignabilityCheck
     manifest {
         attributes([
                 "Specification-Title"     : mod_id,
@@ -143,6 +172,8 @@ jar {
         ])
     }
 }
+
+// ====================================
 
 // Example configuration to allow publishing using the maven-publish task
 // This is the preferred method to reobfuscate your jar file
@@ -165,12 +196,4 @@ publishing {
 
 test {
     useJUnitPlatform()
-}
-
-artifacts {
-    archives shadowJar
-}
-
-reobf {
-    shadowJar {}
 }
