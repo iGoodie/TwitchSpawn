@@ -13,7 +13,7 @@
   <a href="https://www.patreon.com/iGoodie"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.herokuapp.com%2Figoodie"></a>
 </p>
 
-Long waited update is finally here! :tada: 1.14 Adaptation is alive! (See the [user manual](https://igoodie.gitbook.io/twitchspawn/)!)
+Long waited update is finally here! :tada: 1.18 Port is alive! (See the [user manual](https://igoodie.gitbook.io/twitchspawn/)!)
 
 ## Brief Summary
 TwitchSpawn is a Minecraft mod designed for Twitch streamers using 3rd party streaming platforms!
