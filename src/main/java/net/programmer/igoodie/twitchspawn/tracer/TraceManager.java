@@ -41,6 +41,18 @@ public class TraceManager {
 
         running = true;
 
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequests(100);
+        dispatcher.setMaxRequestsPerHost(100);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .dispatcher(dispatcher)
+                .readTimeout(0, TimeUnit.MILLISECONDS)
+                .build();
+
+        IO.setDefaultOkHttpWebSocketFactory(okHttpClient);
+        IO.setDefaultOkHttpCallFactory(okHttpClient);
+
         // Start Websocket tracers
         this.webSocketTracers.add(new TwitchPubSubTracer(this)); // TODO: Extract to a worker, not master
         this.webSocketTracers.add(new TwitchChatTracer(this)); // TODO: Extract to a worker, not master
