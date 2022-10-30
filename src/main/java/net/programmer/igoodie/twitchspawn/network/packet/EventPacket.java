@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.network.packet;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 
@@ -20,14 +20,14 @@ public class EventPacket {
 
     /* ------------------------------------ */
 
-    public static void encode(EventPacket packet, PacketBuffer buffer) {
-        buffer.writeCompoundTag(packet.eventArguments.serializeNBT());
+    public static void encode(EventPacket packet, FriendlyByteBuf buffer) {
+        buffer.writeNbt(packet.eventArguments.serializeNBT());
     }
 
-    public static EventPacket decode(PacketBuffer buffer) {
+    public static EventPacket decode(FriendlyByteBuf buffer) {
         EventPacket packet = new EventPacket();
         packet.eventArguments = new EventArguments();
-        packet.eventArguments.deserializeNBT(Objects.requireNonNull(buffer.readCompoundTag()));
+        packet.eventArguments.deserializeNBT(Objects.requireNonNull(buffer.readNbt()));
         return packet;
     }
 

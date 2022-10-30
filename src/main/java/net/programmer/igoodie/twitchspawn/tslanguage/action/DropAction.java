@@ -2,9 +2,9 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.arguments.ItemParser;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.commands.arguments.item.ItemParser;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -51,9 +51,9 @@ public class DropAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+    protected void performAction(ServerPlayer player, EventArguments args) {
         ItemStack itemStack = createItemStack(args);
-        player.dropItem(itemStack, false, false);
+        player.drop(itemStack, false, false);
     }
 
     private ItemStack createItemStack(EventArguments args) {
@@ -76,7 +76,7 @@ public class DropAction extends TSLAction {
         ItemStack itemStack = createItemStack(args);
 
         if (expression.equals("itemName"))
-            return itemStack.getItem().getDisplayName(itemStack).getString();
+            return itemStack.getItem().getName(itemStack).getString();
 //            return itemStack.getItem().getName().getString(); // getName() is client only...
 
         if (expression.equals("itemCount"))

@@ -2,10 +2,9 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.arguments.ItemParser;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.commands.arguments.item.ItemParser;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -92,7 +91,7 @@ public class ChangeAction extends ItemSelectiveAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+    protected void performAction(ServerPlayer player, EventArguments args) {
         ItemStack itemStack = createItemStack(args);
 
         if (selectionType == SelectionType.WITH_INDEX) {
@@ -100,9 +99,9 @@ public class ChangeAction extends ItemSelectiveAction {
 
         } else if (selectionType == SelectionType.EVERYTHING) {
             if (inventoryType == null) {
-                setAll(player.inventory.mainInventory, itemStack);
-                setAll(player.inventory.armorInventory, itemStack);
-                setAll(player.inventory.offHandInventory, itemStack);
+                setAll(player.getInventory().items, itemStack);
+                setAll(player.getInventory().armor, itemStack);
+                setAll(player.getInventory().offhand, itemStack);
 
             } else {
                 setAll(getInventory(player, inventoryType), itemStack);
@@ -117,21 +116,22 @@ public class ChangeAction extends ItemSelectiveAction {
             }
 
         } else if (selectionType == SelectionType.ONLY_HELD_ITEM) {
-            int selectedHotbarIndex = player.inventory.currentItem;
-            player.inventory.mainInventory.set(selectedHotbarIndex, itemStack.copy());
+            int selectedHotbarIndex = player.getInventory().selected;
+            player.getInventory().items.set(selectedHotbarIndex, itemStack.copy());
 
         } else if (selectionType == SelectionType.HOTBAR) {
             for (int i = 0; i <= 8; i++) {
-                player.inventory.mainInventory.set(i, itemStack.copy());
+                player.getInventory().items.set(i, itemStack.copy());
             }
         }
 
-        CommandSource commandSource = player.getCommandSource()
-                .withPermissionLevel(9999).withFeedbackDisabled();
-        player.getServer().getCommandManager().handleCommand(commandSource,
-                "/playsound minecraft:item.armor.equip_leather master @s");
-        player.getServer().getCommandManager().handleCommand(commandSource,
-                "/particle minecraft:entity_effect ~ ~ ~ 2 2 2 0.1 400");
+        // TODO:
+//        CommandSource commandSource = player.getCommandSource()
+//                .withPermissionLevel(9999).withFeedbackDisabled();
+//        player.getServer().getCommands().performCommand(player,
+//                "/playsound minecraft:item.armor.equip_leather master @s");
+//        player.getServer().getCommandManager().handleCommand(commandSource,
+//                "/particle minecraft:entity_effect ~ ~ ~ 2 2 2 0.1 400");
     }
 
     private void setAll(List<ItemStack> inventory, ItemStack itemStack) {

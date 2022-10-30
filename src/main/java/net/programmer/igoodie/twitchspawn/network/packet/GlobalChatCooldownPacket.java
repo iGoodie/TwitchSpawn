@@ -1,18 +1,18 @@
 package net.programmer.igoodie.twitchspawn.network.packet;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 import net.programmer.igoodie.twitchspawn.client.gui.GlobalChatCooldownOverlay;
 
 import java.util.function.Supplier;
 
 public class GlobalChatCooldownPacket {
 
-    public static void encode(GlobalChatCooldownPacket packet, PacketBuffer buffer) {
+    public static void encode(GlobalChatCooldownPacket packet, FriendlyByteBuf buffer) {
         buffer.writeLong(packet.timestamp);
     }
 
-    public static GlobalChatCooldownPacket decode(PacketBuffer buffer) {
+    public static GlobalChatCooldownPacket decode(FriendlyByteBuf buffer) {
         return new GlobalChatCooldownPacket(buffer.readLong());
     }
 

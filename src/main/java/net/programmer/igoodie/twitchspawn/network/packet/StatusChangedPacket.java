@@ -1,18 +1,18 @@
 package net.programmer.igoodie.twitchspawn.network.packet;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 
 import java.util.function.Supplier;
 
 public class StatusChangedPacket {
 
-    public static void encode(StatusChangedPacket packet, PacketBuffer buffer) {
+    public static void encode(StatusChangedPacket packet, FriendlyByteBuf buffer) {
         buffer.writeBoolean(packet.status);
     }
 
-    public static StatusChangedPacket decode(PacketBuffer buffer) {
+    public static StatusChangedPacket decode(FriendlyByteBuf buffer) {
         return new StatusChangedPacket(buffer.readBoolean());
     }
 

@@ -1,6 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
@@ -64,7 +64,7 @@ public class ReflectAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+    protected void performAction(ServerPlayer player, EventArguments args) {
         action.reflectedUser = null;
 
         if (onlyReflectedPlayers) {
@@ -85,7 +85,7 @@ public class ReflectAction extends TSLAction {
                 return;
             }
 
-            ServerPlayerEntity reflectedPlayer = getPlayer(username);
+            ServerPlayer reflectedPlayer = getPlayer(username);
 
             if (reflectedPlayer == null) {
                 TwitchSpawn.LOGGER.info("{} was not online on the server. Skipping reflection for them", username);
@@ -103,14 +103,14 @@ public class ReflectAction extends TSLAction {
         });
     }
 
-    private List<String> getReflectedPlayers(ServerPlayerEntity player) {
+    private List<String> getReflectedPlayers(ServerPlayer player) {
         if (this.reflectEveryone) {
-            return Arrays.asList(player.getServer().getOnlinePlayerNames());
+            return Arrays.asList(player.getServer().getPlayerNames());
         }
 
         if (this.reflectRandomN != 0) {
             List<String> reflectedPlayers = new LinkedList<>();
-            List<String> onlinePlayers = new LinkedList<>(Arrays.asList(player.getServer().getOnlinePlayerNames()));
+            List<String> onlinePlayers = new LinkedList<>(Arrays.asList(player.getServer().getPlayerNames()));
 
             for (int i = 0; i < reflectRandomN; i++) {
                 if (onlinePlayers.size() == 0) break;
@@ -127,7 +127,7 @@ public class ReflectAction extends TSLAction {
     }
 
 
-    private void reflectAction(ServerPlayerEntity player, EventArguments args) {
+    private void reflectAction(ServerPlayer player, EventArguments args) {
         action.reflectedUser = player;
 
         String title = action.titleMessage(args);

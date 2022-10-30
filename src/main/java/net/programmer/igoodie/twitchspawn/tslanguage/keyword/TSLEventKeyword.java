@@ -1,13 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.keyword;
 
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.DonationBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.EventBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.ExtraLifeBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.TwitchFollowBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.PatreonBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.TiltifyBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.TreatStreamBuilder;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,6 +14,7 @@ public enum TSLEventKeyword {
             new DonationBuilder(),
             new TSLEventPair("donation", ""), // This alias might be redundant (?)
             new TSLEventPair("donation", "streamlabs"),
+            new TSLEventPair("tip", "streamelements"),
             new TSLEventPair("tip", "twitch"),
             new TSLEventPair("tip", "youtube")
     ),

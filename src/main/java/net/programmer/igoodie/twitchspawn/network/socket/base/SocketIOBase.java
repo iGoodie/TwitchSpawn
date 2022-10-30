@@ -53,10 +53,7 @@ public abstract class SocketIOBase implements SocketTracer {
         try {
             IO.Options options = generateOptions(config);
             this.socket = IO.socket(platform.url, options);
-
-            this.socket.on(Socket.EVENT_CONNECT, args -> onConnect(socket, args));
-            this.socket.on(Socket.EVENT_DISCONNECT, args -> onDisconnect(socket, args));
-            this.socket.on(liveEventChannelName(), args -> onLiveEvent(socket, args));
+            bindEvents();
 
             return true;
 
@@ -95,12 +92,13 @@ public abstract class SocketIOBase implements SocketTracer {
 
     /* ------------------------ */
 
-    protected abstract String liveEventChannelName();
+    protected void bindEvents() {
+        this.socket.on(Socket.EVENT_CONNECT, args -> onConnect(socket, args));
+        this.socket.on(Socket.EVENT_DISCONNECT, args -> onDisconnect(socket, args));
+    }
 
     protected abstract void onConnect(Socket socket, Object... args);
 
     protected abstract void onDisconnect(Socket socket, Object... args);
-
-    protected abstract void onLiveEvent(Socket socket, Object... args);
 
 }

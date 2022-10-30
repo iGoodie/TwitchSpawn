@@ -1,8 +1,8 @@
 package net.programmer.igoodie.twitchspawn.network;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.network.packet.EventPacket;
 import net.programmer.igoodie.twitchspawn.network.packet.GlobalChatCooldownPacket;

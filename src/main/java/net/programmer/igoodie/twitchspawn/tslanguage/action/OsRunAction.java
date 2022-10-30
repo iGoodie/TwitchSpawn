@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.packet.OsRunPacket;
@@ -171,13 +171,13 @@ public class OsRunAction extends TSLAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+    protected void performAction(ServerPlayer player, EventArguments args) {
         if (scriptLocation == ScriptLocation.LOCAL) {
             handleLocalScript(shell, replaceExpressions(shellScript, args));
 
         } else if (scriptLocation == ScriptLocation.REMOTE) {
             NetworkManager.CHANNEL.sendTo(new OsRunPacket(shell, replaceExpressions(shellScript, args)),
-                    player.connection.netManager,
+                    player.connection.connection,
                     NetworkDirection.PLAY_TO_CLIENT);
         }
     }

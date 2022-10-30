@@ -1,18 +1,20 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.google.gson.JsonArray;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.play.server.SPlaySoundPacket;
-import net.minecraft.network.play.server.STitlePacket;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundCustomSoundPacket;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLFlowNode;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLRuleTokenizer;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -32,7 +34,7 @@ public abstract class TSLAction implements TSLFlowNode {
     /**
      * Determines whether action is a reflection or not
      */
-    protected ServerPlayerEntity reflectedUser;
+    protected ServerPlayer reflectedUser;
 
     /**
      * Determines whether action should be notified to the player or not
@@ -87,7 +89,7 @@ public abstract class TSLAction implements TSLFlowNode {
      * @param player Target player of the action
      * @param args   Arguments of the event
      */
-    protected abstract void performAction(ServerPlayerEntity player, EventArguments args);
+    protected abstract void performAction(ServerPlayer player, EventArguments args);
 
     /**
      * Evaluates a value for given expression
@@ -123,7 +125,7 @@ public abstract class TSLAction implements TSLFlowNode {
      */
     @Override
     public boolean process(EventArguments args) {
-        ServerPlayerEntity player = this.isReflection()
+        ServerPlayer player = this.isReflection()
                 ? reflectedUser
                 : getPlayer(args.streamerNickname);
 
@@ -193,26 +195,26 @@ public abstract class TSLAction implements TSLFlowNode {
         });
     }
 
-    protected void notifyPlayer(ServerPlayerEntity player, EventArguments args) {
+    protected void notifyPlayer(ServerPlayer player, EventArguments args) {
         notifyPlayer(player, titleMessage(args), subtitleMessage(args));
     }
 
-    protected void notifyPlayer(ServerPlayerEntity player, String title, String subtitle) {
+    protected void notifyPlayer(ServerPlayer player, String title, String subtitle) {
         // Form and send sound packet
         float volume = (float) ConfigManager.PREFERENCES.notificationVolume;
         float pitch = ConfigManager.PREFERENCES.notificationPitch == -1
                 ? (float) Math.random() : (float) ConfigManager.PREFERENCES.notificationPitch;
         ResourceLocation soundLocation = new ResourceLocation("minecraft:entity.player.levelup");
-        SoundCategory category = SoundCategory.MASTER;
-        SPlaySoundPacket packetSound = new SPlaySoundPacket(soundLocation, category, player.getPositionVec(), volume, pitch);
-        player.connection.sendPacket(packetSound);
+        SoundSource category = SoundSource.MASTER;
+        ClientboundCustomSoundPacket packetSound = new ClientboundCustomSoundPacket(soundLocation, category, player.position(), volume, pitch);
+        player.connection.send(packetSound);
 
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.DISABLED)
             return; // Stop here since message displaying is disabled
 
         // Form text and subtext components
-        ITextComponent text = MCPHelpers.fromJsonLenient(title);
-        ITextComponent subtext = MCPHelpers.fromJsonLenient(subtitle);
+        MutableComponent text = MCPHelpers.fromJsonLenient(title);
+        MutableComponent subtext = MCPHelpers.fromJsonLenient(subtitle);
 
         if (subtext != null && subtext.getString().equals("NOTHING_0xDEADC0DE_0xDEADBEEF")) {
             return; // Stop here since it was a  DISPLAYING NOTHING statement
@@ -220,24 +222,22 @@ public abstract class TSLAction implements TSLFlowNode {
 
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.TITLES) {
             // Form title and subtitle packets
-            STitlePacket packet = new STitlePacket(STitlePacket.Type.TITLE, text,
-                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.1f / 50), // 10
-                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.7f / 50), // 70
-                    (int) (ConfigManager.PREFERENCES.notificationDelay * 0.2f / 50)); // 20
-            STitlePacket subtitlePacket = new STitlePacket(STitlePacket.Type.SUBTITLE, subtext,
+            ClientboundSetTitleTextPacket packet = new ClientboundSetTitleTextPacket(text);
+            ClientboundSetSubtitleTextPacket subtitlePacket = new ClientboundSetSubtitleTextPacket(subtext);
+            ClientboundSetTitlesAnimationPacket anim = new ClientboundSetTitlesAnimationPacket(
                     (int) (ConfigManager.PREFERENCES.notificationDelay * 0.1f / 50), // 10
                     (int) (ConfigManager.PREFERENCES.notificationDelay * 0.7f / 50), // 70
                     (int) (ConfigManager.PREFERENCES.notificationDelay * 0.2f / 50)); // 20
 
             // Send them over
-            player.connection.sendPacket(packet);
-            player.connection.sendPacket(subtitlePacket);
+            player.connection.send(packet);
+            player.connection.send(subtitlePacket);
         }
 
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.CHAT) {
-            UUID uuid = player.getUniqueID();
-            if (text != null) player.sendMessage(MCPHelpers.merge(new StringTextComponent(">> "), text), uuid);
-            if (subtext != null) player.sendMessage(MCPHelpers.merge(new StringTextComponent(">> "), subtext), uuid);
+            UUID uuid = player.getUUID();
+            if (text != null) player.sendMessage(MCPHelpers.merge(new TextComponent(">> "), text), uuid);
+            if (subtext != null) player.sendMessage(MCPHelpers.merge(new TextComponent(">> "), subtext), uuid);
         }
     }
 
@@ -248,11 +248,11 @@ public abstract class TSLAction implements TSLFlowNode {
      * @return Player entity with given nickname
      * @throws IllegalStateException if executed on a non-running server
      */
-    protected ServerPlayerEntity getPlayer(String username) {
+    protected ServerPlayer getPlayer(String username) {
         if (TwitchSpawn.SERVER == null)
             throw new IllegalStateException("TSLAction tried to fetch player from a not-running server.");
 
-        return TwitchSpawn.SERVER.getPlayerList().getPlayerByUsername(username);
+        return TwitchSpawn.SERVER.getPlayerList().getPlayerByName(username);
     }
 
     /* ------------------------------------------------ */

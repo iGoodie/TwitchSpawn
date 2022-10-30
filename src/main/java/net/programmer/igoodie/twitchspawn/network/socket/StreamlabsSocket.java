@@ -3,7 +3,7 @@ package net.programmer.igoodie.twitchspawn.network.socket;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ClientCredentialsConfig;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
@@ -35,21 +35,16 @@ public class StreamlabsSocket extends SocketIOBase {
     }
 
     @Override
-    protected String liveEventChannelName() {
-        return "event";
-    }
-
-    @Override
     protected IO.Options generateOptions(ClientCredentialsConfig config) {
         IO.Options options = super.generateOptions(config);
-        options.query = "token=" + config.streamlabsToken;
+        options.query = "token=" + config.platformToken;
         return options;
     }
 
     @Override
     public boolean validateCredentials(ClientCredentialsConfig config) {
-        return config.streamlabsToken != null
-                && !config.streamlabsToken.isEmpty();
+        return config.platform != null
+                && !config.platformToken.isEmpty();
     }
 
     @Override
@@ -66,8 +61,15 @@ public class StreamlabsSocket extends SocketIOBase {
         this.subGiftHandleTimestamps.clear();
     }
 
+    /* -------------------- */
+
     @Override
-    protected void onLiveEvent(Socket socket, Object... args) {
+    protected void bindEvents() {
+        super.bindEvents();
+        this.socket.on("event", args -> onEvent(socket, args));
+    }
+
+    protected void onEvent(Socket socket, Object... args) {
         JSONObject event = (JSONObject) args[0];
         JSONArray messages = extractMessages(event);
 
@@ -107,7 +109,7 @@ public class StreamlabsSocket extends SocketIOBase {
                 return; // Stop here, do not handle
 
             Minecraft minecraft = Minecraft.getInstance();
-            ClientPlayerEntity player = minecraft.player;
+            LocalPlayer player = minecraft.player;
 
             // Build arguments
             EventArguments eventArguments = eventBuilder.build(

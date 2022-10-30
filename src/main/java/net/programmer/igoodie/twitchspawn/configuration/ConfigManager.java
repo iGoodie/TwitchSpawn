@@ -27,7 +27,7 @@ public class ConfigManager {
             configDirectory.mkdirs();
 
         accumulateExceptions(errors,
-                () -> CLIENT_CREDS = (ClientCredentialsConfig) new ClientCredentialsConfig().readConfig());
+                () -> CLIENT_CREDS = new ClientCredentialsConfig().readConfig(new File(getPath("client_credentials.json"))));
         accumulateExceptions(errors,
                 () -> RULESET_COLLECTION = RulesConfig.createRules(CONFIG_DIR_PATH));
         accumulateExceptions(errors,

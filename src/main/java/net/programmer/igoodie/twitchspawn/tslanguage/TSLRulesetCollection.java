@@ -59,9 +59,9 @@ public class TSLRulesetCollection {
 
         TwitchSpawn.getStreamerLogger(args.streamerNickname)
                 .info(ruleset == defaultRuleset
-                        ? "No associated ruleset for {} found. Handling with default rules"
-                        : "Found associated ruleset for {}. Handling with their rules",
-                args.streamerNickname);
+                                ? "No associated ruleset for {} found. Handling with default rules"
+                                : "Found associated ruleset for {}. Handling with their rules",
+                        args.streamerNickname);
 
         // Fetch event handler node
         TSLEvent eventNode = ruleset.getEventHandler(eventKeyword);
@@ -73,13 +73,25 @@ public class TSLRulesetCollection {
             return false;
         }
 
-        // Queue incoming event arguments
-        EventQueue eventQueue = getQueue(args.streamerNickname);
-        eventQueue.queue(eventNode, args, cooldownBucket);
-        eventQueue.queueSleep();
-        eventQueue.updateThread();
-        TwitchSpawn.getStreamerLogger(args.streamerNickname)
-                .info("Queued handler for {} event.", eventKeyword);
+        // Perform immediately instead of queueing
+        if (eventNode.willPerform(args)) {
+            TwitchSpawn.getStreamerLogger(args.streamerNickname)
+                    .info("Begin performing  {} event.", eventKeyword);
+            boolean succeeded = eventNode.process(args);
+            TwitchSpawn.getStreamerLogger(args.streamerNickname)
+                    .info("Finished performing {} event. (Success: {})", eventKeyword, succeeded);
+        }
+
+//        // Queue incoming event arguments
+//        EventQueue eventQueue = getQueue(args.streamerNickname);
+//        eventQueue.queue(eventNode, args, cooldownBucket);
+//        eventQueue.queueSleep();
+//        eventQueue.updateThread();
+//        TwitchSpawn.getStreamerLogger(args.streamerNickname)
+//                .info("Queued handler for {} event.", eventKeyword);
+
+        // Perform event
+
         return true;
     }
 

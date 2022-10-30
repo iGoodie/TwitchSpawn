@@ -1,38 +1,33 @@
 package net.programmer.igoodie.twitchspawn;
 
-import net.minecraft.command.arguments.ArgumentSerializer;
-import net.minecraft.command.arguments.ArgumentTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingStage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.programmer.igoodie.twitchspawn.client.gui.GlobalChatCooldownOverlay;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
-import net.programmer.igoodie.twitchspawn.command.RulesetNameArgumentType;
-import net.programmer.igoodie.twitchspawn.command.StreamerArgumentType;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.log.TSLogger;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
+import net.programmer.igoodie.twitchspawn.network.SocketManager;
 import net.programmer.igoodie.twitchspawn.udl.NotepadUDLUpdater;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Mod(TwitchSpawn.MOD_ID)
 public class TwitchSpawn {
@@ -66,17 +61,19 @@ public class TwitchSpawn {
         try {
             TSLogger.clearHistoricalLogs(14);
             ConfigManager.loadConfigs();
+            SocketManager.initialize();
             NetworkManager.initialize();
 
-            ArgumentTypes.register("twitchspawn:streamer", StreamerArgumentType.class,
-                    new ArgumentSerializer<>(StreamerArgumentType::streamerNick));
-            ArgumentTypes.register("twitchspawn:ruleset", RulesetNameArgumentType.class,
-                    new ArgumentSerializer<>(RulesetNameArgumentType::rulesetName));
+            // TODO: Migration
+//            ArgumentTypes.register("twitchspawn:streamer", StreamerArgumentType.class,
+//                    new ArgumentSerializer<>(StreamerArgumentType::streamerNick));
+//            ArgumentTypes.register("twitchspawn:ruleset", RulesetNameArgumentType.class,
+//                    new ArgumentSerializer<>(RulesetNameArgumentType::rulesetName));
 
         } catch (TwitchSpawnLoadingErrors e) {
             e.bindFMLWarnings(ModLoadingStage.COMMON_SETUP);
-            e.printStackTrace();
-            throw new RuntimeException("TwitchSpawn loading errors occurred");
+            e.exceptions.forEach(Throwable::printStackTrace);
+            throw new RuntimeException("TwitchSpawn loading errors occurred", e);
         }
     }
 
@@ -101,23 +98,20 @@ public class TwitchSpawn {
     }
 
     @SubscribeEvent
-    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+    public void onServerStarting(ServerStartingEvent event) {
         SERVER = event.getServer();
     }
 
     @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) { }
-
-    @SubscribeEvent
-    public void onServerStopping(FMLServerStoppingEvent event) {
+    public void onServerStopping(ServerStoppingEvent event) {
         SERVER = null;
         ConfigManager.RULESET_COLLECTION.clearQueue();
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) { }
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {}
 
     @SubscribeEvent
-    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) { }
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {}
 
 }

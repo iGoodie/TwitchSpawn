@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.network.socket;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.easteregg.Developers;
@@ -162,7 +162,7 @@ public class TwitchChatSocket extends WebSocketBase {
 //        CooldownBucket cooldownBucket = cooldownBuckets.get(streamer.twitchNick);
 
         Minecraft minecraft = Minecraft.getInstance();
-        ClientPlayerEntity player = minecraft.player;
+        LocalPlayer player = minecraft.player;
 
         EventArguments eventArguments = new EventArguments("chat", "twitch");
         eventArguments.streamerNickname = player == null ? "Dev" : player.getDisplayName().getString();

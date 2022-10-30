@@ -1,21 +1,18 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="runServer" type="Application" factoryName="Application" singleton="false">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component>
+  <configuration default="false" factoryName="Application" name="runServer" singleton="false" type="Application">
+    <option name="MAIN_CLASS_NAME" value="cpw.mods.bootstraplauncher.BootstrapLauncher"/>
+    <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=debug -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP &quot;-DlegacyClassPath.file=E:\IntelliJ IDEA Workspace\TwitchSpawn-1.16\build\classpath\runServer_minecraftClasspath.txt&quot; -DignoreList=bootstraplauncher,securejarhandler,asm-commons,asm-util,asm-analysis,asm-tree,asm,client-extra,fmlcore,javafmllanguage,lowcodelanguage,mclanguage,forge- -DmergeModules=jna-5.10.0.jar,jna-platform-5.10.0.jar,java-objc-bridge-1.0.0.jar -Dforge.enableGameTest=true -p C:\Users\xgen_\.gradle\caches\modules-2\files-2.1\cpw.mods\bootstraplauncher\1.0.0\f55ddbb35612c6745cefc47d1a0d6dbfb25d3982\bootstraplauncher-1.0.0.jar;C:\Users\xgen_\.gradle\caches\modules-2\files-2.1\cpw.mods\securejarhandler\1.0.3\acbf5e3c8a38fb8bf824a54fe45eee121c510392\securejarhandler-1.0.3.jar;C:\Users\xgen_\.gradle\caches\modules-2\files-2.1\org.ow2.asm\asm-commons\9.2\f4d7f0fc9054386f2893b602454d48e07d4fbead\asm-commons-9.2.jar;C:\Users\xgen_\.gradle\caches\modules-2\files-2.1\org.ow2.asm\asm-util\9.2\fbc178fc5ba3dab50fd7e8a5317b8b647c8e8946\asm-util-9.2.jar;C:\Users\xgen_\.gradle\caches\modules-2\files-2.1\org.ow2.asm\asm-analysis\9.2\7487dd756daf96cab9986e44b9d7bcb796a61c10\asm-analysis-9.2.jar;C:\Users\xgen_\.gradle\caches\modules-2\files-2.1\org.ow2.asm\asm-tree\9.2\d96c99a30f5e1a19b0e609dbb19a44d8518ac01e\asm-tree-9.2.jar;C:\Users\xgen_\.gradle\caches\modules-2\files-2.1\org.ow2.asm\asm\9.2\81a03f76019c67362299c40e0ba13405f5467bff\asm-9.2.jar --add-modules ALL-MODULE-PATH --add-opens java.base/java.util.jar=cpw.mods.securejarhandler --add-exports java.base/sun.security.util=cpw.mods.securejarhandler --add-exports jdk.naming.dns/com.sun.jndi.dns=java.naming"/>
+    <option name="PROGRAM_PARAMETERS" value="--launchTarget forgeserveruserdev --gameDir . --fml.forgeVersion 40.1.61 --fml.mcVersion 1.18.2 --fml.forgeGroup net.minecraftforge --fml.mcpVersion 20220404.173914"/>
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$\run"/>
+    <module name="TwitchSpawn-1.16.main"/>
     <envs>
-      <env name="MOD_CLASSES" value="examplemod%%$PROJECT_DIR$/../TwitchSpawn-1.16\build\resources\main;examplemod%%$PROJECT_DIR$/../TwitchSpawn-1.16\build\classes\java\main" />
-      <env name="MCP_MAPPINGS" value="snapshot_20200707-1.16.1" />
-      <env name="MCP_VERSION" value="20200625.160719" />
-      <env name="FORGE_VERSION" value="32.0.70" />
-      <env name="FORGE_GROUP" value="net.minecraftforge" />
-      <env name="target" value="fmluserdevserver" />
-      <env name="MC_VERSION" value="1.16.1" />
+      <env name="MOD_CLASSES" value="examplemod%%$PROJECT_DIR$\build\resources\main;examplemod%%$PROJECT_DIR$\build\classes\java\main"/>
+      <env name="MCP_MAPPINGS" value="official_1.18.2"/>
     </envs>
-    <option name="MAIN_CLASS_NAME" value="net.minecraftforge.userdev.LaunchTesting" />
-    <module name="TwitchSpawn-1.16.main" />
-    <option name="VM_PARAMETERS" value="-Dforge.logging.console.level=info -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <method v="2">
-      <option name="Make" enabled="true" />
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks=":prepareRunServer" externalProjectPath="$PROJECT_DIR$" />
+      <option enabled="true" name="Make"/>
+      <option enabled="true" externalProjectPath="$PROJECT_DIR$" name="Gradle.BeforeRunTask" tasks=":prepareRunServer"/>
     </method>
   </configuration>
 </component>

@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.network.socket;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
@@ -168,7 +168,7 @@ public class TwitchPubSubSocket extends WebSocketBase {
         // TODO: Extract to EventBuilder, perhaps? Can stay like this too. Need to reconsider
 
         Minecraft minecraft = Minecraft.getInstance();
-        ClientPlayerEntity player = minecraft.player;
+        LocalPlayer player = minecraft.player;
 
         EventArguments eventArguments = new EventArguments("channelPointReward", "twitch");
         eventArguments.streamerNickname = player == null ? "Dev" : player.getDisplayName().getString();

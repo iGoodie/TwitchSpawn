@@ -1,10 +1,10 @@
 package net.programmer.igoodie.twitchspawn.client.gui.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.StringTextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
@@ -21,7 +21,7 @@ public class TwitchSpawnScreen extends Screen {
     protected Button refreshButton;
 
     public TwitchSpawnScreen() {
-        super(new StringTextComponent("TwitchSpawn"));
+        super(new TextComponent("TwitchSpawn"));
         refreshButtons();
     }
 
@@ -31,7 +31,7 @@ public class TwitchSpawnScreen extends Screen {
         this.startButton = new Button(
                 10, buttonYOffset,
                 100, 20,
-                new StringTextComponent("Connect"),
+                new TextComponent("Connect"),
                 (button) -> SocketManager.start()
         );
         this.startButton.active = !SocketManager.isRunning();
@@ -39,7 +39,7 @@ public class TwitchSpawnScreen extends Screen {
         this.stopButton = new Button(
                 10, buttonYOffset + 25,
                 100, 20,
-                new StringTextComponent("Disconnect"),
+                new TextComponent("Disconnect"),
                 (button) -> SocketManager.stop()
         );
         this.stopButton.active = SocketManager.isRunning();
@@ -47,7 +47,7 @@ public class TwitchSpawnScreen extends Screen {
         this.refreshButton = new Button(
                 10, buttonYOffset + 50,
                 100, 20,
-                new StringTextComponent("Reload Configs"),
+                new TextComponent("Reload Configs"),
                 (button) -> {
                     try {
                         ConfigManager.loadConfigs();
@@ -85,28 +85,44 @@ public class TwitchSpawnScreen extends Screen {
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public boolean mouseDragged(double p_231045_1_, double p_231045_3_, int p_231045_5_, double p_231045_6_, double p_231045_8_) {
+        startButton.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
+        startButton.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
+        startButton.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
+        return super.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
+    }
+
+    @Override
+    public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
+        startButton.mouseScrolled(p_94686_, p_94687_, p_94688_);
+        stopButton.mouseScrolled(p_94686_, p_94687_, p_94688_);
+        refreshButton.mouseScrolled(p_94686_, p_94687_, p_94688_);
+        return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
+    }
+
+    @Override
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(matrixStack);
         StatusIndicatorOverlay.render(matrixStack, PreferencesConfig.IndicatorDisplay.ENABLED);
 
-        renderConnectionStatus(matrixStack, SocketManager.STREAMLABS_SOCKET, 10, 35, false);
+        renderConnectionStatus(matrixStack, SocketManager.PLATFORM_SOCKET, 10, 35, false);
         renderConnectionStatus(matrixStack, SocketManager.TWITCH_PUB_SUB_SOCKET, 10, 45, false);
         renderConnectionStatus(matrixStack, SocketManager.TWITCH_CHAT_SOCKET, 10, 55, true);
 
         refreshButtons();
-        startButton.renderButton(matrixStack, mouseX, mouseY, partialTicks);
-        stopButton.renderButton(matrixStack, mouseX, mouseY, partialTicks);
-        refreshButton.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+        startButton.render(matrixStack, mouseX, mouseY, partialTicks);
+        stopButton.render(matrixStack, mouseX, mouseY, partialTicks);
+        refreshButton.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    private void renderConnectionStatus(MatrixStack matrixStack, SocketTracer tracer, int x, int y, boolean optional) {
-        FontRenderer fontRenderer = getMinecraft().fontRenderer;
+    private void renderConnectionStatus(PoseStack matrixStack, SocketTracer tracer, int x, int y, boolean optional) {
+        Font fontRenderer = getMinecraft().font;
 
         String text = String.format("> %s %s %s", tracer.getPlatform().name,
                 tracer.isConnected() ? "Connected" : "Not Connected",
                 optional ? "(Optional)" : "");
 
-        fontRenderer.drawString(matrixStack, text, x, y,
+        fontRenderer.draw(matrixStack, text, x, y,
                 tracer.isConnected() ? 0xFF_FFFFFF : 0xFF_FF0000);
     }
 

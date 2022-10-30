@@ -1,8 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
@@ -84,15 +83,16 @@ public class ShuffleAction extends ItemSelectiveAction {
     }
 
     @Override
-    protected void performAction(ServerPlayerEntity player, EventArguments args) {
+    protected void performAction(ServerPlayer player, EventArguments args) {
         shuffle(getInventory(player, inventoryType), this.firstIndex, this.lastIndex);
 
-        CommandSource commandSource = player.getCommandSource()
-                .withPermissionLevel(9999).withFeedbackDisabled();
-        player.getServer().getCommandManager().handleCommand(commandSource,
-                "/playsound minecraft:block.conduit.activate master @s");
-        player.getServer().getCommandManager().handleCommand(commandSource,
-                "/particle minecraft:end_rod ~ ~ ~ 2 2 2 0.0001 400");
+        // TODO:
+//        CommandSource commandSource = player.getCommandSource()
+//                .withPermissionLevel(9999).withFeedbackDisabled();
+//        player.getServer().getCommandManager().handleCommand(commandSource,
+//                "/playsound minecraft:block.conduit.activate master @s");
+//        player.getServer().getCommandManager().handleCommand(commandSource,
+//                "/particle minecraft:end_rod ~ ~ ~ 2 2 2 0.0001 400");
     }
 
     private void shuffle(List<ItemStack> inventory, int firstIndex, int lastIndex) {

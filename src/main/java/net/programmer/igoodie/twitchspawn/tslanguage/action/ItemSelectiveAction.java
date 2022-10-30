@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.LinkedList;
@@ -37,19 +37,13 @@ public abstract class ItemSelectiveAction extends TSLAction {
     protected SelectionType selectionType = SelectionType.WITH_INDEX;
     protected int inventoryIndex = -1;
 
-    protected List<ItemStack> getInventory(ServerPlayerEntity player, InventoryType inventoryType) {
-        switch (inventoryType) {
-            case MAIN_INVENTORY:
-                return player.inventory.mainInventory;
-            case ARMOR_INVENTORY:
-                return player.inventory.armorInventory;
-            case OFFHAND_INVENTORY:
-                return player.inventory.offHandInventory;
-            case HOTBAR_INVENTORY:
-                return player.inventory.mainInventory.subList(0, 8 + 1);
-            default:
-                return null; // Not possible
-        }
+    protected List<ItemStack> getInventory(ServerPlayer player, InventoryType inventoryType) {
+        return switch (inventoryType) {
+            case MAIN_INVENTORY -> player.getInventory().items;
+            case ARMOR_INVENTORY -> player.getInventory().armor;
+            case OFFHAND_INVENTORY -> player.getInventory().offhand;
+            case HOTBAR_INVENTORY -> player.getInventory().items.subList(0, 8 + 1);
+        };
     }
 
     protected void parseFrom(List<String> words) throws TSLSyntaxError {
@@ -161,12 +155,12 @@ public abstract class ItemSelectiveAction extends TSLAction {
         }
     }
 
-    protected InventorySlot randomInventorySlot(ServerPlayerEntity player, boolean includeEmptySlots) {
+    protected InventorySlot randomInventorySlot(ServerPlayer player, boolean includeEmptySlots) {
         List<InventorySlot> possibleSlots = new LinkedList<>();
 
-        InventorySlot fromMainInventory = randomInventorySlot(player.inventory.mainInventory, includeEmptySlots);
-        InventorySlot fromArmors = randomInventorySlot(player.inventory.armorInventory, includeEmptySlots);
-        InventorySlot fromOffHand = randomInventorySlot(player.inventory.offHandInventory, includeEmptySlots);
+        InventorySlot fromMainInventory = randomInventorySlot(player.getInventory().items, includeEmptySlots);
+        InventorySlot fromArmors = randomInventorySlot(player.getInventory().armor, includeEmptySlots);
+        InventorySlot fromOffHand = randomInventorySlot(player.getInventory().offhand, includeEmptySlots);
 
         if (fromMainInventory != null)
             possibleSlots.add(fromMainInventory);

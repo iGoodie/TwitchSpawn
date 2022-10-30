@@ -1,27 +1,21 @@
 package net.programmer.igoodie.twitchspawn.configuration;
 
-import com.google.gson.annotations.Expose;
+import net.programmer.igoodie.goodies.configuration.JsonConfiGoodie;
+import net.programmer.igoodie.goodies.serialization.annotation.Goodie;
+import net.programmer.igoodie.twitchspawn.network.Platform;
 
-public class ClientCredentialsConfig extends JSONConfig {
+public class ClientCredentialsConfig extends JsonConfiGoodie {
 
-    @Expose public String twitchNickname;
-    @Expose public String streamlabsToken;
-    @Expose public String twitchChatToken;
+    @Goodie
+    public String twitchNickname = "";
 
-    @Override
-    public String getName() {
-        return "client_credentials";
-    }
+    @Goodie
+    public Platform platform = Platform.STREAMELEMENTS;
 
-    @Override
-    protected void fillEmpty() {
-        this.twitchNickname = fillEmpty(this.twitchNickname, "");
-        this.streamlabsToken = fillEmpty(this.streamlabsToken, "");
-        this.twitchChatToken = fillEmpty(this.twitchChatToken, "YOUR_CHAT_TOKEN_HERE - Can be generated from https://twitchapps.com/tmi/");
-    }
+    @Goodie
+    public String platformToken = "";
 
-    private String fillEmpty(String value, String defaultValue) {
-        return value == null ? defaultValue : value;
-    }
+    @Goodie
+    public String twitchChatToken = "YOUR_CHAT_TOKEN_HERE - Can be generated from https://twitchapps.com/tmi/";
 
 }

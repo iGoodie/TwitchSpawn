@@ -1,7 +1,6 @@
 package net.programmer.igoodie.twitchspawn;
 
 import com.google.common.io.Resources;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +16,7 @@ public class TestResources {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new InternalException(e.getMessage());
+            throw new InternalError(e.getMessage());
         }
     }
 

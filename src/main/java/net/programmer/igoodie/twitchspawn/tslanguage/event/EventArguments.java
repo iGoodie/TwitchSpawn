@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.event;
 
 import com.google.common.base.Defaults;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 
@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class EventArguments implements INBTSerializable<CompoundNBT> {
+public class EventArguments implements INBTSerializable<CompoundTag> {
 
     public static EventArguments createRandom(String streamerNickname) {
         EventArguments eventArguments = new EventArguments(TSLEventKeyword.randomPair());
@@ -76,8 +76,8 @@ public class EventArguments implements INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putString("eventType", eventType);
         nbt.putString("eventAccount", eventAccount);
         nbt.putString("eventName", eventName);
@@ -103,7 +103,7 @@ public class EventArguments implements INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         this.eventType = nbt.getString("eventType");
         this.eventAccount = nbt.getString("eventAccount");
         this.eventName = nbt.getString("eventName");
