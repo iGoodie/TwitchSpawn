@@ -3,7 +3,7 @@ package net.programmer.igoodie.twitchspawn.network.socket;
 import io.socket.client.Socket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.TwitchSpawnClient;
 import net.programmer.igoodie.twitchspawn.configuration.ClientCredentialsConfig;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
@@ -47,7 +47,7 @@ public class StreamElementsSocket extends SocketIOBase {
         } catch (JSONException ignored) {} // Must be impossible
 
         socket.on("authenticated", foo -> {
-            TwitchSpawn.LOGGER.info("Connected to StreamElements Socket API with the token successfully!");
+            TwitchSpawnClient.LOGGER.info("Connected to StreamElements Socket API with the token successfully!");
             authorized = true;
         });
 
@@ -55,7 +55,7 @@ public class StreamElementsSocket extends SocketIOBase {
             @Override
             public void run() {
                 if (SocketManager.isRunning() && !authorized) {
-                    TwitchSpawn.LOGGER.info("Disconnected from the StreamElements Socket connection. (unauthorized)");
+                    TwitchSpawnClient.LOGGER.info("Disconnected from the StreamElements Socket connection. (unauthorized)");
                     SocketManager.stop();
                 }
             }
@@ -64,7 +64,7 @@ public class StreamElementsSocket extends SocketIOBase {
 
     @Override
     protected void onDisconnect(Socket socket, Object... args) {
-        TwitchSpawn.LOGGER.info("Disconnected from the StreamElements Socket connection. (intentional)");
+        TwitchSpawnClient.LOGGER.info("Disconnected from the StreamElements Socket connection. (intentional)");
         SocketManager.stop();
     }
 
@@ -84,7 +84,7 @@ public class StreamElementsSocket extends SocketIOBase {
         // TODO: Talk to someone from SE... And continue afterwards
 
         if (!event.has("data") || event.optJSONObject("data") == null) {
-            TwitchSpawn.LOGGER.info("Received unexpected {} StreamElements packet -> {}", test ? "Test" : "Live", event);
+            TwitchSpawnClient.LOGGER.info("Received unexpected {} StreamElements packet -> {}", test ? "Test" : "Live", event);
             return; // Contains no data (in expected format), stop here
         }
 
@@ -94,7 +94,7 @@ public class StreamElementsSocket extends SocketIOBase {
 
         JSONObject data = JSONUtils.extractFrom(event, "data", JSONObject.class, new JSONObject());
 
-        TwitchSpawn.LOGGER.info("Received StreamElements packet {} -> {}",
+        TwitchSpawnClient.LOGGER.info("Received StreamElements packet {} -> {}",
                 eventPair, data);
 
         // Fetch the appropriate builder
@@ -116,7 +116,7 @@ public class StreamElementsSocket extends SocketIOBase {
 
         // Build failed for an unknown reason
         if (eventArguments == null) {
-            TwitchSpawn.LOGGER.warn("{} was not able to build arguments from incoming data -> {}",
+            TwitchSpawnClient.LOGGER.warn("{} was not able to build arguments from incoming data -> {}",
                     eventBuilder.getClass().getSimpleName(), data.toString());
             return;
         }

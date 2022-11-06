@@ -2,7 +2,7 @@ package net.programmer.igoodie.twitchspawn.network.socket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.TwitchSpawnClient;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.Platform;
@@ -126,7 +126,7 @@ public class TwitchPubSubSocket extends WebSocketBase {
         try {
             JSONObject json = new JSONObject(text);
 
-            TwitchSpawn.LOGGER.info("Received Twitch PubSub packet {} -> {}",
+            TwitchSpawnClient.LOGGER.info("Received Twitch PubSub packet {} -> {}",
                     ConfigManager.CLIENT_CREDS.twitchNickname, json);
 
             if (json.getString("type").equals("RESPONSE")) {

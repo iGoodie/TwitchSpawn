@@ -2,7 +2,7 @@ package net.programmer.igoodie.twitchspawn.network.socket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.TwitchSpawnClient;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.easteregg.Developers;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
@@ -103,11 +103,11 @@ public class TwitchChatSocket extends WebSocketBase {
     public void onOpen(@Nonnull WebSocket socket, @Nonnull Response response) {
         super.onOpen(socket, response);
 
-        TwitchSpawn.LOGGER.info("Attempting to connect Twitch Chat of {}", ConfigManager.CLIENT_CREDS.twitchNickname);
+        TwitchSpawnClient.LOGGER.info("Attempting to connect Twitch Chat of {}", ConfigManager.CLIENT_CREDS.twitchNickname);
 
         if (!ConfigManager.CLIENT_CREDS.twitchChatToken.startsWith("oauth:")) {
             this.stop();
-            TwitchSpawn.LOGGER.info("Failed to connect Twitch Chat of {}", ConfigManager.CLIENT_CREDS.twitchNickname);
+            TwitchSpawnClient.LOGGER.info("Failed to connect Twitch Chat of {}", ConfigManager.CLIENT_CREDS.twitchNickname);
             return;
         }
 
@@ -125,7 +125,7 @@ public class TwitchChatSocket extends WebSocketBase {
 
     @Override
     public void onClosing(@Nonnull WebSocket webSocket, int code, @Nonnull String reason) {
-        TwitchSpawn.LOGGER.info("Disconnected from {}'s Twitch Chat connection. (intentional)", ConfigManager.CLIENT_CREDS.twitchNickname);
+        TwitchSpawnClient.LOGGER.info("Disconnected from {}'s Twitch Chat connection. (intentional)", ConfigManager.CLIENT_CREDS.twitchNickname);
         if (startedWithProperToken) {
             SocketManager.stop();
             startedWithProperToken = false;
@@ -146,12 +146,12 @@ public class TwitchChatSocket extends WebSocketBase {
             } else if (message.contains(":tmi.twitch.tv NOTICE")) {
                 if (message.contains("Improperly formatted auth")) {
                     // Intentionally left empty/malformed.
-                    TwitchSpawn.LOGGER.info("Disconnected from {}'s Twitch Chat connection. (no token)", ConfigManager.CLIENT_CREDS.twitchNickname);
+                    TwitchSpawnClient.LOGGER.info("Disconnected from {}'s Twitch Chat connection. (no token)", ConfigManager.CLIENT_CREDS.twitchNickname);
                     SocketManager.stop();
 
                 } else if (message.contains("Login authentication failed")) {
                     // Uh oh invalid token?
-                    TwitchSpawn.LOGGER.warn("Disconnected from {}'s Twitch Chat connection. (unauthorized)", ConfigManager.CLIENT_CREDS.twitchNickname);
+                    TwitchSpawnClient.LOGGER.warn("Disconnected from {}'s Twitch Chat connection. (unauthorized)", ConfigManager.CLIENT_CREDS.twitchNickname);
                     SocketManager.stop();
                 }
             }
@@ -180,7 +180,7 @@ public class TwitchChatSocket extends WebSocketBase {
         }
 
 //        if (cooldownBucket.hasGlobalCooldown()) {
-//            TwitchSpawn.LOGGER.info("Still has {} seconds global cooldown.", cooldownBucket.getGlobalCooldown());
+//            TwitchSpawnClient.LOGGER.info("Still has {} seconds global cooldown.", cooldownBucket.getGlobalCooldown());
 //
 //        } else if (cooldownBucket.canConsume(twitchChatMessage.username)) {
 //            ConfigManager.RULESET_COLLECTION.handleEvent(eventArguments, cooldownBucket);

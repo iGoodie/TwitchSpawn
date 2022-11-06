@@ -10,11 +10,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.programmer.igoodie.twitchspawn.client.gui.screen.TwitchSpawnScreen;
+import net.programmer.igoodie.twitchspawn.log.TSLogger;
 import net.programmer.igoodie.twitchspawn.network.SocketManager;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class TwitchSpawnClient {
 
+    public static final TSLogger LOGGER = TwitchSpawn.getStreamerLogger("LOCAL_CLIENT");
     public static KeyMapping openTwitchSpawnScreen;
 
     public static void registerKeybinds(final FMLClientSetupEvent event) {

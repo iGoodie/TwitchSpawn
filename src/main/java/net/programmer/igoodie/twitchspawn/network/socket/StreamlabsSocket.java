@@ -5,6 +5,7 @@ import io.socket.client.Socket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.TwitchSpawnClient;
 import net.programmer.igoodie.twitchspawn.configuration.ClientCredentialsConfig;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.Platform;
@@ -74,7 +75,7 @@ public class StreamlabsSocket extends SocketIOBase {
         JSONArray messages = extractMessages(event);
 
         if (messages == null) {
-            TwitchSpawn.LOGGER.info("Received unexpected Streamlabs packet -> {}", event);
+            TwitchSpawnClient.LOGGER.info("Received unexpected Streamlabs packet -> {}", event);
             return; // Contains no message (in expected format), stop here
         }
 
@@ -83,7 +84,7 @@ public class StreamlabsSocket extends SocketIOBase {
         TSLEventPair eventPair = new TSLEventPair(eventType, eventFor.replace("_account", ""));
 
         JSONUtils.forEach(messages, message -> {
-            TwitchSpawn.LOGGER.info("Received Streamlabs packet {} -> {}",
+            TwitchSpawnClient.LOGGER.info("Received Streamlabs packet {} -> {}",
                     new TSLEventPair(eventType, eventFor), message);
 
             // If it's a sub gift -- XXX: Streamlabs notify Sub Gifts twice for some reason :thinking:
@@ -120,7 +121,7 @@ public class StreamlabsSocket extends SocketIOBase {
 
             // Build failed for an unknown reason
             if (eventArguments == null) {
-                TwitchSpawn.LOGGER.warn("{} was not able to build arguments from incoming data -> {}",
+                TwitchSpawnClient.LOGGER.warn("{} was not able to build arguments from incoming data -> {}",
                         eventBuilder.getClass().getSimpleName(), message.toString());
                 return;
             }

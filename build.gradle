@@ -110,15 +110,17 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // Nightly Config by Electronwill
-    shade group: 'com.electronwill.night-config', name: 'core', version: '3.6.0'
-    shade group: 'com.electronwill.night-config', name: 'toml', version: '3.6.0'
+    shade(group: 'com.electronwill.night-config', name: 'core', version: '3.6.0') {
+        transitive = false
+    }
+    shade(group: 'com.electronwill.night-config', name: 'toml', version: '3.6.0')
 
     // SocketIO Client
-    shade group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
+    shade(group: 'io.socket', name: 'socket.io-client', version: '1.0.0')
     minecraftLibrary group: 'io.socket', name: 'socket.io-client', version: '1.0.0'
 
     // RuntimeGoodies
-    shade 'com.github.iGoodie:RuntimeGoodies:1.1.0'
+    shade('com.github.iGoodie:RuntimeGoodies:1.1.0')
     minecraftLibrary 'com.github.iGoodie:RuntimeGoodies:1.1.0'
 
     // JUnit 5 for testings
@@ -136,6 +138,10 @@ shadowJar {
     archiveClassifier = ''
     configurations = [project.configurations.shade]
     finalizedBy 'reobfShadowJar'
+
+    relocate("com.electronwill.nightconfig", "twitchspawn.com.electronwill.nightconfig")
+    relocate("io.socket", "twitchspawn.io.socket")
+    relocate("com.google.gson", "twitchspawn.com.google.gson")
 }
 
 assemble.dependsOn shadowJar
