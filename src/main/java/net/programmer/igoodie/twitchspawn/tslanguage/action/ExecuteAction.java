@@ -50,7 +50,8 @@ public class ExecuteAction extends TSLAction {
                             .performCommand(newSource, replaceExpressions(command, args));
                 }
 
-                TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, replaceExpressions(command, args));
+                TwitchSpawn.getStreamerLogger(args.streamerNickname)
+                        .info("Executed (Status:{}) -> {}", result, replaceExpressions(command, args));
             });
         }
     }
