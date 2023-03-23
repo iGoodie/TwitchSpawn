@@ -6,14 +6,13 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-//        classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
+        classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-//apply plugin: 'com.github.johnrengelman.shadow'
-//apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
@@ -101,10 +100,6 @@ configurations {
     implementation.extendsFrom shade
 }
 
-afterEvaluate {
-    println configurations.runtimeClasspath.extendsFrom
-}
-
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
@@ -117,6 +112,7 @@ dependencies {
 
     // SocketIO Client
     shade "io.socket:socket.io-client:1.0.0"
+    minecraftLibrary "io.socket:socket.io-client:1.0.0"
 
     // JUnit 5 for testings
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
@@ -129,23 +125,23 @@ dependencies {
 
 }
 
-// Fix the classpath the right way and once and for all
-afterEvaluate {
-    // Collect deps in runtimeClasspath but NOT in minecraft
-    def deps = (configurations.runtimeClasspath - configurations.minecraft).join(';')
-    // Add deps to classpath
-    minecraft.runs.each { run ->
-        run.token 'minecraft_classpath', deps
-    }
-}
+//// Fix the classpath the right way and once and for all
+//afterEvaluate {
+//    // Collect deps in runtimeClasspath but NOT in minecraft
+//    def deps = (configurations.runtimeClasspath - configurations.minecraft).join(';')
+//    // Add deps to classpath
+//    minecraft.runs.each { run ->
+//        run.token 'minecraft_classpath', deps
+//    }
+//}
 
-jar {
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)){
-            exclude 'META-INF', 'META-INF/**'
-        }
-    }
-}
+//jar {
+//    configurations.shade.each { dep ->
+//        from(project.zipTree(dep)) {
+//            exclude 'META-INF', 'META-INF/**'
+//        }
+//    }
+//}
 
 //shadowJar {
 //    configurations = [project.configurations.shadow]
@@ -159,6 +155,7 @@ jar {
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
+    archiveClassifier = 'slim'
     //noinspection GroovyAssignabilityCheck
     manifest {
         attributes([
@@ -171,6 +168,18 @@ jar {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+}
+
+shadowJar {
+    archiveClassifier = ''
+    configurations = [project.configurations.shade]
+    finalizedBy 'reobfShadowJar'
+}
+
+assemble.dependsOn shadowJar
+
+reobf {
+    shadowJar {}
 }
 
 // ====================================
