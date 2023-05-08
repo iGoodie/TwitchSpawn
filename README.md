@@ -1,4 +1,4 @@
-<p align="center"><img src="https://cdn.discordapp.com/attachments/460909423045509140/460909450354622476/logo.png"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/iGoodie/TwitchSpawn/master/.github/assets/logo.png"></p>
 
 <!-- Badges -->
 <p align="center">
