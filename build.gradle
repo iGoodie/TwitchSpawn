@@ -143,10 +143,17 @@ shadowJar {
     configurations = [project.configurations.shade]
     finalizedBy 'reobfShadowJar'
 
+    dependencies {
+        exclude(dependency("org.slf4j:.*"))
+    }
+
     relocate("com.electronwill.nightconfig", "twitchspawn.com.electronwill.nightconfig")
     relocate("io.socket", "twitchspawn.io.socket")
     relocate("com.google.gson", "twitchspawn.com.google.gson")
     relocate("net.dv8tion.jda", "twitchspawn.net.dv8tion.jda")
+    relocate("org.apache.commons.collections4", "twitchspawn.org.apache.commons.collections4")
+    relocate("com.neovisionaries.ws", "twitchspawn.com.neovisionaries.ws")
+    relocate("com.sun.jna", "twitchspawn.com.sun.jna")
 }
 
 assemble.dependsOn shadowJar

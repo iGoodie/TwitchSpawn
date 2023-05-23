@@ -51,17 +51,16 @@ public class DiscordConnection extends ListenerAdapter implements CommandSource 
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        System.out.println("Channel: " + event.getChannel().getId());
-
         if (!ConfigManager.DISCORD_CONN.getChannelId().equals(event.getChannel().getId()))
             return;
-
-        System.out.println("Author: " + event.getAuthor().getId());
 
         if (!ConfigManager.DISCORD_CONN.getEditorIds().contains(event.getAuthor().getId()))
             return;
 
         String command = event.getMessage().getContentRaw();
+
+        if (!command.startsWith("/"))
+            return;
 
         TwitchSpawn.SERVER.execute(() -> {
             CommandSourceStack sourceStack = createCommandSourceStack();
