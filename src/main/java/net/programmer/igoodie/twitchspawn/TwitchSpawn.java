@@ -23,6 +23,7 @@ import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.log.TSLogger;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.SocketManager;
+import net.programmer.igoodie.twitchspawn.network.server.DiscordConnection;
 import net.programmer.igoodie.twitchspawn.udl.NotepadUDLUpdater;
 
 import java.io.IOException;
@@ -45,6 +46,10 @@ public class TwitchSpawn {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public static ResourceLocation id(String name) {
+        return new ResourceLocation(MOD_ID, name);
+    }
+
     public static TSLogger getStreamerLogger(String nickname) {
         return STREAMER_LOGGERS.computeIfAbsent(nickname.toLowerCase(),
                 (key) -> {
@@ -63,6 +68,7 @@ public class TwitchSpawn {
             ConfigManager.loadConfigs();
             SocketManager.initialize();
             NetworkManager.initialize();
+            DiscordConnection.start();
 
             // TODO: Migration
 //            ArgumentTypes.register("twitchspawn:streamer", StreamerArgumentType.class,
@@ -88,8 +94,8 @@ public class TwitchSpawn {
 
     @SubscribeEvent
     public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
-        event.getRegistry().register(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, "pop_in")));
-        event.getRegistry().register(new SoundEvent(new ResourceLocation(TwitchSpawn.MOD_ID, "pop_out")));
+        event.getRegistry().register(new SoundEvent(TwitchSpawn.id("pop_in")));
+        event.getRegistry().register(new SoundEvent(TwitchSpawn.id("pop_out")));
     }
 
     @SubscribeEvent

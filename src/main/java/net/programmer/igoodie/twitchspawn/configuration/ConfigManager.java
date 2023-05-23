@@ -16,6 +16,7 @@ public class ConfigManager {
     public static SubtitlesConfig SUBTITLES;
     public static PreferencesConfig PREFERENCES;
     public static ClientCredentialsConfig CLIENT_CREDS;
+    public static DiscordConnectionConfig DISCORD_CONN;
 
     public static void loadConfigs() throws TwitchSpawnLoadingErrors {
         TwitchSpawn.LOGGER.info("Loading configs...");
@@ -36,6 +37,8 @@ public class ConfigManager {
                 () -> SUBTITLES = SubtitlesConfig.create(new File(getPath("messages.subtitle.json"))));
         accumulateExceptions(errors,
                 () -> PREFERENCES = PreferencesConfig.create(new File(getPath("preferences.toml"))));
+        accumulateExceptions(errors,
+                () -> DISCORD_CONN = new DiscordConnectionConfig().readConfig(new File(getPath("server_discord_conn.json"))));
 
         if (!errors.isEmpty())
             throw errors;

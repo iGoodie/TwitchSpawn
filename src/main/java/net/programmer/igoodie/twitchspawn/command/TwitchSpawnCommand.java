@@ -20,6 +20,7 @@ import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 import net.programmer.igoodie.twitchspawn.network.SocketManager;
+import net.programmer.igoodie.twitchspawn.network.server.DiscordConnection;
 import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.TSLAction;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
@@ -83,6 +84,7 @@ public class TwitchSpawnCommand {
         try {
             ConfigManager.loadConfigs();
             SocketManager.initialize();
+            DiscordConnection.start();
             source.sendSuccess(new TranslatableComponent(
                     "commands.twitchspawn.reloadcfg.success"), false);
             return 1;
