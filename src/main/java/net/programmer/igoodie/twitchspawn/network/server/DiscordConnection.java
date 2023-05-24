@@ -19,6 +19,8 @@ import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 public class DiscordConnection extends ListenerAdapter implements CommandSource {
@@ -49,6 +51,8 @@ public class DiscordConnection extends ListenerAdapter implements CommandSource 
         TwitchSpawn.LOGGER.info("Connected to Discord. {} guilds available.", event.getGuildAvailableCount());
     }
 
+    protected Queue<String> commands = new LinkedList<>();
+
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!ConfigManager.DISCORD_CONN.getChannelId().equals(event.getChannel().getId()))
@@ -62,14 +66,21 @@ public class DiscordConnection extends ListenerAdapter implements CommandSource 
         if (!command.startsWith("/"))
             return;
 
-        TwitchSpawn.SERVER.execute(() -> {
-            CommandSourceStack sourceStack = createCommandSourceStack();
-            int result = TwitchSpawn.SERVER.getCommands().performCommand(sourceStack, command);
-            EmojiUnion emoji = result >= 0
-                    ? Emoji.fromFormatted("\uD83D\uDC4D")
-                    : Emoji.fromFormatted("\uD83D\uDC4E");
-            event.getMessage().addReaction(emoji).queue();
-        });
+        commands.add(command);
+
+        if (TwitchSpawn.SERVER != null) {
+            while (!commands.isEmpty()) {
+                String awaitingCommand = commands.poll();
+                TwitchSpawn.SERVER.execute(() -> {
+                    CommandSourceStack sourceStack = createCommandSourceStack();
+                    int result = TwitchSpawn.SERVER.getCommands().performCommand(sourceStack, awaitingCommand);
+                    EmojiUnion emoji = result >= 0
+                            ? Emoji.fromFormatted("\uD83D\uDC4D")
+                            : Emoji.fromFormatted("\uD83D\uDC4E");
+                    event.getMessage().addReaction(emoji).queue();
+                });
+            }
+        }
     }
 
     /* -------------------------------- */
