@@ -1,5 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tracer;
 
+import io.socket.client.IO;
 import io.socket.client.Socket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -14,8 +15,11 @@ import net.programmer.igoodie.twitchspawn.tracer.chat.TwitchChatTracer;
 import net.programmer.igoodie.twitchspawn.tracer.socket.StreamElementsSocketTracer;
 import net.programmer.igoodie.twitchspawn.tracer.socket.StreamlabsSocketTracer;
 import net.programmer.igoodie.twitchspawn.tracer.socket.TwitchPubSubTracer;
+import okhttp3.Dispatcher;
+import okhttp3.OkHttpClient;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class TraceManager {
 

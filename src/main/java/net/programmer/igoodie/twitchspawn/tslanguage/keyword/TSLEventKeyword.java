@@ -4,13 +4,7 @@ import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
 import net.programmer.igoodie.twitchspawn.tracer.Platform;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.DonationBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.EventBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.ExtraLifeBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.TwitchFollowBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.PatreonBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.TiltifyBuilder;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.TreatStreamBuilder;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -135,7 +129,11 @@ public enum TSLEventKeyword {
             new TreatStreamBuilder(),
             new TSLEventPair("treat", "treatstream")
     ),
-    ;
+    DONORDRIVE_DONATION(
+            "DonorDrive Donation",
+            new DonorDriveDonationBuilder(),
+            new TSLEventPair("donordrivedonation", "donordrive")
+    );
 
     public static boolean exists(String eventName) {
         for (TSLEventKeyword keyword : values())

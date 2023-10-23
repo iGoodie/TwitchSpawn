@@ -21,8 +21,8 @@ public class ExecuteAction extends TSLAction {
         if (actionWords.size() == 0)
             throw new TSLSyntaxError("Expected at least one command.");
 
-        if (!actionWords.stream().allMatch(word -> word.startsWith("/")))
-            throw new TSLSyntaxError("Every command must start with '/' character");
+//        if (!actionWords.stream().allMatch(word -> word.startsWith("/")))
+//            throw new TSLSyntaxError("Every command must start with '/' character");
 
         this.commands = new LinkedList<>(actionWords);
     }
