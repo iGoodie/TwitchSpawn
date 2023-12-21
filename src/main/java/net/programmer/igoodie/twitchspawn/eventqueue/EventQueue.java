@@ -136,10 +136,9 @@ public class EventQueue {
                         .getPlayerByName(args.streamerNickname);
 
                 if (playerEntity != null) {
-                    NetworkManager.CHANNEL.sendTo(
-                            new GlobalChatCooldownPacket(cooldownBucket.getGlobalCooldownTimestamp()),
-                            playerEntity.connection.connection,
-                            NetworkDirection.PLAY_TO_CLIENT
+                    NetworkManager.CHANNEL.send(
+                        new GlobalChatCooldownPacket(cooldownBucket.getGlobalCooldownTimestamp()),
+                        playerEntity.connection.getConnection()
                     );
                 }
             }

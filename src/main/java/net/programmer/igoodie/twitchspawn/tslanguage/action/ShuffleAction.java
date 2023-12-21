@@ -93,9 +93,9 @@ public class ShuffleAction extends ItemSelectiveAction {
         if (server != null) {
             CommandSourceStack commandSource = player.createCommandSourceStack()
                     .withPermission(9999).withSuppressedOutput();
-            server.getCommands().performCommand(commandSource,
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/playsound minecraft:block.conduit.activate master @s");
-            server.getCommands().performCommand(commandSource,
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/particle minecraft:end_rod ~ ~ ~ 2 2 2 0.0001 400");
         }
     }

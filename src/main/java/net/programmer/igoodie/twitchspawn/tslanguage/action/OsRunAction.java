@@ -176,9 +176,8 @@ public class OsRunAction extends TSLAction {
             handleLocalScript(shell, replaceExpressions(shellScript, args));
 
         } else if (scriptLocation == ScriptLocation.REMOTE) {
-            NetworkManager.CHANNEL.sendTo(new OsRunPacket(shell, replaceExpressions(shellScript, args)),
-                    player.connection.connection,
-                    NetworkDirection.PLAY_TO_CLIENT);
+            NetworkManager.CHANNEL.send(new OsRunPacket(shell, replaceExpressions(shellScript, args)),
+                player.connection.getConnection());
         }
     }
 

@@ -1,12 +1,16 @@
 package net.programmer.igoodie.twitchspawn.network.packet;
 
+
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.OsRunAction;
 
-import java.util.function.Supplier;
-
 public class OsRunPacket {
+
+    public OsRunPacket(OsRunAction.Shell shell, String script) {
+        this.shell = shell;
+        this.script = script;
+    }
 
     public static void encode(OsRunPacket packet, FriendlyByteBuf buffer) {
         buffer.writeInt(packet.shell.ordinal());
@@ -20,19 +24,19 @@ public class OsRunPacket {
         return new OsRunPacket(shell, script);
     }
 
-    public static void handle(final OsRunPacket packet, Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> OsRunAction.handleLocalScript(packet.shell, packet.script));
-        context.get().setPacketHandled(true);
+    public void handle(CustomPayloadEvent.Context context) {
+        context.enqueueWork(() -> OsRunAction.handleLocalScript(this.shell, this.script));
+        context.setPacketHandled(true);
     }
 
-    /* ------------------------------------------------ */
 
-    private OsRunAction.Shell shell;
-    private String script;
+    /**
+     * Shell to run the script with.
+     */
+    private final OsRunAction.Shell shell;
 
-    public OsRunPacket(OsRunAction.Shell shell, String script) {
-        this.shell = shell;
-        this.script = script;
-    }
-
+    /**
+     * Script to run.
+     */
+    private final String script;
 }

@@ -2,15 +2,18 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import java.util.List;
+
 import net.minecraft.commands.arguments.item.ItemParser;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
-
-import java.util.List;
+import net.programmer.igoodie.twitchspawn.util.ItemProcessingHelper;
 
 public class DropAction extends TSLAction {
 
@@ -43,8 +46,9 @@ public class DropAction extends TSLAction {
             EventArguments randomEvent = EventArguments.createRandom("RandomStreamer");
             String randomItem = ExpressionEvaluator.replaceExpressions(this.itemRaw,
                     expression -> ExpressionEvaluator.fromArgs(expression, randomEvent));
-            new ItemParser(new StringReader(randomItem), true).parse();
 
+            // This is an ugly way, but I do not know if there is other way how to get lookup class.
+            ItemParser.parseForTesting(BuiltInRegistries.ITEM.asLookup(), new StringReader(randomItem));
         } catch (CommandSyntaxException e) {
             throw new TSLSyntaxError(e.getRawMessage().getString());
         }
@@ -52,35 +56,34 @@ public class DropAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayer player, EventArguments args) {
-        ItemStack itemStack = createItemStack(args);
-        player.drop(itemStack, false, false);
-    }
-
-    private ItemStack createItemStack(EventArguments args) {
         try {
-            String input = replaceExpressions(itemRaw, args);
-
-            ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
-            ItemStack itemStack = new ItemStack(itemParser.getItem(), itemAmount);
-            itemStack.setTag(itemParser.getNbt());
-
-            return itemStack;
-
+            ItemStack itemStack = ItemProcessingHelper.createItemStack(
+                this.replaceExpressions(this.itemRaw, args),
+                this.itemAmount);
+            player.drop(itemStack, false, false);
         } catch (CommandSyntaxException e) {
-            throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
+            TwitchSpawn.LOGGER.error("Failed to parse item: " + this.itemRaw + " with error: " + e.getRawMessage());
         }
     }
 
+
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
-        ItemStack itemStack = createItemStack(args);
+        try {
+            ItemStack itemStack = ItemProcessingHelper.createItemStack(
+                this.replaceExpressions(this.itemRaw, args),
+                this.itemAmount);
 
-        if (expression.equals("itemName"))
-            return itemStack.getItem().getName(itemStack).getString();
-//            return itemStack.getItem().getName().getString(); // getName() is client only...
+            if (expression.equals("itemName")) {
+                return itemStack.getItem().getName(itemStack).getString();
+            }
 
-        if (expression.equals("itemCount"))
-            return String.valueOf(itemStack.getCount());
+            if (expression.equals("itemCount")) {
+                return String.valueOf(itemStack.getCount());
+            }
+        } catch (CommandSyntaxException e) {
+            TwitchSpawn.LOGGER.error("Failed to parse item: " + this.itemRaw + " with error: " + e.getRawMessage());
+        }
 
         return null;
     }

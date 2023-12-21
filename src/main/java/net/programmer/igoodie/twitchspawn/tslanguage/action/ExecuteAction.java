@@ -37,8 +37,8 @@ public class ExecuteAction extends TSLAction {
         for (String command : commands) {
             TwitchSpawn.SERVER.execute(() -> {
                 int result = TwitchSpawn.SERVER
-                        .getCommands()
-                        .performCommand(source, replaceExpressions(command, args));
+                    .getCommands()
+                    .performPrefixedCommand(source, replaceExpressions(command, args));
 
                 if (result <= 0) { // Wohooo we knew iGoodie liked hacky solutions. ( ? :/ )
                     // If it yielded an error, and not worked as expected
@@ -46,8 +46,8 @@ public class ExecuteAction extends TSLAction {
                     CommandSourceStack newSource = player.createCommandSourceStack()
                             .withPermission(9999);
                     TwitchSpawn.SERVER
-                            .getCommands()
-                            .performCommand(newSource, replaceExpressions(command, args));
+                        .getCommands()
+                        .performPrefixedCommand(newSource, replaceExpressions(command, args));
                 }
 
                 TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, replaceExpressions(command, args));

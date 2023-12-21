@@ -73,9 +73,9 @@ public class ThrowAction extends ItemSelectiveAction {
         if (server != null) {
             CommandSourceStack commandSource = player.createCommandSourceStack()
                     .withPermission(9999).withSuppressedOutput();
-            server.getCommands().performCommand(commandSource,
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/playsound minecraft:entity.ender_pearl.throw master @s");
-            server.getCommands().performCommand(commandSource,
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/particle minecraft:witch ~ ~ ~ 2 2 2 0.1 400");
         }
     }

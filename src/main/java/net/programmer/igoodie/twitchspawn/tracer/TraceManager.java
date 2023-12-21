@@ -3,9 +3,8 @@ package net.programmer.igoodie.twitchspawn.tracer;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
@@ -70,12 +69,10 @@ public class TraceManager {
         }
 
         for (ServerPlayer player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
-            UUID uuid = player.getUUID();
-            TranslatableComponent successText = new TranslatableComponent("commands.twitchspawn.start.success");
-            player.sendMessage(successText, uuid);
-            NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(true),
-                    player.connection.connection,
-                    NetworkDirection.PLAY_TO_CLIENT);
+            Component successText = Component.translatable("commands.twitchspawn.start.success");
+            player.sendSystemMessage(successText);
+            NetworkManager.CHANNEL.send(new StatusChangedPacket(true),
+                player.connection.getConnection());
         }
     }
 
@@ -98,13 +95,11 @@ public class TraceManager {
 
         if (TwitchSpawn.SERVER != null) {
             for (ServerPlayer player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
-                UUID uuid = player.getUUID();
-                TranslatableComponent successText = new TranslatableComponent("commands.twitchspawn.stop.success",
-                        source == null ? "Server" : source.getTextName(), reason);
-                player.sendMessage(successText, uuid);
-                NetworkManager.CHANNEL.sendTo(new StatusChangedPacket(false),
-                        player.connection.connection,
-                        NetworkDirection.PLAY_TO_CLIENT);
+                Component successText = Component.translatable("commands.twitchspawn.stop.success",
+                    source == null ? "Server" : source.getTextName(), reason);
+                player.sendSystemMessage(successText);
+                NetworkManager.CHANNEL.send(new StatusChangedPacket(false),
+                    player.connection.getConnection());
             }
         }
     }
