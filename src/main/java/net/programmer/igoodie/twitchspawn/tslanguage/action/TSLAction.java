@@ -231,7 +231,9 @@ public abstract class TSLAction implements TSLFlowNode {
         Component text = MCPHelpers.fromJsonLenient(title);
         Component subtext = MCPHelpers.fromJsonLenient(subtitle);
 
-        if (subtext != null && subtext.getString().equals("NOTHING_0xDEADC0DE_0xDEADBEEF")) {
+        if (subtext == null) {
+            subtext = Component.nullToEmpty(""); // You cannot send NULL pockets.
+        } else if (subtext.getString().equals("NOTHING_0xDEADC0DE_0xDEADBEEF")) {
             return; // Stop here since it was a  DISPLAYING NOTHING statement
         }
 
