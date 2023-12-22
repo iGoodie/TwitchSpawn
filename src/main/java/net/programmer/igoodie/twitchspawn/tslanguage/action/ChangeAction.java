@@ -1,19 +1,23 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.item.ItemParser;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
-
-import java.util.LinkedList;
-import java.util.List;
+import net.programmer.igoodie.twitchspawn.util.ItemProcessingHelper;
 
 public class ChangeAction extends ItemSelectiveAction {
 
@@ -85,8 +89,9 @@ public class ChangeAction extends ItemSelectiveAction {
             EventArguments randomEvent = EventArguments.createRandom("RandomStreamer");
             String randomItem = ExpressionEvaluator.replaceExpressions(this.itemRaw,
                     expression -> ExpressionEvaluator.fromArgs(expression, randomEvent));
-            new ItemParser(new StringReader(randomItem), true).parse();
 
+            // This is an ugly way, but I do not know if there is other way how to get lookup class.
+            ItemParser.parseForTesting(BuiltInRegistries.ITEM.asLookup(), new StringReader(randomItem));
         } catch (CommandSyntaxException e) {
             throw new TSLSyntaxError(e.getRawMessage().getString());
         }
@@ -94,37 +99,41 @@ public class ChangeAction extends ItemSelectiveAction {
 
     @Override
     protected void performAction(ServerPlayer player, EventArguments args) {
-        ItemStack itemStack = createItemStack(args);
+        try {
+            // Why whole in try-catch? Well, I think it fits better here. Can change if not needed.
+            ItemStack itemStack = ItemProcessingHelper.createItemStack(
+                this.replaceExpressions(this.itemRaw, args),
+                this.itemAmount);
 
-        if (selectionType == SelectionType.WITH_INDEX) {
-            getInventory(player, inventoryType).set(inventoryIndex, itemStack.copy());
-
-        } else if (selectionType == SelectionType.EVERYTHING) {
-            if (inventoryType == null) {
-                setAll(player.getInventory().items, itemStack);
-                setAll(player.getInventory().armor, itemStack);
-                setAll(player.getInventory().offhand, itemStack);
-
-            } else {
-                setAll(getInventory(player, inventoryType), itemStack);
-            }
-
-        } else if (selectionType == SelectionType.RANDOM) {
-            InventorySlot randomSlot = inventoryType == null
+            if (this.selectionType == SelectionType.WITH_INDEX) {
+                this.getInventory(player, this.inventoryType).set(this.inventoryIndex, itemStack.copy());
+            } else if (this.selectionType == SelectionType.EVERYTHING) {
+                if (this.inventoryType == null) {
+                    this.setAll(player.getInventory().items, itemStack);
+                    this.setAll(player.getInventory().armor, itemStack);
+                    this.setAll(player.getInventory().offhand, itemStack);
+                } else {
+                    this.setAll(getInventory(player, this.inventoryType), itemStack);
+                }
+            } else if (this.selectionType == SelectionType.RANDOM)  {
+                InventorySlot randomSlot = this.inventoryType == null
                     ? randomInventorySlot(player, true)
-                    : randomInventorySlot(getInventory(player, inventoryType), true);
-            if (randomSlot != null) {
-                randomSlot.inventory.set(randomSlot.index, itemStack.copy());
-            }
+                    : randomInventorySlot(this.getInventory(player, this.inventoryType), true);
 
-        } else if (selectionType == SelectionType.ONLY_HELD_ITEM) {
-            int selectedHotbarIndex = player.getInventory().selected;
-            player.getInventory().items.set(selectedHotbarIndex, itemStack.copy());
-
-        } else if (selectionType == SelectionType.HOTBAR) {
-            for (int i = 0; i <= 8; i++) {
-                player.getInventory().items.set(i, itemStack.copy());
+                if (randomSlot != null) {
+                    randomSlot.inventory.set(randomSlot.index, itemStack.copy());
+                }
+            } else if (this.selectionType == SelectionType.ONLY_HELD_ITEM) {
+                int selectedHotbarIndex = player.getInventory().selected;
+                player.getInventory().items.set(selectedHotbarIndex, itemStack.copy());
+            } else if (this.selectionType == SelectionType.HOTBAR) {
+                for (int i = 0; i <= 8; i++)
+                {
+                    player.getInventory().items.set(i, itemStack.copy());
+                }
             }
+        } catch (CommandSyntaxException e) {
+            TwitchSpawn.LOGGER.error("Failed to parse item: " + this.itemRaw + " with error: " + e.getRawMessage());
         }
 
         MinecraftServer server = player.getServer();
@@ -132,9 +141,9 @@ public class ChangeAction extends ItemSelectiveAction {
         if (server != null) {
             CommandSourceStack commandSource = player.createCommandSourceStack()
                     .withPermission(9999).withSuppressedOutput();
-            server.getCommands().performCommand(commandSource,
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/playsound minecraft:item.armor.equip_leather master @s");
-            server.getCommands().performCommand(commandSource,
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/particle minecraft:entity_effect ~ ~ ~ 2 2 2 0.1 400");
         }
     }
@@ -144,20 +153,4 @@ public class ChangeAction extends ItemSelectiveAction {
             inventory.set(i, itemStack.copy());
         }
     }
-
-    private ItemStack createItemStack(EventArguments args) {
-        try {
-            String input = replaceExpressions(itemRaw, args);
-
-            ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
-            ItemStack itemStack = new ItemStack(itemParser.getItem(), itemAmount);
-            itemStack.setTag(itemParser.getNbt());
-
-            return itemStack;
-
-        } catch (CommandSyntaxException e) {
-            throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
-        }
-    }
-
 }

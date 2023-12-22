@@ -69,14 +69,14 @@ public class SummonAction extends TSLAction {
     @Override
     protected void performAction(ServerPlayer player, EventArguments args) {
         String command = String.format("/summon %s %s %s %s %s",
-                entityType.getRegistryName(),
+                entityType.builtInRegistryHolder().key().location(),
                 rawCoordX,
                 rawCoordY,
                 rawCoordZ,
                 replaceExpressions(rawNbt, args));
 
-        player.getServer().getCommands().performCommand(player.createCommandSourceStack()
-                .withPermission(9999).withSuppressedOutput(), command);
+        player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack()
+            .withPermission(9999).withSuppressedOutput(), command);
     }
 
     @Override
