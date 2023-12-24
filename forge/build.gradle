@@ -39,6 +39,9 @@ dependencies {
 
     forgeRuntimeLibrary 'com.squareup.okhttp3:okhttp:3.8.1'
     forgeRuntimeLibrary 'io.socket:socket.io-client:1.0.2'
+
+    shadowCommon 'com.squareup.okhttp3:okhttp:3.8.1'
+    shadowCommon 'io.socket:socket.io-client:1.0.2'
 }
 
 processResources {

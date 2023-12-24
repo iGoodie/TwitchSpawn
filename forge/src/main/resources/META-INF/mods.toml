@@ -42,7 +42,8 @@ authors="iGoodie, BONNe1704" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-TwitchSpawn listens for live events related to your Twitch channel using various Socket APIs.\nThen it handles those events with the rules handcrafted by you!
+    TwitchSpawn listens for live events related to your Twitch channel using various Socket APIs.
+    Then it handles those events with the rules handcrafted by you!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.twitchspawn]] #optional
