@@ -31,8 +31,10 @@ dependencies {
     implementation "com.electronwill.night-config:core:3.6.4"
     implementation "com.electronwill.night-config:toml:3.6.4"
 
-    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
-    implementation 'io.socket:socket.io-client:1.0.2'
+    shadowCommon "com.electronwill.night-config:core:3.6.4"
+    shadowCommon "com.electronwill.night-config:toml:3.6.4"
+    shadowCommon "com.squareup.okhttp3:okhttp:3.8.1"
+    shadowCommon "io.socket:socket.io-client:1.0.2"
 }
 
 processResources {
