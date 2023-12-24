@@ -1,17 +1,18 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
-import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 public class WaitAction extends TSLAction {
 

@@ -1,17 +1,18 @@
 package net.programmer.igoodie.twitchspawn.configuration;
 
+
 import com.google.common.io.Resources;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.programmer.igoodie.twitchspawn.util.GsonUtils;
 import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+
+import net.programmer.igoodie.twitchspawn.util.GsonUtils;
 
 public abstract class TextComponentConfig {
 

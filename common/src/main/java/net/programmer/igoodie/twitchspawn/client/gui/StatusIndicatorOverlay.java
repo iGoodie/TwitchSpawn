@@ -3,19 +3,22 @@ package net.programmer.igoodie.twitchspawn.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.client.ClientGuiEvent;
+import dev.architectury.hooks.client.screen.ScreenAccess;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
+import net.programmer.igoodie.twitchspawn.events.TwitchSpawnClientGuiEvent;
 import net.programmer.igoodie.twitchspawn.registries.TwitchSpawnSoundEvent;
 
 
@@ -25,7 +28,39 @@ public class StatusIndicatorOverlay {
             new ResourceLocation(TwitchSpawn.MOD_ID, "textures/indicators.png");
 
     private static boolean running = false;
+
     private static boolean drew = false;
+
+    /**
+     * Render indicator
+     */
+    private static final TwitchSpawnClientGuiEvent.OverlayRenderPre PRE_RENDER =
+        (graphics, resourceLocation) -> drew = false;
+
+    /**
+     * Render the gui
+     */
+    private static final TwitchSpawnClientGuiEvent.RenderDebugHud POST_RENDER =
+        StatusIndicatorOverlay::onRenderGuiPost;
+
+
+    /**
+     * Register rendering events.
+     */
+    public static void register() {
+        TwitchSpawnClientGuiEvent.OVERLAY_RENDER_PRE.register(PRE_RENDER);
+        TwitchSpawnClientGuiEvent.DEBUG_TEXT.register(POST_RENDER);
+    }
+
+
+    /**
+     * Unregister rendering events.
+     */
+    public static void unregister() {
+        TwitchSpawnClientGuiEvent.OVERLAY_RENDER_PRE.unregister(PRE_RENDER);
+        TwitchSpawnClientGuiEvent.DEBUG_TEXT.unregister(POST_RENDER);
+    }
+
 
     public static void setRunning(boolean running) {
         StatusIndicatorOverlay.running = running;
@@ -41,19 +76,8 @@ public class StatusIndicatorOverlay {
         }
     }
 
-    @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END)
-            return;
-    }
 
-    @SubscribeEvent
-    public static void onRenderGuiPre(RenderGuiOverlayEvent.Pre event) {
-        drew = false;
-    }
-
-    @SubscribeEvent
-    public static void onRenderGuiPost(CustomizeGuiOverlayEvent.DebugText event) {
+    private static void onRenderGuiPost(GuiGraphics gui) {
         if (ConfigManager.PREFERENCES.indicatorDisplay == PreferencesConfig.IndicatorDisplay.DISABLED)
             return; // The display is disabled, stop here
 
@@ -66,7 +90,6 @@ public class StatusIndicatorOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, indicatorIcons);
 
-        GuiGraphics gui = event.getGuiGraphics();
         gui.pose().pushPose();
 
         int x = 5, y = 5;

@@ -1,5 +1,10 @@
 package net.programmer.igoodie.twitchspawn.tracer.socket;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
@@ -13,10 +18,6 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.builder.EventBuilder;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.util.JSONUtils;
-import net.programmer.igoodie.twitchspawn.util.TSHelper;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class StreamlabsSocketTracer extends SocketIOTracer {
 

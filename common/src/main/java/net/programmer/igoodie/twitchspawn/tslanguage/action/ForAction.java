@@ -1,13 +1,14 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+
+import java.util.List;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLActionKeyword;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
-
-import java.util.List;
 
 public class ForAction extends TSLAction {
 

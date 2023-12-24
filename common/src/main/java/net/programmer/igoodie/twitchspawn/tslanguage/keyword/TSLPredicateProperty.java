@@ -1,11 +1,12 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.keyword;
 
-import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 
 public enum TSLPredicateProperty {
 

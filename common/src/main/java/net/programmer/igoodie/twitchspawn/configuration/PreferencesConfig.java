@@ -1,20 +1,22 @@
 package net.programmer.igoodie.twitchspawn.configuration;
 
+
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.toml.TomlParser;
 import com.google.common.io.Resources;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class PreferencesConfig {
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 
+
+public class PreferencesConfig
+{
     public enum IndicatorDisplay {
         DISABLED, CIRCLE_ONLY, ENABLED
     }

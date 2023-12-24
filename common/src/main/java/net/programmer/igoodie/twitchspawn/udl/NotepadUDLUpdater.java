@@ -1,9 +1,8 @@
 package net.programmer.igoodie.twitchspawn.udl;
 
-import com.google.common.io.Resources;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import org.apache.commons.io.FileUtils;
 
+import com.google.common.io.Resources;
+import org.apache.commons.io.FileUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 
 public class NotepadUDLUpdater {
 

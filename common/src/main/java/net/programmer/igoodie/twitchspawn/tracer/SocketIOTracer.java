@@ -1,12 +1,11 @@
 package net.programmer.igoodie.twitchspawn.tracer;
 
+
+import java.net.URISyntaxException;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
-import net.programmer.igoodie.twitchspawn.util.JSONUtils;
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
 
 public abstract class SocketIOTracer {
 

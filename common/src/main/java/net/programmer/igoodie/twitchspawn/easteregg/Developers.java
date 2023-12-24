@@ -7,6 +7,6 @@ import java.util.Set;
 public class Developers {
 
     public static final Set<String> TWITCH_NICKS = new HashSet<>(
-            Arrays.asList("iGoodiex", "TheDiaval", "Girloflegend"));
+            Arrays.asList("iGoodiex", "TheDiaval", "Girloflegend", "BONNe1704"));
 
 }

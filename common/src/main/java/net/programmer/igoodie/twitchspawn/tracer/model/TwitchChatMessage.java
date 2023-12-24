@@ -1,11 +1,15 @@
 package net.programmer.igoodie.twitchspawn.tracer.model;
 
-import net.programmer.igoodie.twitchspawn.easteregg.Developers;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import net.programmer.igoodie.twitchspawn.easteregg.Developers;
 
 public class TwitchChatMessage {
 

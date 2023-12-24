@@ -1,7 +1,7 @@
 package net.programmer.igoodie.twitchspawn.configuration;
 
-import com.google.gson.JsonArray;
 
+import com.google.gson.JsonArray;
 import java.io.File;
 
 public class TitlesConfig extends TextComponentConfig {

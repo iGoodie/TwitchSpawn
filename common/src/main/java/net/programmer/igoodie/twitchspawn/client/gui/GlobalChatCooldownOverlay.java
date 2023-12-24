@@ -1,16 +1,19 @@
 package net.programmer.igoodie.twitchspawn.client.gui;
 
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.client.ClientGuiEvent;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
+import net.programmer.igoodie.twitchspawn.events.TwitchSpawnClientGuiEvent;
 import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 
 public class GlobalChatCooldownOverlay {
@@ -19,20 +22,47 @@ public class GlobalChatCooldownOverlay {
             new ResourceLocation(TwitchSpawn.MOD_ID, "textures/cooldown.png");
 
     private static long timestamp = -1;
+
     private static boolean drew = false;
+
+    /**
+     * Render indicator
+     */
+    private static final TwitchSpawnClientGuiEvent.OverlayRenderPre PRE_RENDER =
+        (graphics, resourceLocation) -> drew = false;
+
+    /**
+     * Render the gui
+     */
+    private static final TwitchSpawnClientGuiEvent.OverlayRenderPost POST_RENDER =
+        GlobalChatCooldownOverlay::onRenderGuiPost;
+
+
+    /**
+     * Register rendering events.
+     */
+    public static void register() {
+        TwitchSpawnClientGuiEvent.OVERLAY_RENDER_PRE.register(PRE_RENDER);
+        TwitchSpawnClientGuiEvent.OVERLAY_RENDER_POST.register(POST_RENDER);
+    }
+
+
+    /**
+     * Unregister rendering events.
+     */
+    public static void unregister() {
+        TwitchSpawnClientGuiEvent.OVERLAY_RENDER_PRE.unregister(PRE_RENDER);
+        TwitchSpawnClientGuiEvent.OVERLAY_RENDER_POST.unregister(POST_RENDER);
+    }
+
 
     public static void setCooldownTimestamp(long timestamp) {
         GlobalChatCooldownOverlay.timestamp = timestamp;
     }
 
-    @SubscribeEvent
-    public static void onRenderGuiPre(RenderGuiOverlayEvent.Pre event) {
-        drew = false;
-    }
 
-    @SubscribeEvent
-    public static void onRenderGuiPost(RenderGuiOverlayEvent.Post event) {
-        if (event.getOverlay() != VanillaGuiOverlay.HOTBAR.type())
+    private static void onRenderGuiPost(GuiGraphics graphics, ResourceLocation resourceLocation) {
+        if (!resourceLocation.equals(ResourceLocation.of("hotbar", ':')))
             return; // Render only on HOTBAR
 
         // Already drew, stop here
@@ -60,20 +90,20 @@ public class GlobalChatCooldownOverlay {
                 y = 5;
             }
 
-            PoseStack matrixStack = event.getGuiGraphics().pose();
+            PoseStack matrixStack = graphics.pose();
             matrixStack.pushPose();
             matrixStack.scale(scale, scale, scale);
-            renderGlyph(event.getGuiGraphics(), matrixStack, String.format("%02d", minutes), x, (int) (y / scale));
-            renderGlyph(event.getGuiGraphics(), matrixStack, ":", x + 32, (int) (y / scale));
-            renderGlyph(event.getGuiGraphics(), matrixStack, String.format("%02d", seconds), (x + 10 + 2 * 18), (int) (y / scale));
-            renderGlyph(event.getGuiGraphics(), matrixStack, "i", (int) (x + 10 + 4.25f * 18), (int) ((y - 2) / scale));
+            renderGlyph(graphics, matrixStack, String.format("%02d", minutes), x, (int) (y / scale));
+            renderGlyph(graphics, matrixStack, ":", x + 32, (int) (y / scale));
+            renderGlyph(graphics, matrixStack, String.format("%02d", seconds), (x + 10 + 2 * 18), (int) (y / scale));
+            renderGlyph(graphics, matrixStack, "i", (int) (x + 10 + 4.25f * 18), (int) ((y - 2) / scale));
             matrixStack.popPose();
         }
 
         drew = true;
     }
 
-    public static void renderGlyph(GuiGraphics guiGraphics, PoseStack ms, String number, int x, int y) {
+    private static void renderGlyph(GuiGraphics guiGraphics, PoseStack ms, String number, int x, int y) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, cooldownGlyphs);
@@ -88,7 +118,7 @@ public class GlobalChatCooldownOverlay {
             int w = 28;
             int h = 25;
 
-            guiGraphics.blit(VanillaGuiOverlay.HOTBAR.id(),
+            guiGraphics.blit(ResourceLocation.tryParse("hotbar"),
                 x, y,
                 ux, uy,
                 w, h
@@ -105,7 +135,7 @@ public class GlobalChatCooldownOverlay {
                 int w = 18;
                 int h = 18;
 
-                guiGraphics.blit(VanillaGuiOverlay.HOTBAR.id(),
+                guiGraphics.blit(ResourceLocation.tryParse("hotbar"),
                     x + offset, y,
                     ux, uy,
                     w, h
@@ -122,5 +152,4 @@ public class GlobalChatCooldownOverlay {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, new ResourceLocation("hud/hotbar"));
     }
-
 }

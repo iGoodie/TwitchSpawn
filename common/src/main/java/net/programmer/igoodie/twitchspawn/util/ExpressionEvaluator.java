@@ -1,6 +1,5 @@
 package net.programmer.igoodie.twitchspawn.util;
 
-import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -10,6 +9,8 @@ import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 
 public class ExpressionEvaluator {
 

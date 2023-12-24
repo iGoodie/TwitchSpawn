@@ -17,7 +17,7 @@ public class TSLWordsArgumentType implements ArgumentType<String> {
 
     /* ------------------------------------ */
 
-    private TSLWordsArgumentType() { }
+    public TSLWordsArgumentType() { }
 
     @Override
     public String parse(StringReader reader) throws CommandSyntaxException {

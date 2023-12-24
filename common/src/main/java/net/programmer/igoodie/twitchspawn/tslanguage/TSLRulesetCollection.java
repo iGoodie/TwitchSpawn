@@ -1,18 +1,19 @@
 package net.programmer.igoodie.twitchspawn.tslanguage;
 
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
-import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
-import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
-import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
+import net.programmer.igoodie.twitchspawn.eventqueue.EventQueue;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
+import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 
 public class TSLRulesetCollection {
 

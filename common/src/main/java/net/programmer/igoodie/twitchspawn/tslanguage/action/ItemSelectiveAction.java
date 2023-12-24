@@ -1,11 +1,12 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 public abstract class ItemSelectiveAction extends TSLAction {
 

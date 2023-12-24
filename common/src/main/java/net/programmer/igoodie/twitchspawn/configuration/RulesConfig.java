@@ -1,12 +1,8 @@
 package net.programmer.igoodie.twitchspawn.configuration;
 
-import com.google.common.io.Resources;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
-import net.programmer.igoodie.twitchspawn.tslanguage.TSLRulesetCollection;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
-import org.apache.commons.io.FileUtils;
 
+import com.google.common.io.Resources;
+import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -15,6 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.tslanguage.TSLRuleset;
+import net.programmer.igoodie.twitchspawn.tslanguage.TSLRulesetCollection;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
 
 public class RulesConfig {
 

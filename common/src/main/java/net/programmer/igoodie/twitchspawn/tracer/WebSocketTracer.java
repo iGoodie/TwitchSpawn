@@ -1,12 +1,18 @@
 package net.programmer.igoodie.twitchspawn.tracer;
 
-import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
-import okhttp3.*;
-import okio.ByteString;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
+import okhttp3.Dispatcher;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
 
 public abstract class WebSocketTracer {
 

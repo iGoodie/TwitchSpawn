@@ -1,9 +1,10 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.predicate;
 
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 public class InRangeComparator extends TSLComparator {
 

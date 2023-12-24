@@ -1,6 +1,5 @@
 package net.programmer.igoodie.twitchspawn.util;
 
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -8,6 +7,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 
 public class PercentageRandomizer<T> {
 

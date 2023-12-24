@@ -1,5 +1,10 @@
 package net.programmer.igoodie.twitchspawn.tracer.chat;
 
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
@@ -12,10 +17,6 @@ import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
 
 public class TwitchChatTracer extends WebSocketTracer {
 

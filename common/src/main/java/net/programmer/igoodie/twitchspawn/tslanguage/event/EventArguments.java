@@ -1,12 +1,13 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.event;
 
-import com.google.common.base.Defaults;
-import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 
+import com.google.common.base.Defaults;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+
+import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 
 public class EventArguments {
 

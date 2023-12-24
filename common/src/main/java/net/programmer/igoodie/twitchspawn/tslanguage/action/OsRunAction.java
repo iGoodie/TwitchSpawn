@@ -1,19 +1,19 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.network.NetworkManager;
-import net.programmer.igoodie.twitchspawn.network.packet.OsRunPacket;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.network.NetworkManager;
+import net.programmer.igoodie.twitchspawn.network.packet.OsRunPacket;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
+import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
 public class OsRunAction extends TSLAction {
 
@@ -176,8 +176,8 @@ public class OsRunAction extends TSLAction {
             handleLocalScript(shell, replaceExpressions(shellScript, args));
 
         } else if (scriptLocation == ScriptLocation.REMOTE) {
-            NetworkManager.CHANNEL.send(new OsRunPacket(shell, replaceExpressions(shellScript, args)),
-                player.connection.getConnection());
+            NetworkManager.CHANNEL.sendToPlayer(player,
+                new OsRunPacket(shell, replaceExpressions(shellScript, args)));
         }
     }
 

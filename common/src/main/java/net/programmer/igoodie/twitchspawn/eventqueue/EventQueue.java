@@ -1,17 +1,18 @@
 package net.programmer.igoodie.twitchspawn.eventqueue;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.network.NetworkManager;
-import net.programmer.igoodie.twitchspawn.network.packet.GlobalChatCooldownPacket;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
-import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
-import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.network.NetworkManager;
+import net.programmer.igoodie.twitchspawn.network.packet.GlobalChatCooldownPacket;
+import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
+import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEvent;
+import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 
 public class EventQueue {
 
@@ -136,10 +137,8 @@ public class EventQueue {
                         .getPlayerByName(args.streamerNickname);
 
                 if (playerEntity != null) {
-                    NetworkManager.CHANNEL.send(
-                        new GlobalChatCooldownPacket(cooldownBucket.getGlobalCooldownTimestamp()),
-                        playerEntity.connection.getConnection()
-                    );
+                    NetworkManager.CHANNEL.sendToPlayer(playerEntity,
+                        new GlobalChatCooldownPacket(cooldownBucket.getGlobalCooldownTimestamp()));
                 }
             }
         }

@@ -1,14 +1,15 @@
 package net.programmer.igoodie.twitchspawn.command;
 
+
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
-
 import java.util.concurrent.CompletableFuture;
+
+import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 
 public class RulesetNameArgumentType implements ArgumentType<String> {
 
@@ -22,7 +23,7 @@ public class RulesetNameArgumentType implements ArgumentType<String> {
 
     /* ------------------------------ */
 
-    private RulesetNameArgumentType() { }
+    public RulesetNameArgumentType() { }
 
     @Override
     public String parse(StringReader reader) throws CommandSyntaxException {

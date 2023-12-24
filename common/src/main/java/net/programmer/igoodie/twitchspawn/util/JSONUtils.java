@@ -1,9 +1,9 @@
 package net.programmer.igoodie.twitchspawn.util;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.function.Consumer;
 
 public class JSONUtils {

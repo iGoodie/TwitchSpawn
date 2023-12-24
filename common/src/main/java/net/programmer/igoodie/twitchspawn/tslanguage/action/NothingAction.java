@@ -1,11 +1,12 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+
+import java.util.List;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
-
-import java.util.List;
 
 public class NothingAction extends TSLAction {
 

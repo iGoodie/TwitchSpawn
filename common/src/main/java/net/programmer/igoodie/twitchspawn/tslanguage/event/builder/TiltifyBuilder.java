@@ -1,13 +1,14 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.event.builder;
 
+
+import org.json.JSONObject;
+
 import net.programmer.igoodie.twitchspawn.configuration.CredentialsConfig;
 import net.programmer.igoodie.twitchspawn.tracer.Platform;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.TSLEventPair;
 import net.programmer.igoodie.twitchspawn.util.JSONUtils;
-import org.json.JSONObject;
 
-import java.awt.*;
 
 public class TiltifyBuilder extends EventBuilder {
 
