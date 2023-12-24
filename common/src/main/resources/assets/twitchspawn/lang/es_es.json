@@ -1,0 +1,38 @@
+  
+{
+  "modloader.twitchspawn.error.tsl":  "Error de TSL: §4{2}",
+  "modloader.twitchspawn.error.json":  "Error de JSON: §4{2}",
+  "modloader.twitchspawn.error.toml":  "Error de TOML: §4{2}",
+  "modloader.twitchspawn.error.unknown":  "Error Desconocido: §4{2} ({3})",
+
+  "commands.twitchspawn.reloadcfg.success": "§3>> ¡Se han recargado exitosamente todas las configuraciones!",
+  "commands.twitchspawn.reloadcfg.invalid_syntax": "§4>> Recarga Fallida. Errores de Sintaxis:\n{0}",
+  "commands.twitchspawn.reloadcfg.already_started": "§4>> TwitchSpawn debe ser detenido para poder recargar las configuraciones.",
+  "commands.twitchspawn.reloadcfg.no_perm": "§4>> No tienes permiso para recargar las configuraciones de TwitchSpawn.",
+
+  "commands.twitchspawn.status.on": "§3>> TwitchSpawn se esta ejecutando. [ON]",
+  "commands.twitchspawn.status.off": "§3>> TwitchSpawn no se esta ejecutando [OFF]",
+
+  "commands.twitchspawn.start.success": "§a>> ¡TwitchSpawn ha iniciado en este servidor!",
+  "commands.twitchspawn.start.illegal_state": "§4>> TwitchSpawn ya se esta ejecutando.",
+  "commands.twitchspawn.start.no_perm": "§4>> No tienes permiso para iniciar TwitchSpawn.",
+
+  "commands.twitchspawn.stop.success": "§6>> TwitchSpawn se ha detenido por {0} (Razon: {1})",
+  "commands.twitchspawn.stop.illegal_state": "§4>> TwitchSpawn ya esta apagado.",
+  "commands.twitchspawn.stop.no_perm": "§4>> No tienes permiso para detener TwitchSpawn.",
+
+  "commands.twitchspawn.rules.list": "§3>> Lista de Reglas cargadas para: {0}",
+  "commands.twitchspawn.rules.default": "§3>> La Lista de Reglas por defecto incluye:\n{1}",
+  "commands.twitchspawn.rules.one": "§3>> Lista de Recarga caragada para {0} e incluye:\n{1}",
+  "commands.twitchspawn.rules.one.fail": "§4>> Ninguna Lista de Reglas ha sido cargada para {0}",
+
+  "commands.twitchspawn.simulate.missing": "§4>> Falta el nombre del evento en el objeto de simulación. Esperado: \"event\" field.",
+  "commands.twitchspawn.simulate.invalid_event": "§4>> Nombre de evento invalido -> {0}",
+  "commands.twitchspawn.simulate.success": "§a>> Simulacion ejecutada {0}",
+  "commands.twitchspawn.simulate.no_perm": "§4>> No tienes permiso para simular un evento.",
+
+  "commands.twitchspawn.test.not_found": "§4>> Ninguna Lista de Reglas asociada con {0}",
+  "commands.twitchspawn.test.success": "§a>> Se han puesto en cola las reglas para {0}",
+
+  "errors.twitchspawn.loading": "No se puede cargar TwitchSpawn."
+}
