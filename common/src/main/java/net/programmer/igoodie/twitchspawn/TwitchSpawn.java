@@ -4,6 +4,7 @@ package net.programmer.igoodie.twitchspawn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
@@ -149,13 +150,13 @@ public class TwitchSpawn
 			TwitchSpawn.initializeCommon();
 			NotepadUDLUpdater.attemptUpdate();
 
-			PlayerEvent.PLAYER_JOIN.register(player ->
+			ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(player ->
 			{
 				StatusIndicatorOverlay.register();
 				GlobalChatCooldownOverlay.register();
 			});
 
-			PlayerEvent.PLAYER_QUIT.register(player ->
+            ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player ->
 			{
 				StatusIndicatorOverlay.unregister();
 				GlobalChatCooldownOverlay.unregister();

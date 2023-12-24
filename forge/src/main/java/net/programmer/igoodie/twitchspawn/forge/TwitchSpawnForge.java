@@ -2,10 +2,9 @@ package net.programmer.igoodie.twitchspawn.forge;
 
 
 import dev.architectury.platform.forge.EventBuses;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.registries.forge.TwitchSpawnArgumentTypesImpl;
 
 
