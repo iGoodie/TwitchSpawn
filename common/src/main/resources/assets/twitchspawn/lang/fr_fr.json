@@ -1,4 +1,9 @@
 ﻿{
+  "modloader.twitchspawn.error.title":  "TwitchSpawn Errors",
+  "modloader.twitchspawn.error.continue":  "Proceed to main menu",
+  "modloader.twitchspawn.error.folder":  "Open Config Folder",
+  "modloader.twitchspawn.error.reload":  "Reload Configs",
+
   "modloader.twitchspawn.error.tsl":  "Erreur TSL: §4{2}",
   "modloader.twitchspawn.error.json":  "Erreur JSON: §4{2}",
   "modloader.twitchspawn.error.toml":  "Erreur TOML: §4{2}",

@@ -1,4 +1,9 @@
 {
+  "modloader.twitchspawn.error.title":  "TwitchSpawn Errors",
+  "modloader.twitchspawn.error.continue":  "Proceed to main menu",
+  "modloader.twitchspawn.error.folder":  "Open Config Folder",
+  "modloader.twitchspawn.error.reload":  "Reload Configs",
+
   "modloader.twitchspawn.error.tsl":  "TSL Error: §4{2}",
   "modloader.twitchspawn.error.json":  "JSON Error: §4{2}",
   "modloader.twitchspawn.error.toml":  "TOML Error: §4{2}",
@@ -32,6 +37,6 @@
 
   "commands.twitchspawn.test.not_found": "§4>> Kein Regelwerk mit {0} verbunden",
   "commands.twitchspawn.test.success": "§a>> Erfolgreich Regeln für {0} in die Warteschlange gestellt",
-  
+
   "errors.twitchspawn.loading": "Kann TwitchSpawn nicht laden."
 }

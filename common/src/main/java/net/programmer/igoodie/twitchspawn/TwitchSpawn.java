@@ -12,14 +12,16 @@ import dev.architectury.utils.Env;
 import dev.architectury.utils.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.programmer.igoodie.twitchspawn.client.gui.GlobalChatCooldownOverlay;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
+import net.programmer.igoodie.twitchspawn.client.gui.screens.LoadingErrorScreen;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
-import net.programmer.igoodie.twitchspawn.events.TwitchSpawnCommonEvent;
+import net.programmer.igoodie.twitchspawn.events.TwitchSpawnClientGuiEvent;
 import net.programmer.igoodie.twitchspawn.events.TwitchSpawnEventHandler;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
 import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
@@ -131,9 +133,10 @@ public class TwitchSpawn
 			ConfigManager.loadConfigs();
 			NetworkManager.initialize();
 		}
-		catch (TwitchSpawnLoadingErrors e)
+		catch (TwitchSpawnLoadingErrors exception)
 		{
-			TwitchSpawnCommonEvent.SETUP_EVENT.invoker().setupEvent(e);
+            EnvExecutor.runInEnv(Env.CLIENT, () -> () -> Client.notifyCrash(exception));
+            EnvExecutor.runInEnv(Env.SERVER, () -> () -> Server.notifyCrash(exception));
 		}
 	}
 
@@ -144,6 +147,9 @@ public class TwitchSpawn
 	@Environment(EnvType.CLIENT)
 	public static class Client
 	{
+        /**
+         * The client initialization.
+         */
 		@Environment(EnvType.CLIENT)
 		public static void initializeClient()
 		{
@@ -162,6 +168,27 @@ public class TwitchSpawn
 				GlobalChatCooldownOverlay.unregister();
 			});
 		}
+
+
+        /**
+         * Notify the client about the config crash.
+         * @param errors The errors that caused the config crash.
+         */
+        @Environment(EnvType.CLIENT)
+        public static void notifyCrash(TwitchSpawnLoadingErrors errors)
+        {
+            TwitchSpawnClientGuiEvent.FINISH_LOADING_OVERLAY.register((client, screen) ->
+            {
+                if (screen instanceof TitleScreen)
+                {
+                    LoadingErrorScreen errorScreen = new LoadingErrorScreen(errors.getExceptions());
+                    errorScreen.init(client,
+                        client.getWindow().getGuiScaledWidth(),
+                        client.getWindow().getGuiScaledHeight());
+                    client.setScreen(errorScreen);
+                }
+            });
+        }
 	}
 
 
@@ -171,10 +198,25 @@ public class TwitchSpawn
 	@Environment(EnvType.SERVER)
 	public static class Server
 	{
+        /**
+         * The server initialization.
+         */
 		@Environment(EnvType.SERVER)
 		public static void initializeServer()
 		{
 			TwitchSpawn.initializeCommon();
 		}
+
+
+        /**
+         * Notify the server about the config crash.
+         * @param errors The errors that caused the config crash.
+         */
+        @Environment(EnvType.SERVER)
+        public static void notifyCrash(TwitchSpawnLoadingErrors errors)
+        {
+            LOGGER.warn("TwitchSpawn config contains errors:");
+            LOGGER.warn("\n" + errors.toString());
+        }
 	}
 }
