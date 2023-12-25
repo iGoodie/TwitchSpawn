@@ -231,16 +231,14 @@ public abstract class TSLAction implements TSLFlowNode {
         Component text = MCPHelpers.fromJsonLenient(title);
         Component subtext = MCPHelpers.fromJsonLenient(subtitle);
 
-        if (subtext == null) {
-            subtext = Component.nullToEmpty(""); // You cannot send NULL pockets.
-        } else if (subtext.getString().equals("NOTHING_0xDEADC0DE_0xDEADBEEF")) {
+        if (subtext != null && subtext.getString().equals("NOTHING_0xDEADC0DE_0xDEADBEEF")) {
             return; // Stop here since it was a  DISPLAYING NOTHING statement
         }
 
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.TITLES) {
             // Form title and subtitle packets
-            ClientboundSetTitleTextPacket packet = new ClientboundSetTitleTextPacket(text);
-            ClientboundSetSubtitleTextPacket subtitlePacket = new ClientboundSetSubtitleTextPacket(subtext); // 20
+            ClientboundSetTitleTextPacket packet = new ClientboundSetTitleTextPacket(text != null ? text : Component.empty());
+            ClientboundSetSubtitleTextPacket subtitlePacket = new ClientboundSetSubtitleTextPacket(subtext != null ? subtext : Component.empty());
             ClientboundSetTitlesAnimationPacket timePacket = new ClientboundSetTitlesAnimationPacket(
                     (int) (ConfigManager.PREFERENCES.notificationDelay * 0.1f / 50), // 10
                     (int) (ConfigManager.PREFERENCES.notificationDelay * 0.7f / 50), // 70
