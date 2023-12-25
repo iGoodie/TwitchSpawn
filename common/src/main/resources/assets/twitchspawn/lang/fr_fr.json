@@ -4,13 +4,13 @@
   "modloader.twitchspawn.error.folder":  "Open Config Folder",
   "modloader.twitchspawn.error.reload":  "Reload Configs",
 
-  "modloader.twitchspawn.error.tsl":  "Erreur TSL: §4{2}",
-  "modloader.twitchspawn.error.json":  "Erreur JSON: §4{2}",
-  "modloader.twitchspawn.error.toml":  "Erreur TOML: §4{2}",
-  "modloader.twitchspawn.error.unknown":  "Erreur inconnue: §4{2} ({3})",
+  "modloader.twitchspawn.error.tsl":  "Erreur TSL: §4%s",
+  "modloader.twitchspawn.error.json":  "Erreur JSON: §4%s",
+  "modloader.twitchspawn.error.toml":  "Erreur TOML: §4%s",
+  "modloader.twitchspawn.error.unknown":  "Erreur inconnue: §4%s (%s)",
 
   "commands.twitchspawn.reloadcfg.success": "§3>> Chargement des configurations réussi.",
-  "commands.twitchspawn.reloadcfg.invalid_syntax": "§4>> Echec du chargement. Erreur de syntaxe:\n{0}",
+  "commands.twitchspawn.reloadcfg.invalid_syntax": "§4>> Echec du chargement. Erreur de syntaxe:\n%s",
   "commands.twitchspawn.reloadcfg.already_started": "§4>> TwitchSpawn doit être arrêté pour charger les configurations.",
   "commands.twitchspawn.reloadcfg.no_perm": "§4>> Vous n'avez pas de l'autorisation nécessaire pour charger les configurations de TwitchSpawn.",
 
@@ -21,22 +21,22 @@
   "commands.twitchspawn.start.illegal_state": "§4>> TwitchSpawn est déjà en cours d'utilisation.",
   "commands.twitchspawn.start.no_perm": "§4>> Vous n'avez l'autorisation nécessaire pour démarrer TwitchSpawn.",
 
-  "commands.twitchspawn.stop.success": "§6>> TwitchSpawn a été arrêté par {0} (Motif: {1})",
+  "commands.twitchspawn.stop.success": "§6>> TwitchSpawn a été arrêté par %s (Motif: %2$s)",
   "commands.twitchspawn.stop.illegal_state": "§4>> TwitchSpawn est déjà arrêté.",
   "commands.twitchspawn.stop.no_perm": "§4>> Vous n'avez l'autorisation nécessaire pour arrêter TwitchSpawn.",
 
-  "commands.twitchspawn.rules.list": "§3>> Rulesets chargé pour: {0}",
-  "commands.twitchspawn.rules.default": "§3>> Le ruleset par défaut chargé inclut les éléments suivants:\n{1}",
-  "commands.twitchspawn.rules.one": "§3>> Le ruleset chargé pour {0} inclut les éléments suivants:\n{1}",
-  "commands.twitchspawn.rules.one.fail": "§4>> Pas de ruleset chargé pour {0}",
+  "commands.twitchspawn.rules.list": "§3>> Rulesets chargé pour: %s",
+  "commands.twitchspawn.rules.default": "§3>> Le ruleset par défaut chargé inclut les éléments suivants:\n%2$s",
+  "commands.twitchspawn.rules.one": "§3>> Le ruleset chargé pour %s inclut les éléments suivants:\n%2$s",
+  "commands.twitchspawn.rules.one.fail": "§4>> Pas de ruleset chargé pour %s",
 
   "commands.twitchspawn.simulate.missing": "§4>> Évènement manquant dans la simulation de l'objet. Syntaxe attendue \"évènement\" champ.",
-  "commands.twitchspawn.simulate.invalid_event": "§4>> Non d'évènement invalide -> {0}",
-  "commands.twitchspawn.simulate.success": "§a>> Exécution de la simulation réussie {0}",
+  "commands.twitchspawn.simulate.invalid_event": "§4>> Non d'évènement invalide -> %s",
+  "commands.twitchspawn.simulate.success": "§a>> Exécution de la simulation réussie %s",
   "commands.twitchspawn.simulate.no_perm": "§4>> Vous n'avez pas l'autorisation de simuler un évènement.",
 
-  "commands.twitchspawn.test.not_found": "§4>> Aucun ruleset associé à {0}",
-  "commands.twitchspawn.test.success": "§a>> Ajout des règles à la file d'attente réussi pour {0}",
+  "commands.twitchspawn.test.not_found": "§4>> Aucun ruleset associé à %s",
+  "commands.twitchspawn.test.success": "§a>> Ajout des règles à la file d'attente réussi pour %s",
 
   "errors.twitchspawn.loading": "Impossible de charger TwitchSpawn"
 }
