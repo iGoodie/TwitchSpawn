@@ -130,8 +130,8 @@ public class TwitchSpawn
 			TwitchSpawnSoundEvent.REGISTRY.register();
 			TwitchSpawnArgumentTypes.registerArgumentType();
 
-			ConfigManager.loadConfigs();
-			NetworkManager.initialize();
+            NetworkManager.initialize();
+            ConfigManager.loadConfigs();
 		}
 		catch (TwitchSpawnLoadingErrors exception)
 		{
