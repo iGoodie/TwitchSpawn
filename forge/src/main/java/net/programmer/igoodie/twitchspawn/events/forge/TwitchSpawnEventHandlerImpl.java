@@ -2,17 +2,13 @@
 package net.programmer.igoodie.twitchspawn.events.forge;
 
 
-import com.electronwill.nightconfig.core.io.ParsingException;
-import com.google.gson.JsonSyntaxException;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.*;
-import net.minecraftforge.forgespi.language.IModInfo;
-import net.programmer.igoodie.twitchspawn.TwitchSpawn;
-import net.programmer.igoodie.twitchspawn.events.TwitchSpawnCommonEvent;
-import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.programmer.igoodie.twitchspawn.events.TwitchSpawnClientGuiEvent;
 
 
 /**
@@ -24,47 +20,29 @@ public class TwitchSpawnEventHandlerImpl
     public static void registerClient()
     {
         // Register client events.
-        MinecraftForge.EVENT_BUS.register(TwitchSpawnEventHandlerClientImpl.class);
+        MinecraftForge.EVENT_BUS.register(TwitchSpawnEventHandlerImpl.class);
+    }
 
-        // Register error for incorrect configs.
-        TwitchSpawnCommonEvent.SETUP_EVENT.register(error -> {
-            ModLoadingStage stage = ModLoadingStage.COMMON_SETUP;
 
-            ModContainer modContainer = ModList.get().getModContainerById(TwitchSpawn.MOD_ID).get();
+    @SubscribeEvent
+    public static void onScreenGuiOverlayEvent(CustomizeGuiOverlayEvent.DebugText event)
+    {
+        TwitchSpawnClientGuiEvent.DEBUG_TEXT.invoker().renderHud(event.getGuiGraphics());
+    }
 
-            IModInfo modInfo = modContainer.getModInfo();
 
-            for (Exception exception : error.getExceptions())
-            {
-                String i18nMessage;
+    @SubscribeEvent
+    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event)
+    {
+        TwitchSpawnClientGuiEvent.OVERLAY_RENDER_PRE.invoker().renderHud(event.getGuiGraphics(),
+            event.getOverlay().id());
+    }
 
-                if (exception instanceof TSLSyntaxError)
-                {
-                    i18nMessage = "modloader.twitchspawn.error.tsl";
-                }
-                else if (exception instanceof ParsingException)
-                {
-                    i18nMessage = "modloader.twitchspawn.error.toml";
-                }
-                else if (exception instanceof JsonSyntaxException)
-                {
-                    i18nMessage = "modloader.twitchspawn.error.json";
-                }
-                else
-                {
-                    i18nMessage = "modloader.twitchspawn.error.unknown";
-                }
 
-                ModLoadingWarning warning = new ModLoadingWarning(
-                    modInfo, stage, i18nMessage,
-                    exception.getMessage(),
-                    exception.getClass().getSimpleName()
-                );
-
-                ModLoader.get().addWarning(warning);
-
-                TwitchSpawn.LOGGER.error(exception.getMessage());
-            }
-        });
+    @SubscribeEvent
+    public static void onRenderGuiOverlayPost(RenderGuiOverlayEvent.Post event)
+    {
+        TwitchSpawnClientGuiEvent.OVERLAY_RENDER_POST.invoker().renderHud(event.getGuiGraphics(),
+            event.getOverlay().id());
     }
 }
