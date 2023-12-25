@@ -5,6 +5,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import java.util.List;
 
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
@@ -82,9 +83,8 @@ public class SummonAction extends TSLAction {
 
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
-        // XXX: Dunno where that went... Fix that later?
-//        if (expression.equals("mobName"))
-//            return entityType.getName().getString();
+        if (expression.equals("mobName"))
+            return I18n.get(entityType.getDescriptionId());
         return null;
     }
 
