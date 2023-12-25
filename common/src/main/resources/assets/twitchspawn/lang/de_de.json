@@ -1,0 +1,42 @@
+{
+  "modloader.twitchspawn.error.title":  "TwitchSpawn Errors",
+  "modloader.twitchspawn.error.continue":  "Proceed to main menu",
+  "modloader.twitchspawn.error.folder":  "Open Config Folder",
+  "modloader.twitchspawn.error.reload":  "Reload Configs",
+
+  "modloader.twitchspawn.error.tsl":  "TSL Error: §4%s",
+  "modloader.twitchspawn.error.json":  "JSON Error: §4%s",
+  "modloader.twitchspawn.error.toml":  "TOML Error: §4%s",
+  "modloader.twitchspawn.error.unknown":  "Unbekannter Fehler: §4%s (%s)",
+
+  "commands.twitchspawn.reloadcfg.success": "§3>> Alle Konfigurationen erfolgreich neu geladen",
+  "commands.twitchspawn.reloadcfg.invalid_syntax": "§4>> Neu laden gescheitert. Syntax Fehler: \n%s",
+  "commands.twitchspawn.reloadcfg.already_started": "§4>> TwitchSpawn sollte angehalten werden, damit die Konfigurationen neu geladen werden können. ",
+  "commands.twitchspawn.reloadcfg.no_perm": "§4>> Du hast keine Berechtigung die TwitchSpawn Konfigurationen neu zu laden.",
+
+  "commands.twitchspawn.status.on": "§3>> TwitchSpawn ist aktiv. [AN]",
+  "commands.twitchspawn.status.off": "§3>> TwitchSpawn ist nicht aktiv. [AUS]",
+
+  "commands.twitchspawn.start.success": "§a>> TwitchSpawn ist jetzt auf diesem Server gestartet!",
+  "commands.twitchspawn.start.illegal_state": "§4>> TwitchSpawn läuft bereits.",
+  "commands.twitchspawn.start.no_perm": "§4>> Du hast keine Berechtigung TwitchSpawn zu starten.",
+
+  "commands.twitchspawn.stop.success": "§6>> TwitchSpawn wurde von %s angehalten (Ursache: %2$s)",
+  "commands.twitchspawn.stop.illegal_state": "§4>> TwitchSpawn wurde bereits angehalten.",
+  "commands.twitchspawn.stop.no_perm": "§4>> Du hast keine Berechtigung TwitchSpawn anzuhalten.",
+
+  "commands.twitchspawn.rules.list": "§3>> Regelset ist geladen für: %s",
+  "commands.twitchspawn.rules.default": "§3>> Das geladene Standard-Regelset enthält folgendes:\n%2$s",
+  "commands.twitchspawn.rules.one": "§3>> Das für %s geladene Regelset enthält folgendes:\n%2$s",
+  "commands.twitchspawn.rules.one.fail": "§4>> Für %s wurde kein Regelset geladen",
+
+  "commands.twitchspawn.simulate.missing": "§4>> Im Simulationsobjekt fehlt ein Event-Name. Erwartet \"event\" Feld.",
+  "commands.twitchspawn.simulate.invalid_event": "§4>> Ungültiger Event-Name -> %s",
+  "commands.twitchspawn.simulate.success": "§a>> Simulation erfolgreich ausgeführt %s",
+  "commands.twitchspawn.simulate.no_perm": "§4>> Du hast keine Berechtigung ein Event zu simulieren.",
+
+  "commands.twitchspawn.test.not_found": "§4>> Kein Regelwerk mit %s verbunden",
+  "commands.twitchspawn.test.success": "§a>> Erfolgreich Regeln für %s in die Warteschlange gestellt",
+
+  "errors.twitchspawn.loading": "Kann TwitchSpawn nicht laden."
+}

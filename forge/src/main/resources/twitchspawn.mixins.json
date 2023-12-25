@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.programmer.igoodie.twitchspawn.mixin.forge",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "MixinForgeLoadingOverlay"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "modloader.twitchspawn.error.title":  "TwitchSpawn Kļūdas",
+  "modloader.twitchspawn.error.continue":  "Turpināt uz galveno izvēlni",
+  "modloader.twitchspawn.error.folder":  "Atvērt konfigurācijas mapi",
+  "modloader.twitchspawn.error.reload":  "Pārlādēd konfigurācijas",
+
+  "modloader.twitchspawn.error.tsl":  "TSL Kļūda: §4%s",
+  "modloader.twitchspawn.error.json":  "JSON Kļūda: §4%s",
+  "modloader.twitchspawn.error.toml":  "TOML Kļūda: §4%s",
+  "modloader.twitchspawn.error.unknown":  "Nezināma Kļūda: §4%s (%s)",
+
+  "commands.twitchspawn.reloadcfg.success": "§3>> Konfigurācijas faili pārlādēti!",
+  "commands.twitchspawn.reloadcfg.invalid_syntax": "§4>> Kļūda pārlādējot. Sintakses kļūda:\n%s",
+  "commands.twitchspawn.reloadcfg.already_started": "§4>> TwitchSpawn nepieciešams apturēt, lai pārlādētu konfigurācijas failus.",
+  "commands.twitchspawn.reloadcfg.no_perm": "§4>> Tev nav atļaujas pārlādēt TwitchSpawn konfigurāciju.",
+
+  "commands.twitchspawn.status.on": "§3>> TwitchSpawn šobrīd strādā. [ON]",
+  "commands.twitchspawn.status.off": "§3>> TwitchSpawn šobrīd ir izslēgts. [OFF]",
+
+  "commands.twitchspawn.start.success": "§A>> TwitchSpawn tagad ir startēts šajā serverī!",
+  "commands.twitchspawn.start.illegal_state": "§4>> TwitchSpawn jau darbojas.",
+  "commands.twitchspawn.start.no_perm": "§4>> Jums nav atļaujas startēt TwitchSpawn.",
+
+  "commands.twitchspawn.stop.success": "§6>> TwitchSpawn apturēja %s (iemesls: %2$s)",
+  "commands.twitchspawn.stop.illegal_state": "§4>> TwitchSpawn jau ir apturēts.",
+  "commands.twitchspawn.stop.no_perm": "§4>> Jums nav atļaujas apturēt TwitchSpawn.",
+
+  "commands.twitchspawn.rules.list": "§3>> Noteikumu kopas priekš: %s",
+  "commands.twitchspawn.rules.default": "§3>> ielādētā noklusējuma noteikumu kopa ietver:\n %2$s",
+  "commands.twitchspawn.rules.one": "§3>> %s ielādētā noteikumu kopa ietver:\n %2$s",
+  "commands.twitchspawn.rules.one.fail": "§4>> %s netika ielādēta noteikumu kopa",
+
+  "commands.twitchspawn.simulate.missing": "§4 >> simulācijas objektā trūkst notikuma nosaukuma. Paredzēts notikums lauks.",
+  "commands.twitchspawn.simulate.invalid_event": "§4 >> Nederīgs notikuma nosaukums - > %s",
+  "commands.twitchspawn.simulate.success": "§A >> simulācija sekmīgi izslēgta %s",
+  "commands.twitchspawn.simulate.no_perm": "§4 >> Jums nav atļaujas simulēt notikumu.",
+
+  "commands.twitchspawn.test.not_found": "§4 >> ar %s nav saistīta noteikumu kopa",
+  "commands.twitchspawn.test.success": "§A >> %s noteikumus ir sekmīgi ievietotas rindā",
+
+  "errors.twitchspawn.loading": "Nevarēja ielādēt TwitchSpawn"
+}
