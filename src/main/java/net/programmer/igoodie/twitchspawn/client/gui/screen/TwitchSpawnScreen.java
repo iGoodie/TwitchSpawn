@@ -13,12 +13,15 @@ import net.programmer.igoodie.twitchspawn.network.SocketManager;
 import net.programmer.igoodie.twitchspawn.network.socket.base.SocketTracer;
 
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
 
 public class TwitchSpawnScreen extends Screen {
 
     protected Button startButton;
     protected Button stopButton;
     protected Button refreshButton;
+    protected Button openConfigFolderButton;
 
     public TwitchSpawnScreen() {
         super(new TextComponent("TwitchSpawn"));
@@ -51,6 +54,9 @@ public class TwitchSpawnScreen extends Screen {
                 (button) -> {
                     try {
                         ConfigManager.loadConfigs();
+                        if (SocketManager.isRunning())
+                            SocketManager.stop();
+                        SocketManager.initialize();
                     } catch (TwitchSpawnLoadingErrors twitchSpawnLoadingErrors) {
                         twitchSpawnLoadingErrors.printStackTrace();
                     }
@@ -58,6 +64,37 @@ public class TwitchSpawnScreen extends Screen {
         );
 
         this.refreshButton.active = !SocketManager.isRunning();
+
+        this.openConfigFolderButton = new Button(
+                10, buttonYOffset + 100,
+                120, 20,
+                new TextComponent("Open Config Folder"),
+                (button) -> {
+                    try {
+                        File configDirectory = new File(ConfigManager.CONFIG_DIR_PATH);
+                        openDir(configDirectory);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
+    }
+
+    private static void openDir(File file) throws IOException {
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("win")) {
+            // Windows
+            new ProcessBuilder("explorer", file.getAbsolutePath()).start();
+        } else if (os.contains("mac")) {
+            // macOS
+            new ProcessBuilder("open", file.getAbsolutePath()).start();
+        } else if (os.contains("nix") || os.contains("nux")) {
+            // Unix or Linux
+            new ProcessBuilder("xdg-open", file.getAbsolutePath()).start();
+        } else {
+            throw new UnsupportedOperationException("OS not supported");
+        }
     }
 
     @Override
@@ -65,6 +102,7 @@ public class TwitchSpawnScreen extends Screen {
         startButton.mouseMoved(mouseX, mouseY);
         stopButton.mouseMoved(mouseX, mouseY);
         refreshButton.mouseMoved(mouseX, mouseY);
+        openConfigFolderButton.mouseMoved(mouseX, mouseY);
         super.mouseMoved(mouseX, mouseY);
     }
 
@@ -73,6 +111,7 @@ public class TwitchSpawnScreen extends Screen {
         startButton.mouseClicked(mouseX, mouseY, button);
         stopButton.mouseClicked(mouseX, mouseY, button);
         refreshButton.mouseClicked(mouseX, mouseY, button);
+        openConfigFolderButton.mouseClicked(mouseX, mouseY, button);
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
@@ -81,14 +120,16 @@ public class TwitchSpawnScreen extends Screen {
         startButton.mouseReleased(mouseX, mouseY, button);
         stopButton.mouseReleased(mouseX, mouseY, button);
         refreshButton.mouseReleased(mouseX, mouseY, button);
+        openConfigFolderButton.mouseReleased(mouseX, mouseY, button);
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseDragged(double p_231045_1_, double p_231045_3_, int p_231045_5_, double p_231045_6_, double p_231045_8_) {
         startButton.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
-        startButton.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
-        startButton.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
+        stopButton.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
+        refreshButton.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
+        openConfigFolderButton.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
         return super.mouseDragged(p_231045_1_, p_231045_3_, p_231045_5_, p_231045_6_, p_231045_8_);
     }
 
@@ -97,6 +138,7 @@ public class TwitchSpawnScreen extends Screen {
         startButton.mouseScrolled(p_94686_, p_94687_, p_94688_);
         stopButton.mouseScrolled(p_94686_, p_94687_, p_94688_);
         refreshButton.mouseScrolled(p_94686_, p_94687_, p_94688_);
+        openConfigFolderButton.mouseScrolled(p_94686_, p_94687_, p_94688_);
         return super.mouseScrolled(p_94686_, p_94687_, p_94688_);
     }
 
@@ -113,12 +155,13 @@ public class TwitchSpawnScreen extends Screen {
         startButton.render(matrixStack, mouseX, mouseY, partialTicks);
         stopButton.render(matrixStack, mouseX, mouseY, partialTicks);
         refreshButton.render(matrixStack, mouseX, mouseY, partialTicks);
+        openConfigFolderButton.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     private void renderConnectionStatus(PoseStack matrixStack, SocketTracer tracer, int x, int y, boolean optional) {
         Font fontRenderer = getMinecraft().font;
 
-        String text = String.format("> %s %s %s", tracer.getPlatform().name,
+        String text = String.format("> %s  -  %s %s", tracer.getPlatform().name,
                 tracer.isConnected() ? "Connected" : "Not Connected",
                 optional ? "(Optional)" : "");
 
