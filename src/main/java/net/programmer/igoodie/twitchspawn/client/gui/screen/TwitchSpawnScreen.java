@@ -193,9 +193,9 @@ public class TwitchSpawnScreen extends Screen {
         renderBackground(matrixStack);
         StatusIndicatorOverlay.render(matrixStack, PreferencesConfig.IndicatorDisplay.ENABLED);
 
-        renderConnectionStatus(matrixStack, SocketManager.PLATFORM_SOCKET, 10, 35, false);
-        renderConnectionStatus(matrixStack, SocketManager.TWITCH_PUB_SUB_SOCKET, 10, 45, false);
-        renderConnectionStatus(matrixStack, SocketManager.TWITCH_CHAT_SOCKET, 10, 55, true);
+        renderConnectionStatus(matrixStack, SocketManager.PLATFORM_SOCKET, 10, 38, false);
+        renderConnectionStatus(matrixStack, SocketManager.TWITCH_PUB_SUB_SOCKET, 10, 48, false);
+        renderConnectionStatus(matrixStack, SocketManager.TWITCH_CHAT_SOCKET, 10, 58, true);
 
         refreshButtons();
         startButton.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -211,6 +211,19 @@ public class TwitchSpawnScreen extends Screen {
         }
 
         Font fontRenderer = getMinecraft().font;
+
+        fontRenderer.draw(matrixStack, "Stream",
+                76,
+                5,
+                0xFF_a186d3);
+        fontRenderer.draw(matrixStack, "Integration",
+                76,
+                13,
+                0xFF_a186d3);
+        fontRenderer.draw(matrixStack, "Control Panel",
+                76,
+                21,
+                0xFF_a186d3);
 
         if (!ConfigManager.CLIENT_CREDS.twitchNickname.isEmpty()) {
             String platformUrl = "twitch.tv/";
@@ -368,12 +381,14 @@ public class TwitchSpawnScreen extends Screen {
     private void renderConnectionStatus(PoseStack matrixStack, SocketTracer tracer, int x, int y, boolean optional) {
         Font fontRenderer = getMinecraft().font;
 
-        String text = String.format("> %s  -  %s %s", tracer.getPlatform().name,
-                tracer.isConnected() ? "Connected" : "Not Connected",
-                optional ? "(Optional)" : "");
+        String text = String.format("%s  %s  -  %s %s",
+                tracer.isConnected() ? "\u263A" : "\u2639",
+                tracer.getPlatform().name,
+                tracer.isConnected() ? "\u2714 Connected" : "\u2716 Not Connected",
+                optional ? " -  Optional" : "");
 
         fontRenderer.draw(matrixStack, text, x, y,
-                tracer.isConnected() ? 0xFF_FFFFFF : 0xFF_FF0000);
+                tracer.isConnected() ? 0xFF_00FF00 : 0xFF_FF0000);
     }
 
 }
