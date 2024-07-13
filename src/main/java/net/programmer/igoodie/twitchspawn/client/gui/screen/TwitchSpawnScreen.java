@@ -28,6 +28,7 @@ import net.programmer.igoodie.twitchspawn.TwitchSpawnLoadingErrors;
 import net.programmer.igoodie.twitchspawn.client.gui.StatusIndicatorOverlay;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
+import net.programmer.igoodie.twitchspawn.init.ModItems;
 import net.programmer.igoodie.twitchspawn.network.SocketManager;
 import net.programmer.igoodie.twitchspawn.network.socket.base.SocketTracer;
 
@@ -67,7 +68,7 @@ public class TwitchSpawnScreen extends Screen {
         };
 
         Item item = Math.random() >= 0.4
-                ? Items.AXOLOTL_BUCKET
+                ? ModItems.TWITCH_LOGO
                 : items[(int) Math.floor(Math.random() * items.length)];
 
         itemStack = new ItemStack(item);
@@ -204,7 +205,7 @@ public class TwitchSpawnScreen extends Screen {
 
         blockChangeTick += partialTicks;
 
-        if (blockChangeTick >= 40f) {
+        if (blockChangeTick >= 20f) {
             pickRandomItem();
             blockChangeTick = 0;
         }

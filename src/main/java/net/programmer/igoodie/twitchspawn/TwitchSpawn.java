@@ -3,6 +3,7 @@ package net.programmer.igoodie.twitchspawn;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -37,6 +38,7 @@ public class TwitchSpawn {
     public static final TSLogger LOGGER = TSLogger.createConsoleLogger(TwitchSpawn.class);
     private static final Map<String, TSLogger> STREAMER_LOGGERS = new HashMap<>(); // Maps lowercase nicks to TSLogger
     public static MinecraftServer SERVER;
+
 
     public TwitchSpawn() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
@@ -91,7 +93,7 @@ public class TwitchSpawn {
     }
 
     private void dedicatedServerSetup(final FMLDedicatedServerSetupEvent event) {}
-
+    
     @SubscribeEvent
     public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
         event.getRegistry().register(new SoundEvent(TwitchSpawn.id("pop_in")));
