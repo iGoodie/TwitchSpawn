@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -116,31 +117,10 @@ public class TwitchSpawnScreen extends Screen {
                 120, 20,
                 new TextComponent("Open Config Folder"),
                 (button) -> {
-                    try {
-                        File configDirectory = new File(ConfigManager.CONFIG_DIR_PATH);
-                        openDir(configDirectory);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    File configDirectory = new File(ConfigManager.CONFIG_DIR_PATH);
+                    Util.getPlatform().openFile(configDirectory);
                 }
         );
-    }
-
-    private static void openDir(File file) throws IOException {
-        String os = System.getProperty("os.name").toLowerCase();
-
-        if (os.contains("win")) {
-            // Windows
-            new ProcessBuilder("explorer", file.getAbsolutePath()).start();
-        } else if (os.contains("mac")) {
-            // macOS
-            new ProcessBuilder("open", file.getAbsolutePath()).start();
-        } else if (os.contains("nix") || os.contains("nux")) {
-            // Unix or Linux
-            new ProcessBuilder("xdg-open", file.getAbsolutePath()).start();
-        } else {
-            throw new UnsupportedOperationException("OS not supported");
-        }
     }
 
     @Override

@@ -36,5 +36,8 @@
   "commands.twitchspawn.test.not_found": "§4>> No ruleset associated with {0}",
   "commands.twitchspawn.test.success": "§a>> Successfully queued rules for {0}",
 
-  "errors.twitchspawn.loading": "Cannot load TwitchSpawn"
+  "errors.twitchspawn.loading": "Cannot load TwitchSpawn",
+
+  "item.twitchspawn.twitchspawn_jelly": "TwitchSpawn Jelly",
+  "block.twitchspawn.twitchspawn_jelly_block": "TwitchSpawn Jelly Block"
 }
