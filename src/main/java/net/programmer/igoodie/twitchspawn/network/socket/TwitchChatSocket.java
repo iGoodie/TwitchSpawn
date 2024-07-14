@@ -172,12 +172,15 @@ public class TwitchChatSocket extends WebSocketBase {
         eventArguments.chatBadges = twitchChatMessage.badges;
 
         // Pass the model to the handler
-        if (cooldownBucket.canConsume(twitchChatMessage.username)) {
-            cooldownBucket.consume(twitchChatMessage.username);
-            NetworkManager.CHANNEL.sendToServer(
-                    new EventPacket(eventArguments)
-            );
-        }
+//        if (cooldownBucket.canConsume(twitchChatMessage.username)) {
+//            cooldownBucket.consume(twitchChatMessage.username);
+//            NetworkManager.CHANNEL.sendToServer(
+//                    new EventPacket(eventArguments)
+//            );
+//        }
+
+        // Nvm the cooldown bucket, and ipc anyways
+        NetworkManager.CHANNEL.sendToServer(new EventPacket(eventArguments));
 
 //        if (cooldownBucket.hasGlobalCooldown()) {
 //            TwitchSpawnClient.LOGGER.info("Still has {} seconds global cooldown.", cooldownBucket.getGlobalCooldown());
