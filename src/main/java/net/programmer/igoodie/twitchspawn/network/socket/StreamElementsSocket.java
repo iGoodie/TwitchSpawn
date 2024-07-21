@@ -18,6 +18,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.keyword.TSLEventKeyword;
 import net.programmer.igoodie.twitchspawn.util.JSONUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -82,6 +83,14 @@ public class StreamElementsSocket extends SocketIOBase {
 
 //        if(!event.has("listener") || event.optString("listener"))
         // TODO: Talk to someone from SE... And continue afterwards
+
+        try {
+            JSONTokener jsonTokener = new JSONTokener("{\"createdAt\":\"2024-07-21T15:56:26.687Z\",\"activityId\":\"669d2fabc0a19c47d694663e\",\"isMock\":true,\"data\":{\"amount\":1,\"sender\":\"miss\",\"gifted\":true,\"displayName\":\"Alisha\",\"providerId\":\"109826174\",\"avatar\":\"https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg\",\"username\":\"alisha\"},\"provider\":\"twitch\",\"sessionEventsCount\":1,\"channel\":\"5a8dda3003f1ef0001ee2ada\",\"activityGroup\":\"1721577386687\",\"_id\":\"669d2fabc0a19c47d694663e\",\"type\":\"subscriber\",\"updatedAt\":\"2024-07-21T15:56:27.102Z\"}");
+            event = new JSONObject(jsonTokener);
+            System.out.println(event);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         if (!event.has("data") || event.optJSONObject("data") == null) {
             TwitchSpawnClient.LOGGER.info("Received unexpected {} StreamElements packet -> {}", test ? "Test" : "Live", event);

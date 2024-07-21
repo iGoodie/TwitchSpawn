@@ -61,7 +61,7 @@ public abstract class EventBuilder {
 //        eventArguments.raiderCount = JSONUtils.extractNumberFrom(message, "raiders", 0).intValue(); // Raids aren't supported (?)
         eventArguments.viewerCount = JSONUtils.extractNumberFrom(data, "amount ", 0).intValue();
         eventArguments.subscriptionTier = extractTier(data, "tier");
-        eventArguments.gifted = data.optBoolean("gifted ", false);
+        eventArguments.gifted = data.optBoolean("gifted", false);
         eventArguments.rewardTitle = JSONUtils.extractFrom(data, "redemption", String.class, null);
 
         return eventArguments;
