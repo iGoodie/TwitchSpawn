@@ -156,6 +156,9 @@ shadowJar {
     relocate("com.sun.jna", "twitchspawn.com.sun.jna")
     relocate("org.jetbrains.annotations", "twitchspawn.org.jetbrains.annotations")
     relocate("org.intellij.lang.annotations", "twitchspawn.org.intellij.lang.annotations")
+    relocate("okhttp3", "twitchspawn.okhttp3")
+    relocate("okio", "twitchspawn.okio")
+    relocate("org.json", "twitchspawn.org.json")
 }
 
 assemble.dependsOn shadowJar

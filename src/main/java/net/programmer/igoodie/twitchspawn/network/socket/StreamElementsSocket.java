@@ -94,6 +94,7 @@ public class StreamElementsSocket extends SocketIOBase {
 
         JSONObject data = JSONUtils.extractFrom(event, "data", JSONObject.class, new JSONObject());
 
+        TwitchSpawnClient.LOGGER.info("Received raw StreamElements packet -> {}", event);
         TwitchSpawnClient.LOGGER.info("Received StreamElements packet {} -> {}",
                 eventPair, data);
 
