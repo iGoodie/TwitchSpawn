@@ -122,7 +122,6 @@ public class TwitchPubSubSocket extends WebSocketBase {
 
     @Override
     public void onMessage(@Nonnull WebSocket socket, @Nonnull String text) {
-
         try {
             JSONObject json = new JSONObject(text);
 
@@ -134,6 +133,12 @@ public class TwitchPubSubSocket extends WebSocketBase {
                     // TODO: Do stuff with error (?)
                 }
                 // No problems here, just responded to our requests :p
+                return;
+            }
+
+            if(json.getString("type").equals("RECONNECT")) {
+                SocketManager.stop();
+                SocketManager.start();
                 return;
             }
 
