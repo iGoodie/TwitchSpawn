@@ -38,10 +38,11 @@ dependencies {
     // SocketIO Client
     shade "io.socket:socket.io-client:1.0.0"
 
-    // JUnit 5 for testings
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.5.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.0'
+    // JUnit 5 for testings, launched through Fabric Loader so Minecraft classes and mixins are available
+    testImplementation platform('org.junit:junit-bom:5.10.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation "net.fabricmc:fabric-loader-junit:${loader_version}"
 }
 
 processResources {
@@ -86,4 +87,6 @@ publishing {
 
 test {
     useJUnitPlatform()
+    systemProperty "twitchspawn.test.minecraftVersion", minecraft_version
+    systemProperty "twitchspawn.test.modVersion", project.version
 }
