@@ -32,8 +32,9 @@ public class TwitchSpawn implements ModInitializer {
     public static final String MOD_ID = "twitchspawn";
     public static final Logger LOGGER = LogManager.getLogger(TwitchSpawn.class);
 
-    public static final SoundEvent POP_IN = registerSound("pop_in");
-    public static final SoundEvent POP_OUT = registerSound("pop_out");
+    // Registered in onInitialize, so merely loading this class never touches the registries
+    public static SoundEvent POP_IN;
+    public static SoundEvent POP_OUT;
 
     public static MinecraftServer SERVER;
     public static TraceManager TRACE_MANAGER;
@@ -43,6 +44,9 @@ public class TwitchSpawn implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        POP_IN = registerSound("pop_in");
+        POP_OUT = registerSound("pop_out");
+
         try {
             ConfigManager.loadConfigs();
 

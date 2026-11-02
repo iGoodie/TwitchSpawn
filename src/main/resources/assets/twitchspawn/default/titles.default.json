@@ -232,5 +232,19 @@
       "text": " (TreatStream)",
       "color": "gold"
     }
+  ],
+  "donordrive donation": [
+    {
+      "text": "${actor}",
+      "color": "dark_purple"
+    },
+    {
+      "text": " donated ${amount_f}${currency}!",
+      "color": "white"
+    },
+    {
+      "text": " (DonorDrive)",
+      "color": "gold"
+    }
   ]
 }

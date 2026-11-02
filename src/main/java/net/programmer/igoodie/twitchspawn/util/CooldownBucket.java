@@ -16,7 +16,7 @@ public class CooldownBucket {
         this.cooldownMillis = individualCooldown;
         this.globalCooldownMillis = globalCooldown;
 
-        this.globalCooldownUntil = now();
+        this.globalCooldownUntil = 0; // Nothing consumed yet
         this.individualCooldownUntil = new HashMap<>();
     }
 

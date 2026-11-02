@@ -1,11 +1,9 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.item.ItemInput;
-import net.minecraft.commands.arguments.item.ItemParser;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -88,7 +86,7 @@ public class ChangeAction extends ItemSelectiveAction {
             EventArguments randomEvent = EventArguments.createRandom("RandomStreamer");
             String randomItem = ExpressionEvaluator.replaceExpressions(this.itemRaw,
                     expression -> ExpressionEvaluator.fromArgs(expression, randomEvent));
-            new ItemParser(RegistryHelpers.lookup()).parse(new StringReader(randomItem));
+            RegistryHelpers.parseItem(randomItem);
 
         } catch (CommandSyntaxException e) {
             throw new TSLSyntaxError(e.getRawMessage().getString());
@@ -152,7 +150,7 @@ public class ChangeAction extends ItemSelectiveAction {
         try {
             String input = replaceExpressions(itemRaw, args);
 
-            ItemInput itemInput = new ItemParser(RegistryHelpers.lookup()).parse(new StringReader(input));
+            ItemInput itemInput = RegistryHelpers.parseItem(input);
             ItemStack itemStack = new ItemStack(itemInput.item(), 1, itemInput.components());
             itemStack.setCount(Math.min(itemAmount, itemStack.getMaxStackSize()));
 
