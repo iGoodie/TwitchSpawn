@@ -1,0 +1,55 @@
+name: Release
+
+# Builds the mod for every pushed tag and attaches the jar to the GitHub release of that tag.
+# Creating a release on GitHub with a new tag also pushes the tag, so both paths end up here.
+# The release is created if it doesn't exist yet.
+on:
+  push:
+    tags: ['*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Read versions
+        id: versions
+        run: |
+          mod_version=$(grep '^mod_version=' gradle.properties | cut -d= -f2)
+          minecraft_version=$(grep '^minecraft_version=' gradle.properties | cut -d= -f2)
+          echo "mod=$mod_version" >> "$GITHUB_OUTPUT"
+          echo "minecraft=$minecraft_version" >> "$GITHUB_OUTPUT"
+
+      - name: Check tag matches mod version
+        env:
+          TAG: ${{ github.ref_name }}
+          MOD_VERSION: ${{ steps.versions.outputs.mod }}
+        run: |
+          if [ "${TAG#v}" != "$MOD_VERSION" ]; then
+            echo "::error::Tag $TAG does not match mod_version=$MOD_VERSION in gradle.properties"
+            exit 1
+          fi
+
+      - name: Build and test
+        run: ./gradlew build --console=plain
+
+      - name: Attach jar to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/libs/twitchspawn_${{ steps.versions.outputs.minecraft }}-${{ steps.versions.outputs.mod }}.jar
+          fail_on_unmatched_files: true
+          generate_release_notes: true

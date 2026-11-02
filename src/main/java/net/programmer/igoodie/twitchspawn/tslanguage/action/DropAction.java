@@ -1,9 +1,7 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.arguments.item.ItemInput;
-import net.minecraft.commands.arguments.item.ItemParser;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Prediction;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +44,7 @@ public class DropAction extends TSLAction {
             EventArguments randomEvent = EventArguments.createRandom("RandomStreamer");
             String randomItem = ExpressionEvaluator.replaceExpressions(this.itemRaw,
                     expression -> ExpressionEvaluator.fromArgs(expression, randomEvent));
-            new ItemParser(RegistryHelpers.lookup()).parse(new StringReader(randomItem));
+            RegistryHelpers.parseItem(randomItem);
 
         } catch (CommandSyntaxException e) {
             throw new TSLSyntaxError(e.getRawMessage().getString());
@@ -68,7 +66,7 @@ public class DropAction extends TSLAction {
     private ItemInput parseItem(EventArguments args) {
         try {
             String input = replaceExpressions(itemRaw, args);
-            return new ItemParser(RegistryHelpers.lookup()).parse(new StringReader(input));
+            return RegistryHelpers.parseItem(input);
 
         } catch (CommandSyntaxException e) {
             throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
