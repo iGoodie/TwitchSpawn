@@ -13,7 +13,7 @@
   <a href="https://www.patreon.com/iGoodie"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.herokuapp.com%2Figoodie"></a>
 </p>
 
-Long waited update is finally here! :tada: 1.18 Port is alive! (See the [user manual](https://igoodie.gitbook.io/twitchspawn/)!)
+Long waited update is finally here! :tada: Now on Fabric for Minecraft 26.3! (See the [user manual](https://igoodie.gitbook.io/twitchspawn/)!)
 
 ## Brief Summary
 TwitchSpawn is a Minecraft mod designed for Twitch streamers using 3rd party streaming platforms!
@@ -57,7 +57,7 @@ EITHER # Selects one random action
  DROP diamond_block 1
  OR
  # Or drops an iron block named "Iron Golem Body"
- DROP %iron_block{display:{Name:"\"Iron Golem Body\""}}% 2
+ DROP %iron_block[custom_name="Iron Golem Body"]% 2
  OR
  # Or summons a zombie on given coordinate
  SUMMON minecraft:zombie ~ ~+10 ~
@@ -67,7 +67,7 @@ EITHER # Selects one random action
  WITH amount IN RANGE [21, 999]
 
 # Executes a Minecraft command as the streamer being the source!
-EXECUTE %/gamerule keepInventory true%
+EXECUTE %/gamerule keep_inventory true%
  DISPLAYING %[
   {text:"${actor}", color:"red"},
   {text:" turned immortality on!", color:"white"},
@@ -82,8 +82,8 @@ BOTH INSTANTLY
  ON Twitch Subscription
  WITH months >= 2
 
-# Drops a stick with NBT data, when a Twitch Follow is received!
-DROP %minecraft:stick{display:{Name:"\"Stick of Truth!\""}}% 1
+# Drops a stick with a custom name, when a Twitch Follow is received!
+DROP %minecraft:stick[custom_name="Stick of Truth!"]% 1
  ON Twitch Follow
 ```
 

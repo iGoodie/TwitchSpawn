@@ -1,5 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
@@ -29,25 +30,28 @@ public class ExecuteAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayer player, EventArguments args) {
-        CommandSourceStack source = player.createCommandSourceStack()
-                .withPermission(9999) // OVER 9000!
-                .withSuppressedOutput();
-
-
         for (String command : commands) {
             TwitchSpawn.SERVER.execute(() -> {
-                int result = TwitchSpawn.SERVER
+                // Commands no longer return their result directly, capture it through the callback
+                int[] resultHolder = {0};
+                CommandSourceStack source = player.createCommandSourceStack()
+                        .withPermission(LevelBasedPermissionSet.OWNER) // OVER 9000!
+                        .withSuppressedOutput()
+                        .withCallback((success, value) -> resultHolder[0] = success ? value : 0);
+
+                TwitchSpawn.SERVER
                         .getCommands()
-                        .performCommand(source, replaceExpressions(command, args));
+                        .performPrefixedCommand(source, replaceExpressions(command, args));
+                int result = resultHolder[0];
 
                 if (result <= 0) { // Wohooo we knew iGoodie liked hacky solutions. ( ? :/ )
                     // If it yielded an error, and not worked as expected
                     // Then turn on the feedback, and run it again! Brilliant! What could go wrong? :))))))
                     CommandSourceStack newSource = player.createCommandSourceStack()
-                            .withPermission(9999);
+                            .withPermission(LevelBasedPermissionSet.OWNER);
                     TwitchSpawn.SERVER
                             .getCommands()
-                            .performCommand(newSource, replaceExpressions(command, args));
+                            .performPrefixedCommand(newSource, replaceExpressions(command, args));
                 }
 
                 TwitchSpawn.LOGGER.info("Executed (Status:{}) -> {}", result, replaceExpressions(command, args));

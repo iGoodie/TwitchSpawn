@@ -1,11 +1,8 @@
 package net.programmer.igoodie.twitchspawn.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
@@ -13,8 +10,8 @@ import net.programmer.igoodie.twitchspawn.util.CooldownBucket;
 
 public class GlobalChatCooldownOverlay {
 
-    private static final ResourceLocation cooldownGlyphs =
-            new ResourceLocation(TwitchSpawn.MOD_ID, "textures/cooldown.png");
+    private static final Identifier cooldownGlyphs =
+            Identifier.fromNamespaceAndPath(TwitchSpawn.MOD_ID, "textures/cooldown.png");
 
     private static long timestamp = -1;
 
@@ -22,7 +19,7 @@ public class GlobalChatCooldownOverlay {
         GlobalChatCooldownOverlay.timestamp = timestamp;
     }
 
-    public static void render(PoseStack matrixStack) {
+    public static void render(GuiGraphicsExtractor graphics) {
         long cooldown = (timestamp - CooldownBucket.now()) / 1000;
 
         if (cooldown > 0) {
@@ -45,39 +42,24 @@ public class GlobalChatCooldownOverlay {
                 y = 5;
             }
 
-            matrixStack.pushPose();
-            matrixStack.scale(scale, scale, scale);
-            renderGlyph(matrixStack, String.format("%02d", minutes), x, (int) (y / scale));
-            renderGlyph(matrixStack, ":", x + 32, (int) (y / scale));
-            renderGlyph(matrixStack, String.format("%02d", seconds), (x + 10 + 2 * 18), (int) (y / scale));
-            renderGlyph(matrixStack, "i", (int) (x + 10 + 4.25f * 18), (int) ((y - 2) / scale));
-            matrixStack.popPose();
+            graphics.pose().pushMatrix();
+            graphics.pose().scale(scale, scale);
+            renderGlyph(graphics, String.format("%02d", minutes), x, (int) (y / scale));
+            renderGlyph(graphics, ":", x + 32, (int) (y / scale));
+            renderGlyph(graphics, String.format("%02d", seconds), (x + 10 + 2 * 18), (int) (y / scale));
+            renderGlyph(graphics, "i", (int) (x + 10 + 4.25f * 18), (int) ((y - 2) / scale));
+            graphics.pose().popMatrix();
         }
     }
 
-    public static void renderGlyph(PoseStack ms, String number, int x, int y) {
-        Minecraft minecraft = Minecraft.getInstance();
-
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, cooldownGlyphs);
-
-        ms.pushPose();
-
-        RenderSystem.enableBlend();
-
+    public static void renderGlyph(GuiGraphicsExtractor graphics, String number, int x, int y) {
         if (number.equals("i")) {
             int ux = 0;
             int uy = 20;
             int w = 28;
             int h = 25;
 
-            minecraft.gui.blit(
-                    ms,
-                    x, y,
-                    ux, uy,
-                    w, h
-            );
+            graphics.blit(RenderPipelines.GUI_TEXTURED, cooldownGlyphs, x, y, ux, uy, w, h, 256, 256);
 
         } else {
             char[] chars = number.toCharArray();
@@ -91,23 +73,11 @@ public class GlobalChatCooldownOverlay {
                 int w = 18;
                 int h = 18;
 
-                minecraft.gui.blit(
-                        ms,
-                        x + offset, y,
-                        ux, uy,
-                        w, h
-                );
+                graphics.blit(RenderPipelines.GUI_TEXTURED, cooldownGlyphs, x + offset, y, ux, uy, w, h, 256, 256);
 
                 offset += w;
             }
         }
-
-        RenderSystem.disableBlend();
-        ms.popPose();
-
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
     }
 
 }

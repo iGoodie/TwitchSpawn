@@ -1,8 +1,10 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.item.ItemStack;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
@@ -29,7 +31,7 @@ public class ThrowAction extends ItemSelectiveAction {
         if (selectionType == SelectionType.WITH_INDEX) {
             ItemStack extracted = getInventory(player, inventoryType).set(inventoryIndex, ItemStack.EMPTY);
             if (!extracted.isEmpty())
-                player.drop(extracted, false, true);
+                player.drop(extracted, false, Prediction.SERVER_ONLY);
 
         } else if (selectionType == SelectionType.EVERYTHING) {
             if (inventoryType == null) {
@@ -39,7 +41,7 @@ public class ThrowAction extends ItemSelectiveAction {
                 for (int i = 0; i < inventory.size(); i++) {
                     ItemStack itemStack = inventory.get(i);
                     if (!itemStack.isEmpty()) {
-                        player.drop(itemStack, false, true);
+                        player.drop(itemStack, false, Prediction.SERVER_ONLY);
                         inventory.set(i, ItemStack.EMPTY);
                     }
                 }
@@ -51,31 +53,31 @@ public class ThrowAction extends ItemSelectiveAction {
                     : randomInventorySlot(getInventory(player, inventoryType), false);
             if (randomSlot != null) {
                 ItemStack extracted = randomSlot.pullOut();
-                player.drop(extracted, false, true);
+                player.drop(extracted, false, Prediction.SERVER_ONLY);
             }
 
         } else if (selectionType == SelectionType.ONLY_HELD_ITEM) {
-            int selectedHotbarIndex = player.getInventory().selected;
-            ItemStack extracted = player.getInventory().items.set(selectedHotbarIndex, ItemStack.EMPTY);
+            int selectedHotbarIndex = player.getInventory().getSelectedSlot();
+            ItemStack extracted = player.getInventory().getNonEquipmentItems().set(selectedHotbarIndex, ItemStack.EMPTY);
             if (!extracted.isEmpty())
-                player.drop(extracted, false, true);
+                player.drop(extracted, false, Prediction.SERVER_ONLY);
 
         } else if (selectionType == SelectionType.HOTBAR) {
             for (int i = 0; i <= 8; i++) {
-                ItemStack extracted = player.getInventory().items.set(i, ItemStack.EMPTY);
+                ItemStack extracted = player.getInventory().getNonEquipmentItems().set(i, ItemStack.EMPTY);
                 if (!extracted.isEmpty())
-                    player.drop(extracted, false, true);
+                    player.drop(extracted, false, Prediction.SERVER_ONLY);
             }
         }
 
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
 
         if (server != null) {
             CommandSourceStack commandSource = player.createCommandSourceStack()
-                    .withPermission(9999).withSuppressedOutput();
-            server.getCommands().performCommand(commandSource,
+                    .withPermission(LevelBasedPermissionSet.OWNER).withSuppressedOutput();
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/playsound minecraft:entity.ender_pearl.throw master @s");
-            server.getCommands().performCommand(commandSource,
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/particle minecraft:witch ~ ~ ~ 2 2 2 0.1 400");
         }
     }

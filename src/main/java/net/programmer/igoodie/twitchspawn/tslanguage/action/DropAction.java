@@ -2,13 +2,16 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.commands.arguments.item.ItemParser;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.item.ItemStack;
 import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
+import net.programmer.igoodie.twitchspawn.util.RegistryHelpers;
 
 import java.util.List;
 
@@ -21,7 +24,7 @@ public class DropAction extends TSLAction {
      * Exemplar valid params:
      * minecraft:diamond_block 123
      * stone_block 321
-     * diamond_sword{Enchantments:[{id:smite,lvl:2},{id:sweeping,lvl:2},{id:unbreaking,lvl:3}]}
+     * diamond_sword[enchantments={smite:2,sweeping_edge:2,unbreaking:3}]
      */
     public DropAction(List<String> words) throws TSLSyntaxError {
         this.message = TSLParser.parseMessage(words);
@@ -43,7 +46,7 @@ public class DropAction extends TSLAction {
             EventArguments randomEvent = EventArguments.createRandom("RandomStreamer");
             String randomItem = ExpressionEvaluator.replaceExpressions(this.itemRaw,
                     expression -> ExpressionEvaluator.fromArgs(expression, randomEvent));
-            new ItemParser(new StringReader(randomItem), true).parse();
+            new ItemParser(RegistryHelpers.lookup()).parse(new StringReader(randomItem));
 
         } catch (CommandSyntaxException e) {
             throw new TSLSyntaxError(e.getRawMessage().getString());
@@ -52,19 +55,20 @@ public class DropAction extends TSLAction {
 
     @Override
     protected void performAction(ServerPlayer player, EventArguments args) {
-        ItemStack itemStack = createItemStack(args);
-        player.drop(itemStack, false, false);
+        ItemInput itemInput = parseItem(args);
+        int maxStackSize = new ItemStack(itemInput.item(), 1, itemInput.components()).getMaxStackSize();
+
+        // Oversized stacks are no longer valid, so drop in max-sized chunks
+        for (int remaining = itemAmount; remaining > 0; remaining -= maxStackSize) {
+            int count = Math.min(remaining, maxStackSize);
+            player.drop(new ItemStack(itemInput.item(), count, itemInput.components()), false, Prediction.SERVER_ONLY);
+        }
     }
 
-    private ItemStack createItemStack(EventArguments args) {
+    private ItemInput parseItem(EventArguments args) {
         try {
             String input = replaceExpressions(itemRaw, args);
-
-            ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
-            ItemStack itemStack = new ItemStack(itemParser.getItem(), itemAmount);
-            itemStack.setTag(itemParser.getNbt());
-
-            return itemStack;
+            return new ItemParser(RegistryHelpers.lookup()).parse(new StringReader(input));
 
         } catch (CommandSyntaxException e) {
             throw new InternalError("Invalid item format occurred after validation... Something fishy here..");
@@ -73,14 +77,13 @@ public class DropAction extends TSLAction {
 
     @Override
     protected String subtitleEvaluator(String expression, EventArguments args) {
-        ItemStack itemStack = createItemStack(args);
+        ItemInput itemInput = parseItem(args);
 
         if (expression.equals("itemName"))
-            return itemStack.getItem().getName(itemStack).getString();
-//            return itemStack.getItem().getName().getString(); // getName() is client only...
+            return new ItemStack(itemInput.item(), 1, itemInput.components()).getHoverName().getString();
 
         if (expression.equals("itemCount"))
-            return String.valueOf(itemStack.getCount());
+            return String.valueOf(itemAmount);
 
         return null;
     }

@@ -105,12 +105,12 @@ public class ReflectAction extends TSLAction {
 
     private List<String> getReflectedPlayers(ServerPlayer player) {
         if (this.reflectEveryone) {
-            return Arrays.asList(player.getServer().getPlayerNames());
+            return Arrays.asList(player.level().getServer().getPlayerNames());
         }
 
         if (this.reflectRandomN != 0) {
             List<String> reflectedPlayers = new LinkedList<>();
-            List<String> onlinePlayers = new LinkedList<>(Arrays.asList(player.getServer().getPlayerNames()));
+            List<String> onlinePlayers = new LinkedList<>(Arrays.asList(player.level().getServer().getPlayerNames()));
 
             for (int i = 0; i < reflectRandomN; i++) {
                 if (onlinePlayers.size() == 0) break;

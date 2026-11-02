@@ -2,7 +2,9 @@ package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.commands.arguments.item.ItemParser;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,6 +13,7 @@ import net.programmer.igoodie.twitchspawn.tslanguage.event.EventArguments;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLParser;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.util.ExpressionEvaluator;
+import net.programmer.igoodie.twitchspawn.util.RegistryHelpers;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,8 +26,8 @@ public class ChangeAction extends ItemSelectiveAction {
     /*
      * Exemplar valid TSL:
      * CHANGE helmet INTO apple
-     * CHANGE slot 21 FROM inventory INTO %stick{display:{Name:"\"Stick of Truth!\""}}%
-     * CHANGE inventory INTO slime_ball{display:{Name:"\"Ewwww\""}}
+     * CHANGE slot 21 FROM inventory INTO %stick[custom_name="Stick of Truth!"]%
+     * CHANGE inventory INTO slime_ball[custom_name="Ewwww"]
      */
     public ChangeAction(List<String> words) throws TSLSyntaxError {
         this.message = TSLParser.parseMessage(words);
@@ -85,7 +88,7 @@ public class ChangeAction extends ItemSelectiveAction {
             EventArguments randomEvent = EventArguments.createRandom("RandomStreamer");
             String randomItem = ExpressionEvaluator.replaceExpressions(this.itemRaw,
                     expression -> ExpressionEvaluator.fromArgs(expression, randomEvent));
-            new ItemParser(new StringReader(randomItem), true).parse();
+            new ItemParser(RegistryHelpers.lookup()).parse(new StringReader(randomItem));
 
         } catch (CommandSyntaxException e) {
             throw new TSLSyntaxError(e.getRawMessage().getString());
@@ -101,9 +104,9 @@ public class ChangeAction extends ItemSelectiveAction {
 
         } else if (selectionType == SelectionType.EVERYTHING) {
             if (inventoryType == null) {
-                setAll(player.getInventory().items, itemStack);
-                setAll(player.getInventory().armor, itemStack);
-                setAll(player.getInventory().offhand, itemStack);
+                setAll(player.getInventory().getNonEquipmentItems(), itemStack);
+                setAll(armorSlots(player), itemStack);
+                setAll(offhandSlot(player), itemStack);
 
             } else {
                 setAll(getInventory(player, inventoryType), itemStack);
@@ -118,24 +121,24 @@ public class ChangeAction extends ItemSelectiveAction {
             }
 
         } else if (selectionType == SelectionType.ONLY_HELD_ITEM) {
-            int selectedHotbarIndex = player.getInventory().selected;
-            player.getInventory().items.set(selectedHotbarIndex, itemStack.copy());
+            int selectedHotbarIndex = player.getInventory().getSelectedSlot();
+            player.getInventory().getNonEquipmentItems().set(selectedHotbarIndex, itemStack.copy());
 
         } else if (selectionType == SelectionType.HOTBAR) {
             for (int i = 0; i <= 8; i++) {
-                player.getInventory().items.set(i, itemStack.copy());
+                player.getInventory().getNonEquipmentItems().set(i, itemStack.copy());
             }
         }
 
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
 
         if (server != null) {
             CommandSourceStack commandSource = player.createCommandSourceStack()
-                    .withPermission(9999).withSuppressedOutput();
-            server.getCommands().performCommand(commandSource,
+                    .withPermission(LevelBasedPermissionSet.OWNER).withSuppressedOutput();
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/playsound minecraft:item.armor.equip_leather master @s");
-            server.getCommands().performCommand(commandSource,
-                    "/particle minecraft:entity_effect ~ ~ ~ 2 2 2 0.1 400");
+            server.getCommands().performPrefixedCommand(commandSource,
+                    "/particle minecraft:entity_effect{color:[1.0,1.0,1.0,1.0]} ~ ~ ~ 2 2 2 0.1 400");
         }
     }
 
@@ -149,9 +152,9 @@ public class ChangeAction extends ItemSelectiveAction {
         try {
             String input = replaceExpressions(itemRaw, args);
 
-            ItemParser itemParser = new ItemParser(new StringReader(input), true).parse();
-            ItemStack itemStack = new ItemStack(itemParser.getItem(), itemAmount);
-            itemStack.setTag(itemParser.getNbt());
+            ItemInput itemInput = new ItemParser(RegistryHelpers.lookup()).parse(new StringReader(input));
+            ItemStack itemStack = new ItemStack(itemInput.item(), 1, itemInput.components());
+            itemStack.setCount(Math.min(itemAmount, itemStack.getMaxStackSize()));
 
             return itemStack;
 

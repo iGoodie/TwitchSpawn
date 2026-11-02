@@ -1,6 +1,6 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
-    id 'com.gradleup.shadow' version '8.3.5'
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id 'com.gradleup.shadow' version '9.6.1'
     id 'maven-publish'
 }
 
@@ -12,7 +12,7 @@ base {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
     withSourcesJar()
 }
 
@@ -28,9 +28,8 @@ configurations {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     // Night Config
     shade "com.electronwill.night-config:core:3.6.7"
@@ -54,7 +53,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    it.options.release = 25
 }
 
 jar {
@@ -62,7 +61,7 @@ jar {
 }
 
 shadowJar {
-    archiveClassifier = 'dev-shadow'
+    archiveClassifier = ''
     configurations = [project.configurations.shade]
     // Minecraft already ships Gson
     dependencies {
@@ -70,22 +69,17 @@ shadowJar {
     }
 }
 
-// Remap the shaded jar into the final distributable
-remapJar {
-    dependsOn shadowJar
-    inputFile = shadowJar.archiveFile
-    archiveClassifier = ''
-}
+assemble.dependsOn shadowJar
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact remapJar
+            artifact shadowJar
         }
     }
     repositories {
         maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
+            url = "file:///${project.projectDir}/mcmodsrepo"
         }
     }
 }

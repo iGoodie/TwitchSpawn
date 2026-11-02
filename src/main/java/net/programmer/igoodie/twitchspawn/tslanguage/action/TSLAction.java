@@ -1,8 +1,8 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import com.google.gson.JsonArray;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
@@ -25,7 +25,6 @@ import net.programmer.igoodie.twitchspawn.util.ComponentHelpers;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 public abstract class TSLAction implements TSLFlowNode {
 
@@ -209,7 +208,8 @@ public abstract class TSLAction implements TSLFlowNode {
         SoundEvent soundLocation = SoundEvents.PLAYER_LEVELUP;
         SoundSource category = SoundSource.MASTER;
         Vec3 position = player.position();
-        ClientboundSoundPacket packetSound = new ClientboundSoundPacket(soundLocation, category, position.x, position.y, position.z, volume, pitch);
+        ClientboundSoundPacket packetSound = new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundLocation),
+                category, position.x, position.y, position.z, volume, pitch, player.getRandom().nextLong());
         player.connection.send(packetSound);
 
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.DISABLED)
@@ -239,9 +239,8 @@ public abstract class TSLAction implements TSLFlowNode {
         }
 
         if (ConfigManager.PREFERENCES.messageDisplay == PreferencesConfig.MessageDisplay.CHAT) {
-            UUID uuid = player.getUUID();
-            if (text != null) player.sendMessage(ComponentHelpers.merge(new TextComponent(">> "), text), uuid);
-            if (subtext != null) player.sendMessage(ComponentHelpers.merge(new TextComponent(">> "), subtext), uuid);
+            if (text != null) player.sendSystemMessage(ComponentHelpers.merge(Component.literal(">> "), text));
+            if (subtext != null) player.sendSystemMessage(ComponentHelpers.merge(Component.literal(">> "), subtext));
         }
     }
 

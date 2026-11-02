@@ -1,5 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -88,14 +89,14 @@ public class ShuffleAction extends ItemSelectiveAction {
     protected void performAction(ServerPlayer player, EventArguments args) {
         shuffle(getInventory(player, inventoryType), this.firstIndex, this.lastIndex);
 
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
 
         if (server != null) {
             CommandSourceStack commandSource = player.createCommandSourceStack()
-                    .withPermission(9999).withSuppressedOutput();
-            server.getCommands().performCommand(commandSource,
+                    .withPermission(LevelBasedPermissionSet.OWNER).withSuppressedOutput();
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/playsound minecraft:block.conduit.activate master @s");
-            server.getCommands().performCommand(commandSource,
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/particle minecraft:end_rod ~ ~ ~ 2 2 2 0.0001 400");
         }
     }

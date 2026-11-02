@@ -6,10 +6,6 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.CompoundTagArgument;
-import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.item.ItemArgument;
-import net.minecraft.commands.arguments.item.ItemInput;
-import net.minecraft.commands.arguments.selector.EntitySelector;
 import net.minecraft.nbt.CompoundTag;
 
 public class CommandArguments {
@@ -24,14 +20,6 @@ public class CommandArguments {
 
     public static RequiredArgumentBuilder<CommandSourceStack, Integer> integer(String name, int min, int max) {
         return Commands.argument(name, IntegerArgumentType.integer(min, max));
-    }
-
-    public static RequiredArgumentBuilder<CommandSourceStack, ItemInput> item(String name) {
-        return Commands.argument(name, ItemArgument.item());
-    }
-
-    public static RequiredArgumentBuilder<CommandSourceStack, EntitySelector> player(String name) {
-        return Commands.argument(name, EntityArgument.player());
     }
 
     public static RequiredArgumentBuilder<CommandSourceStack, String> streamer(String name) {

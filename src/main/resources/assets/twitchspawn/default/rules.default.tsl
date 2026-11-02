@@ -12,12 +12,12 @@ DROP minecraft:diamond_block 1
  ON Donation
  WITH amount IN RANGE [21,999]
 
-EXECUTE %/gamerule keepInventory true%
+EXECUTE %/gamerule keep_inventory true%
  ON Donation
  WITH amount >= 1000
 
 # Follow Rules
-DROP %diamond{display:{Name:"\"99.99\% Percent Real Diamond\""}}% 2
+DROP %diamond[custom_name="99.99\% Percent Real Diamond"]% 2
  ON Twitch Follow
 
 # Host Rules

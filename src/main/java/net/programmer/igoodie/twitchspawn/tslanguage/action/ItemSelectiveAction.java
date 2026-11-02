@@ -1,9 +1,11 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 
+import java.util.AbstractList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,16 +42,48 @@ public abstract class ItemSelectiveAction extends TSLAction {
     protected List<ItemStack> getInventory(ServerPlayer player, InventoryType inventoryType) {
         switch (inventoryType) {
             case MAIN_INVENTORY:
-                return player.getInventory().items;
+                return player.getInventory().getNonEquipmentItems();
             case ARMOR_INVENTORY:
-                return player.getInventory().armor;
+                return armorSlots(player);
             case OFFHAND_INVENTORY:
-                return player.getInventory().offhand;
+                return offhandSlot(player);
             case HOTBAR_INVENTORY:
-                return player.getInventory().items.subList(0, 8 + 1);
+                return player.getInventory().getNonEquipmentItems().subList(0, 8 + 1);
             default:
                 return null; // Not possible
         }
+    }
+
+    // Ordered boots -> helmet, matching the armor slot indices used by TSL
+    protected static List<ItemStack> armorSlots(ServerPlayer player) {
+        return equipmentSlots(player, EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD);
+    }
+
+    protected static List<ItemStack> offhandSlot(ServerPlayer player) {
+        return equipmentSlots(player, EquipmentSlot.OFFHAND);
+    }
+
+    // Armor and off-hand are stored as player equipment rather than inventory lists,
+    // so expose them as a writable list view
+    private static List<ItemStack> equipmentSlots(ServerPlayer player, EquipmentSlot... slots) {
+        return new AbstractList<>() {
+            @Override
+            public ItemStack get(int index) {
+                return player.getItemBySlot(slots[index]);
+            }
+
+            @Override
+            public ItemStack set(int index, ItemStack itemStack) {
+                ItemStack previous = player.getItemBySlot(slots[index]);
+                player.setItemSlot(slots[index], itemStack);
+                return previous;
+            }
+
+            @Override
+            public int size() {
+                return slots.length;
+            }
+        };
     }
 
     protected void parseFrom(List<String> words) throws TSLSyntaxError {
@@ -164,9 +198,9 @@ public abstract class ItemSelectiveAction extends TSLAction {
     protected InventorySlot randomInventorySlot(ServerPlayer player, boolean includeEmptySlots) {
         List<InventorySlot> possibleSlots = new LinkedList<>();
 
-        InventorySlot fromMainInventory = randomInventorySlot(player.getInventory().items, includeEmptySlots);
-        InventorySlot fromArmors = randomInventorySlot(player.getInventory().armor, includeEmptySlots);
-        InventorySlot fromOffHand = randomInventorySlot(player.getInventory().offhand, includeEmptySlots);
+        InventorySlot fromMainInventory = randomInventorySlot(player.getInventory().getNonEquipmentItems(), includeEmptySlots);
+        InventorySlot fromArmors = randomInventorySlot(armorSlots(player), includeEmptySlots);
+        InventorySlot fromOffHand = randomInventorySlot(offhandSlot(player), includeEmptySlots);
 
         if (fromMainInventory != null)
             possibleSlots.add(fromMainInventory);

@@ -1,5 +1,6 @@
 package net.programmer.igoodie.twitchspawn.tslanguage.action;
 
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -48,23 +49,23 @@ public class ClearAction extends ItemSelectiveAction {
             }
 
         } else if (selectionType == SelectionType.ONLY_HELD_ITEM) {
-            int selectedHotbarIndex = player.getInventory().selected;
-            player.getInventory().items.set(selectedHotbarIndex, ItemStack.EMPTY);
+            int selectedHotbarIndex = player.getInventory().getSelectedSlot();
+            player.getInventory().getNonEquipmentItems().set(selectedHotbarIndex, ItemStack.EMPTY);
 
         } else if (selectionType == SelectionType.HOTBAR) {
             for (int i = 0; i <= 8; i++) {
-                player.getInventory().items.set(i, ItemStack.EMPTY);
+                player.getInventory().getNonEquipmentItems().set(i, ItemStack.EMPTY);
             }
         }
 
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
 
         if (server != null) {
             CommandSourceStack commandSource = player.createCommandSourceStack()
-                    .withPermission(9999).withSuppressedOutput();
-            server.getCommands().performCommand(commandSource,
+                    .withPermission(LevelBasedPermissionSet.OWNER).withSuppressedOutput();
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/playsound minecraft:entity.item.break master @s");
-            server.getCommands().performCommand(commandSource,
+            server.getCommands().performPrefixedCommand(commandSource,
                     "/particle minecraft:smoke ~ ~ ~ 2 2 2 0.1 400");
         }
     }

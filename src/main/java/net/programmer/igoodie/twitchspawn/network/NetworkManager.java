@@ -1,22 +1,29 @@
 package net.programmer.igoodie.twitchspawn.network;
 
-import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
+import net.programmer.igoodie.twitchspawn.network.packet.GlobalChatCooldownPacket;
+import net.programmer.igoodie.twitchspawn.network.packet.OsRunPacket;
+import net.programmer.igoodie.twitchspawn.network.packet.StatusChangedPacket;
 
 public class NetworkManager {
 
-    public static final ResourceLocation STATUS_CHANGED = new ResourceLocation(TwitchSpawn.MOD_ID, "status_changed");
-    public static final ResourceLocation OS_RUN = new ResourceLocation(TwitchSpawn.MOD_ID, "os_run");
-    public static final ResourceLocation GLOBAL_CHAT_COOLDOWN = new ResourceLocation(TwitchSpawn.MOD_ID, "global_chat_cooldown");
+    public static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> type(String name) {
+        return new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(TwitchSpawn.MOD_ID, name));
+    }
 
-    public static void sendTo(ServerPlayer player, TwitchSpawnPacket packet) {
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-        packet.encode(buffer);
-        ServerPlayNetworking.send(player, packet.getId(), buffer);
+    public static void initialize() {
+        PayloadTypeRegistry.clientboundPlay().register(StatusChangedPacket.TYPE, StatusChangedPacket.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(OsRunPacket.TYPE, OsRunPacket.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(GlobalChatCooldownPacket.TYPE, GlobalChatCooldownPacket.CODEC);
+    }
+
+    public static void sendTo(ServerPlayer player, CustomPacketPayload packet) {
+        ServerPlayNetworking.send(player, packet);
     }
 
 }

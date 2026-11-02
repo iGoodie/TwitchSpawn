@@ -3,7 +3,6 @@ package net.programmer.igoodie.twitchspawn;
 import com.electronwill.nightconfig.core.io.ParsingException;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxError;
 import net.programmer.igoodie.twitchspawn.tslanguage.parser.TSLSyntaxErrors;
 
@@ -50,7 +49,7 @@ public class TwitchSpawnLoadingErrors extends Exception {
             else
                 i18nMessage = "twitchspawn.error.unknown";
 
-            messages.add(new TranslatableComponent(i18nMessage,
+            messages.add(Component.translatable(i18nMessage,
                     exception.getMessage(),
                     exception.getClass().getSimpleName()));
         }

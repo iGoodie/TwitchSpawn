@@ -16,9 +16,9 @@
     "client": ["net.programmer.igoodie.twitchspawn.client.TwitchSpawnClient"]
   },
   "depends": {
-    "fabricloader": ">=0.14.0",
+    "fabricloader": ">=0.19.5",
     "fabric-api": "*",
-    "minecraft": "1.18.x",
-    "java": ">=17"
+    "minecraft": "~26.3",
+    "java": ">=25"
   }
 }

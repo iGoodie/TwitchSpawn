@@ -2,8 +2,8 @@ package net.programmer.igoodie.twitchspawn.tracer;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import net.minecraft.network.chat.Component;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.programmer.igoodie.twitchspawn.TwitchSpawn;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
@@ -69,9 +69,8 @@ public class TraceManager {
         }
 
         for (ServerPlayer player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
-            UUID uuid = player.getUUID();
-            TranslatableComponent successText = new TranslatableComponent("commands.twitchspawn.start.success");
-            player.sendMessage(successText, uuid);
+            Component successText = Component.translatable("commands.twitchspawn.start.success");
+            player.sendSystemMessage(successText);
             NetworkManager.sendTo(player, new StatusChangedPacket(true));
         }
     }
@@ -95,10 +94,9 @@ public class TraceManager {
 
         if (TwitchSpawn.SERVER != null) {
             for (ServerPlayer player : TwitchSpawn.SERVER.getPlayerList().getPlayers()) {
-                UUID uuid = player.getUUID();
-                TranslatableComponent successText = new TranslatableComponent("commands.twitchspawn.stop.success",
+                Component successText = Component.translatable("commands.twitchspawn.stop.success",
                         source == null ? "Server" : source.getTextName(), reason);
-                player.sendMessage(successText, uuid);
+                player.sendSystemMessage(successText);
                 NetworkManager.sendTo(player, new StatusChangedPacket(false));
             }
         }

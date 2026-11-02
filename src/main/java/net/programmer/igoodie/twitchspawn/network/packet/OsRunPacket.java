@@ -1,43 +1,28 @@
 package net.programmer.igoodie.twitchspawn.network.packet;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
-import net.programmer.igoodie.twitchspawn.network.TwitchSpawnPacket;
 import net.programmer.igoodie.twitchspawn.tslanguage.action.OsRunAction;
 
-public class OsRunPacket implements TwitchSpawnPacket {
+public record OsRunPacket(OsRunAction.Shell shell, String script) implements CustomPacketPayload {
+
+    public static final Type<OsRunPacket> TYPE = NetworkManager.type("os_run");
+
+    public static final StreamCodec<ByteBuf, OsRunPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.idMapper(i -> OsRunAction.Shell.values()[i], Enum::ordinal), OsRunPacket::shell,
+            ByteBufCodecs.STRING_UTF8, OsRunPacket::script,
+            OsRunPacket::new);
 
     @Override
-    public ResourceLocation getId() {
-        return NetworkManager.OS_RUN;
-    }
-
-    @Override
-    public void encode(FriendlyByteBuf buffer) {
-        buffer.writeInt(shell.ordinal());
-        buffer.writeUtf(script);
-    }
-
-    public static OsRunPacket decode(FriendlyByteBuf buffer) {
-        OsRunAction.Shell shell = OsRunAction.Shell.values()[buffer.readInt()];
-        String script = buffer.readUtf();
-
-        return new OsRunPacket(shell, script);
+    public Type<OsRunPacket> type() {
+        return TYPE;
     }
 
     public static void handle(final OsRunPacket packet) {
         OsRunAction.handleLocalScript(packet.shell, packet.script);
-    }
-
-    /* ------------------------------------------------ */
-
-    private OsRunAction.Shell shell;
-    private String script;
-
-    public OsRunPacket(OsRunAction.Shell shell, String script) {
-        this.shell = shell;
-        this.script = script;
     }
 
 }

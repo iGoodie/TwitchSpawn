@@ -2,22 +2,23 @@ package net.programmer.igoodie.twitchspawn;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.commands.synchronization.ArgumentTypes;
+import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.programmer.igoodie.twitchspawn.command.RulesetNameArgumentType;
 import net.programmer.igoodie.twitchspawn.command.StreamerArgumentType;
+import net.programmer.igoodie.twitchspawn.command.TSLWordsArgumentType;
 import net.programmer.igoodie.twitchspawn.command.TwitchSpawnCommand;
-import net.programmer.igoodie.twitchspawn.command.serializer.RulesetNameArgumentSerializer;
-import net.programmer.igoodie.twitchspawn.command.serializer.StreamerArgumentSerializer;
 import net.programmer.igoodie.twitchspawn.configuration.ConfigManager;
 import net.programmer.igoodie.twitchspawn.configuration.PreferencesConfig;
 import net.programmer.igoodie.twitchspawn.network.NetworkManager;
@@ -30,6 +31,9 @@ public class TwitchSpawn implements ModInitializer {
 
     public static final String MOD_ID = "twitchspawn";
     public static final Logger LOGGER = LogManager.getLogger(TwitchSpawn.class);
+
+    public static final SoundEvent POP_IN = registerSound("pop_in");
+    public static final SoundEvent POP_OUT = registerSound("pop_out");
 
     public static MinecraftServer SERVER;
     public static TraceManager TRACE_MANAGER;
@@ -50,15 +54,16 @@ public class TwitchSpawn implements ModInitializer {
             LOADING_ERRORS = e;
         }
 
-        ArgumentTypes.register("twitchspawn:streamer", StreamerArgumentType.class,
-                new StreamerArgumentSerializer());
-        ArgumentTypes.register("twitchspawn:ruleset", RulesetNameArgumentType.class,
-                new RulesetNameArgumentSerializer());
+        NetworkManager.initialize();
 
-        registerSound("pop_in");
-        registerSound("pop_out");
+        ArgumentTypeRegistry.registerArgumentType(id("streamer"), StreamerArgumentType.class,
+                SingletonArgumentInfo.contextFree(StreamerArgumentType::streamerNick));
+        ArgumentTypeRegistry.registerArgumentType(id("ruleset"), RulesetNameArgumentType.class,
+                SingletonArgumentInfo.contextFree(RulesetNameArgumentType::rulesetName));
+        ArgumentTypeRegistry.registerArgumentType(id("tsl_words"), TSLWordsArgumentType.class,
+                SingletonArgumentInfo.contextFree(TSLWordsArgumentType::tslWords));
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> TwitchSpawnCommand.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, selection) -> TwitchSpawnCommand.register(dispatcher));
 
         ServerLifecycleEvents.SERVER_STARTING.register(this::onServerAboutToStart);
         ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
@@ -68,9 +73,13 @@ public class TwitchSpawn implements ModInitializer {
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> onPlayerLoggedOut(handler.player));
     }
 
-    private void registerSound(String name) {
-        ResourceLocation id = new ResourceLocation(TwitchSpawn.MOD_ID, name);
-        Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
+    }
+
+    private static SoundEvent registerSound(String name) {
+        Identifier id = id(name);
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 
     private void onServerAboutToStart(MinecraftServer server) {
@@ -98,7 +107,7 @@ public class TwitchSpawn implements ModInitializer {
         String translationKey = TRACE_MANAGER.isRunning() ?
                 "commands.twitchspawn.status.on" : "commands.twitchspawn.status.off";
 
-        entity.sendMessage(new TranslatableComponent(translationKey), entity.getUUID());
+        entity.sendSystemMessage(Component.translatable(translationKey));
 
         if (TRACE_MANAGER.isRunning())
             TRACE_MANAGER.connectStreamer(entity.getName().getString());
